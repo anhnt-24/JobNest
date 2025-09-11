@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: jobN
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  redis:
+    image: redis:7
+    container_name: redis_server
+    restart: always
+    ports:
+      - '6379:6379'
+
+  redis_commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis_commander
+    restart: always
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - '8081:8081'
+
+  minio:
+    image: minio/minio
+    container_name: minio_server
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+
+  mc:
+    image: minio/mc
+    container_name: minio_client
+    depends_on:
+      - minio
+    volumes:
+      - ./init-minio.sh:/init-minio.sh
+    entrypoint: >
+      /bin/sh -c "
+        chmod +x /init-minio.sh &&
+        /init-minio.sh &&
+        tail -f /dev/null
+      "
+
+volumes:
+  postgres_data:
+    driver: local
+  minio_data:
+    driver: local

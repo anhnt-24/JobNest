@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  password    String
+  role        Role
+  active      Boolean   @default(true)
+  verified   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt  @default(now())
+
+  candidate Candidate?
+  company          Company?
+  savedJobs        SavedJob[]
+} 
+
+enum Role {
+  candidate
+  employer
+  admin
+  company
+}
+
+model Candidate {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+  phone       String?
+  avatarUrl   String?
+  name        String
+  birthday    DateTime?
+  gender      Gender?
+  cvs         CV[]   
+  applications     Application[]
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+enum CVType {
+  UPLOADED   
+  GENERATED  
+}
+
+enum CVFormat {
+  PDF
+  DOCX
+  PNG
+  JPG
+  OTHER
+}
+
+model CV {
+  id           Int        @id @default(autoincrement())
+  candidate    Candidate  @relation(fields: [candidateId], references: [id])
+  candidateId  Int
+  title        String
+  fileUrl      String?    
+  thumbnailUrl String?
+  type         CVType     @default(UPLOADED)
+
+  format       CVFormat?  
+  fileSize     Int?       
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt @default(now())
+  applications Application[] 
+}
+
+model Company {
+  id            Int      @id @default(autoincrement())
+  name          String
+  website       String?
+  employeeCount Int?                        
+  industry      String?                     
+  description   String?                     
+  phone       String?
+  avatarUrl   String?
+  province      String?                     
+  district      String?                     
+  ward          String?                     
+  addressDetail String?                     
+
+  latitude      Float?                      
+  longitude     Float?                      
+
+  coverUrl       String?                     
+  userId    Int   @unique
+  user      User  @relation(fields: [userId], references: [id])
+
+  jobs          Job[]
+}
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// JOB
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+enum JobLevel {
+  INTERN
+  FRESHER
+  JUNIOR
+  MID
+  SENIOR
+  MANAGER
+  DIRECTOR
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  FREELANCE
+  INTERNSHIP
+}
+
+enum EducationLevel {
+  NONE
+  HIGH_SCHOOL
+  COLLEGE
+  BACHELOR
+  MASTER
+  DOCTORATE
+}
+enum JobStatus {
+  OPEN
+  CLOSED
+  PAUSED
+}
+
+model Job {
+  id              Int       @id @default(autoincrement())
+  title           String 
+  description     String                         
+  requirements    String?                        
+  benefits        String?                        
+  workingAddress  String?                        
+  workingTime     String?                        
+  applicationMethod   String?                        
+
+  salary          String?                           
+  experience      String?                        
+  quantity        Int?                           
+  level           JobLevel                       
+  education       EducationLevel?                
+  type            JobType                        
+
+  categories      String?                        
+  mustSkills      String?                        
+  niceSkills      String?                        
+  areaTags        String?                        
+
+  deadline        DateTime?                     
+  status String @default("OPEN") 
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt @default(now())
+
+  company         Company   @relation(fields: [companyId], references: [id])
+  companyId       Int
+  applications    Application[]
+  savedBy         SavedJob[]
+}
+
+
+model Application {
+  id           Int        @id @default(autoincrement())
+  
+  candidate    Candidate  @relation(fields: [candidateId], references: [id])
+  candidateId  Int
+  
+  job          Job        @relation(fields: [jobId], references: [id])
+  jobId        Int
+
+  cvId         Int
+  cv           CV         @relation(fields: [cvId], references: [id])
+
+  message      String?
+  appliedAt    DateTime   @default(now())
+  status       ApplicationStatus @default(pending)
+}
+
+enum ApplicationStatus {
+  pending
+  reviewed
+  accepted
+  rejected
+}
+
+model SavedJob {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  job       Job      @relation(fields: [jobId], references: [id])
+  jobId     Int
+  savedAt   DateTime @default(now())
+  @@unique([userId, jobId]) 
+}
