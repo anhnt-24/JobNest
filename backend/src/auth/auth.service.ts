@@ -12,6 +12,7 @@ import { LoginDto } from './dto/req/login.req';
 import { Role } from '@prisma/client';
 import { RedisService } from 'src/redis/redis.service';
 import { CreateCompanyDto } from './dto/req/company-register.req';
+import { CreateEmployerDto } from './dto/req/employer-create.req';
 
 @Injectable()
 export class AuthService {
@@ -232,6 +233,13 @@ export class AuthService {
             avatarUrl: true,
           },
         },
+        employer: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
       },
     });
     const { password, ...user } = data;
@@ -239,5 +247,55 @@ export class AuthService {
       throw new NotFoundException('Không tìm thấy người dùng');
     }
     return user;
+  }
+  async registerEmployer(companyUserId, dto: CreateEmployerDto) {
+    const company = await this.prisma.company.findUnique({
+      where: { userId: companyUserId },
+    });
+    if (!company) throw new BadRequestException('Công ty không tồn tại');
+    const userExists = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+    if (userExists) throw new BadRequestException('Email đã tồn tại');
+
+    const hash = await bcrypt.hash('12356789', 10);
+    const { email, ...data } = dto;
+    const user = await this.prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          email: email,
+          password: hash,
+          role: Role.employer,
+          active: true,
+        },
+      });
+
+      await tx.employer.create({
+        data: {
+          ...data,
+          companyId: company.id,
+          userId: newUser.id,
+        },
+      });
+
+      return newUser;
+    });
+
+    const payload = {
+      sub: user.id.toString(),
+      email: user.email,
+      role: user.role,
+    };
+    const tokens = this.generateTokens(payload);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+    };
   }
 }

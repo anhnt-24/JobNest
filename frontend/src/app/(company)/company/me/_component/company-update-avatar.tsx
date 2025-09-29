@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from 
 import Cropper, { Point, Area } from 'react-easy-crop';
 import { LoadingButton } from '@/components/ui/custom/loading-button';
 import { companyService } from '@/service/company.service';
+import { FaCamera, FaCameraRetro } from 'react-icons/fa6';
 
 export default function UpdateAvatar() {
 	const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -68,8 +69,8 @@ export default function UpdateAvatar() {
 		<div>
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button size='sm' className='absolute bottom-1 right-1 w-10 h-10 p-1 rounded-full bg-white border border-gray-300 shadow-md hover:bg-gray-100 flex items-center justify-center'>
-						<Camera className='w-5 h-5 text-gray-700' />
+					<Button size='sm' variant={'ghost'} className='  text-gray-300 bggray  w-10 h-10 p-1 rounded-full  !bg-transparent  shadow-md bg flex items-center justify-center'>
+						<FaCameraRetro className='size-8' />
 					</Button>
 				</DialogTrigger>
 

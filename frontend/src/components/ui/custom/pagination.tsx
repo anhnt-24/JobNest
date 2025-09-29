@@ -35,7 +35,7 @@ export default function Pagination({ totalItems, pageSize, currentPage, onPageCh
 	return (
 		<div className='flex gap-4 float-right'>
 			<ShadCnPagination>
-				<PaginationContent>
+				<PaginationContent className='gap-5 items-center'>
 					<PaginationItem>
 						<PaginationPrevious
 							href='#'
@@ -79,10 +79,10 @@ export default function Pagination({ totalItems, pageSize, currentPage, onPageCh
 					</PaginationItem>
 				</PaginationContent>
 			</ShadCnPagination>
-			<div className='flex  items-center px-2 float-left relative border rounded-sm bg-white'>
+			<div className='flex  items-center px-2 float-left relative border rounded-xs bg-white'>
 				<p className='text-primary w-20 font-semibold '>Hiển thị: </p>
 				<Select value={pageSize.toString()} onValueChange={value => onPageSizeChange(Number(value))}>
-					<SelectTrigger className='w-20 border-0 shadow-none'>
+					<SelectTrigger className='w-20 !h-10  border-0 shadow-none'>
 						<SelectValue placeholder={pageSize} />
 					</SelectTrigger>
 					<SelectContent align='end'>

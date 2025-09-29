@@ -7,6 +7,7 @@ import { Public } from './decorators/public.decorator';
 import { CreateCompanyDto } from './dto/req/company-register.req';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { CreateEmployerDto } from './dto/req/employer-create.req';
 
 @Controller('auth')
 export class AuthController {
@@ -42,6 +43,11 @@ export class AuthController {
     return this.authService.registerCompany(dto);
   }
 
+  @Post('employer-register')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  registerEmployer(@Req() req, @Body() dto: CreateEmployerDto) {
+    return this.authService.registerEmployer(+req.user.userId, dto);
+  }
   @Get('me')
   @UseGuards(JwtAuthGuard, RolesGuard)
   me(@Req() req) {

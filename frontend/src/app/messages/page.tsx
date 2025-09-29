@@ -2,56 +2,39 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import { useAuth } from '@/hook/useAuth';
+import { useChatSocket } from '@/hooks/use-socket';
+import { conversationService } from '@/service/conversation.service';
+import { jobService } from '@/service/job.service';
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
+import { da } from 'date-fns/locale';
 import { Building2, Send, Search, Bell, Volume2, Settings, Paperclip, Smile } from 'lucide-react';
-
-const conversations = [
-	{
-		id: 1,
-		company: 'Công ty ABC',
-		avatar: '/company-logos/company1.png',
-		lastMessage: 'Xin chào, chúng tôi đã xem hồ sơ của bạn...',
-		time: '5 phút trước',
-		unread: 2,
-		position: 'Senior Frontend Developer',
-	},
-	{
-		id: 2,
-		company: 'Công ty XYZ',
-		avatar: '/company-logos/company2.png',
-		lastMessage: 'Cảm ơn bạn đã quan tâm đến vị trí của chúng tôi',
-		time: '2 giờ trước',
-		unread: 0,
-		position: 'React Developer',
-	},
-];
-
-const messages = [
-	{
-		id: 1,
-		sender: 'company',
-		message: 'Xin chào, cảm ơn bạn đã ứng tuyển vào vị trí Senior Frontend Developer',
-		time: '10:00',
-	},
-	{
-		id: 2,
-		sender: 'user',
-		message: 'Dạ vâng, em rất quan tâm đến vị trí này ạ',
-		time: '10:02',
-	},
-	{
-		id: 3,
-		sender: 'company',
-		message: 'Bạn có thể phỏng vấn vào 14h ngày mai được không?',
-		time: '10:05',
-	},
-];
+import { useState } from 'react';
+import useSWR from 'swr';
 
 export default function MessagesPage() {
+	const [limit, setLimit] = useState(5);
+	const [page, setPage] = useState(1);
+	const { data, isLoading } = useSWR(['/job/applied', page, limit], () => jobService.getAppliedJobs({ page, limit }).then(res => res.data));
+	const { data: conversations } = useSWR('/conversations', () => conversationService.getMyConversations().then(res => res.data));
+	const [activeConvo, setActiveConvo] = useState<number | null>(null);
+	const { messages: socketMessages } = useChatSocket(activeConvo);
+	const [input, setInput] = useState<string>('');
+	const { user } = useAuth();
+	const handleSendMessage = async () => {
+		if (!input.trim() || !activeConvo) return;
+		await conversationService.sendMessage(activeConvo, input).then(res => {
+			setInput('');
+		});
+	};
+	if (!user) return <div>Loading...</div>;
+
+	if (isLoading && socketMessages && conversations) return <div>Loading...</div>;
+	console.log(conversations);
 	return (
 		<Card className='flex p-0 '>
 			<div className='flex'>
@@ -59,7 +42,7 @@ export default function MessagesPage() {
 					<div className='flex p-4 items-center justify-between'>
 						<h3>
 							<span className='text-primary font-bold text-2xl'>JobNest'</span>
-							<span className='text-xl '> Connect</span>
+							<span className='text-2xl font-semibold  text-gray-700'> Connect</span>
 						</h3>
 						<div className='flex gap-2 items-center'>
 							<Button size={'sm'} variant={'outline'}>
@@ -98,8 +81,8 @@ export default function MessagesPage() {
 						</div>
 					</div>
 					<div className=''>
-						{conversations.map(conv => (
-							<div key={conv.id} className='p-4 border-b hover:bg-gray-50 cursor-pointer relative'>
+						{conversations?.map(conv => (
+							<div onClick={() => setActiveConvo(conv.id)} key={conv.id} className='p-4 border-b hover:bg-gray-50 cursor-pointer relative'>
 								<div className='flex items-center gap-3'>
 									<Avatar className='border w-14 h-14 '>
 										<AvatarImage src={'/image.png'} className='object-cover' />
@@ -137,11 +120,11 @@ export default function MessagesPage() {
 
 					{/* Messages */}
 					<div className='flex-grow overflow-y-auto p-4 space-y-4'>
-						{messages.map(message => (
-							<div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-								<div className={`max-w-[70%] rounded-lg p-3 ${message.sender === 'user' ? 'bg-primary text-white' : 'bg-gray-100'}`}>
-									<p>{message.message}</p>
-									<span className={`text-xs mt-1 block ${message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>{message.time}</span>
+						{socketMessages.map(message => (
+							<div key={message.id} className={`flex ${message.senderId === Number(user.id) ? 'justify-end' : 'justify-start'}`}>
+								<div className={`max-w-[70%] rounded-lg p-3 ${message.senderId === Number(user.id) ? 'bg-primary text-white' : 'bg-gray-100'}`}>
+									<p>{message.content}</p>
+									<span className={`text-xs mt-1 block ${message.senderId === Number(user.id) ? 'text-blue-100' : 'text-gray-500'}`}>{new Date(message.createdAt).toLocaleTimeString()}</span>
 								</div>
 							</div>
 						))}
@@ -156,12 +139,41 @@ export default function MessagesPage() {
 							<Button variant={'ghost'} size={'sm'}>
 								<Smile className='size-6' />
 							</Button>
-							<Input type='text' placeholder='Nhập tin nhắn...' className='flex-grow mr-3' />
-							<Button>
+							<Input value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Nhập tin nhắn...' className='flex-grow mr-3' />
+							<Button onClick={handleSendMessage}>
 								<Send className='w-4 h-4' />
 							</Button>
 						</div>
 					</div>
+				</div>
+				<div className='flex-1 p-4 border-l'>
+					<h3 className='mb-2'>TIN TUYỂN DỤNG ĐÃ ỨNG TUYỂN</h3>
+					{data?.items?.map(c => (
+						<div key={c.id} className='flex items-center gap-3 w-full p-3 rounded-xl hover:bg-gray-50 transition'>
+							<div className='flex-shrink-0'>
+								<div className='w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center'>
+									{c.job?.company?.avatarUrl ? (
+										<img src={c.job?.company?.avatarUrl} alt={c.title} className='w-full h-full object-cover' />
+									) : (
+										<span className='text-sm font-medium text-gray-600'>{c.job.title}</span>
+									)}
+								</div>
+							</div>
+
+							{/* Title & subtitle */}
+							<div className='flex-1 min-w-0'>
+								<h4 className='font-semibold leading-5 text-gray-900 line-clamp-1'>{c.job.title}</h4>
+								<p className='text-sm text-gray-500 truncate mt-0.5 line-clamp-1'>{c.job.company.name}</p>
+							</div>
+
+							{/* Button */}
+							<button className='flex-shrink-0 cursor-pointer'>
+								<span className='inline-flex items-center justify-center px-3 py-1.5 rounded-full border border-primary/50 bg-primary/5 text-primary text-sm font-medium hover:bg-primary/10'>
+									Nhắn tin
+								</span>
+							</button>
+						</div>
+					))}
 				</div>
 			</div>
 		</Card>

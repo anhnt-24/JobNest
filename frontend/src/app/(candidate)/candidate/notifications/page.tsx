@@ -1,15 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Bell, Briefcase, Calendar, MessageSquare, Building2, CheckCheck, ArrowDown } from 'lucide-react';
+import { Card, CardTitle } from '@/components/ui/card';
+import { Bell, Briefcase, Calendar, MessageSquare, Building2, CheckCheck, ArrowDown, User, Earth, User2 } from 'lucide-react';
 
+// Dữ liệu demo
 const notifications = [
 	{
 		id: 1,
 		type: 'interview',
 		title: 'Lịch phỏng vấn đã được xác nhận',
-		company: 'Công ty ABC',
+		sender: { type: 'company', name: 'Công ty ABC' },
 		message: 'Phỏng vấn vị trí Senior Frontend Developer vào 14:00 ngày 07/08/2025',
 		time: '2 giờ trước',
 		unread: true,
@@ -18,74 +19,116 @@ const notifications = [
 		id: 2,
 		type: 'application',
 		title: 'Hồ sơ của bạn đã được duyệt',
-		company: 'Công ty XYZ',
+		sender: { type: 'recruiter', name: 'Nguyễn Văn A (HR Công ty XYZ)' },
 		message: 'Nhà tuyển dụng đang xem xét hồ sơ của bạn',
 		time: '1 ngày trước',
 		unread: true,
 	},
 	{
 		id: 3,
-		type: 'message',
-		title: 'Tin nhắn mới từ nhà tuyển dụng',
-		company: 'Công ty DEF',
-		message: 'HR muốn trao đổi thêm về kinh nghiệm của bạn',
+		type: 'system',
+		title: 'Cập nhật hồ sơ của bạn',
+		sender: { type: 'system', name: 'Hệ thống' },
+		message: 'Bạn chưa cập nhật kỹ năng trong 3 tháng gần đây',
 		time: '2 ngày trước',
 		unread: false,
 	},
-	// Thêm các thông báo khác...
+	{
+		id: 4,
+		type: 'message',
+		title: 'Tin nhắn mới',
+		sender: { type: 'recruiter', name: 'Trần Thị B (Talent Acquisition)' },
+		message: 'HR muốn trao đổi thêm về kinh nghiệm của bạn',
+		time: '3 ngày trước',
+		unread: false,
+	},
 ];
 
-export default function NotificationsPage() {
+// Icon theo loại thông báo
+function getTypeIcon(type: string) {
+	switch (type) {
+		case 'interview':
+			return <Calendar className='w-6 h-6 text-green-600' />;
+		case 'application':
+			return <Briefcase className='w-6 h-6 text-blue-600' />;
+		case 'message':
+			return <MessageSquare className='w-6 h-6 text-yellow-600' />;
+		case 'system':
+			return <Bell className='w-6 h-6 text-purple-600' />;
+		default:
+			return <Bell className='w-6 h-6 text-gray-600' />;
+	}
+}
+
+// Icon theo người gửi
+function getSenderIcon(type: string) {
+	switch (type) {
+		case 'company':
+			return <Building2 className='w-4 h-4 mr-2' />;
+		case 'recruiter':
+			return <User2 className='w-4 h-4 mr-2' />;
+		case 'system':
+			return <Earth className='w-4 h-4 mr-2' />;
+		default:
+			return <User className='w-4 h-4 mr-2' />;
+	}
+}
+
+// Component hiển thị 1 thông báo
+function NotificationItem({ notification }: { notification: any }) {
 	return (
-		<Card className=' p-6'>
+		<div className={`p-4 border-b hover:bg-primary/5 ${notification.unread ? 'bg-gray-100' : ''}`}>
+			<div className='flex items-start '>
+				<div className='flex-grow'>
+					<div className='flex justify-between items-start'>
+						<div>
+							<h3>{notification.title}</h3>
+							<div className='flex items-center text-gray-600 mt-1'>
+								{getSenderIcon(notification.sender.type)}
+								<span>{notification.sender.name}</span>
+							</div>
+						</div>
+						<span className='text-sm text-gray-500'>{notification.time}</span>
+					</div>
+					<p className='text-gray-600 mt-2'>{notification.message}</p>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export default function NotificationsPage() {
+	const unreadCount = notifications.filter(n => n.unread).length;
+
+	return (
+		<Card>
 			<div className='flex justify-between items-center'>
 				<div>
-					<h1 className='text-2xl font-bold'>Thông báo</h1>
-					<p className='text-gray-600'>Bạn có 2 thông báo chưa đọc</p>
+					<h2>Thông báo</h2>
+					<p className='text-gray-600'>Bạn có {unreadCount} thông báo chưa đọc</p>
 				</div>
 				<div className='flex gap-2'>
-					<Button variant='outline'>
+					<Button variant='secondary'>
 						<CheckCheck className='w-4 h-4 mr-2' />
 						Đánh dấu tất cả đã đọc
 					</Button>
 				</div>
 			</div>
 
-			<div className='space-y-4'>
+			{/* Danh sách thông báo */}
+			<div>
 				{notifications.map(notification => (
-					<Card key={notification.id} className={` p-6  border transition-shadow ${notification.unread ? 'bg-gray-50' : ''}`}>
-						<div className='flex items-start gap-4'>
-							<div className={`p-3 rounded-full ${notification.type === 'interview' ? 'bg-green-100' : notification.type === 'application' ? 'bg-blue-100' : 'bg-yellow-100'}`}>
-								{notification.type === 'interview' ? (
-									<Calendar className={`w-6 h-6 ${notification.type === 'interview' ? 'text-green-600' : notification.type === 'application' ? 'text-blue-600' : 'text-yellow-600'}`} />
-								) : notification.type === 'application' ? (
-									<Briefcase className='w-6 h-6 text-blue-600' />
-								) : (
-									<MessageSquare className='w-6 h-6 text-yellow-600' />
-								)}
-							</div>
-							<div className='flex-grow'>
-								<div className='flex justify-between items-start'>
-									<div>
-										<h3 className='font-semibold'>{notification.title}</h3>
-										<div className='flex items-center text-gray-600 mt-1'>
-											<Building2 className='w-4 h-4 mr-2' />
-											<span>{notification.company}</span>
-										</div>
-									</div>
-									<span className='text-sm text-gray-500'>{notification.time}</span>
-								</div>
-								<p className='text-gray-600 mt-2'>{notification.message}</p>
-							</div>
-						</div>
-					</Card>
+					<NotificationItem key={notification.id} notification={notification} />
 				))}
 			</div>
 
-			<Button>
-				<ArrowDown className='size-5' />
-				Xem thêm thông báo
-			</Button>
+			{/* Xem thêm */}
+			<div className='flex justify-center mt-6'>
+				<Button>
+					<ArrowDown className='size-5 mr-2' />
+					Xem thêm thông báo
+				</Button>
+			</div>
 		</Card>
 	);
 }

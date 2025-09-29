@@ -11,16 +11,20 @@ import JobCategories from '@/components/home-page/job-categories';
 import FeaturedEmployers from '@/components/home-page/featured-employers';
 import InfiniteEmployerCarousel from '@/components/home-page/company-convey';
 import ContactBanner from '@/components/home-page/contact-banner';
+import FeaturedPosts from '@/components/home-page/feature-posts';
+import { UrgentJobList } from '@/components/home-page/urgent-job-list';
 
 export default function Home() {
 	return (
-		<div className='flex flex-col min-h-screen'>
+		<div className='flex flex-col min-h-screen gap-6'>
 			<Header />
 			<JobSearchBar></JobSearchBar>
 			<JobListings />
+			<UrgentJobList />
 			<JobCategories></JobCategories>
 			<FeaturedEmployers></FeaturedEmployers>
 			<InfiniteEmployerCarousel></InfiniteEmployerCarousel>
+			<FeaturedPosts />
 			<ContactBanner></ContactBanner>
 			<Footer />
 		</div>

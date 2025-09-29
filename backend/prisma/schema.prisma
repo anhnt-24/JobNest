@@ -19,7 +19,11 @@ model User {
 
   candidate Candidate?
   company          Company?
+  employer          Employer?
   savedJobs        SavedJob[]
+ notifications Notification[] 
+conversations  UserConversation[]
+  messages       Message[]
 } 
 
 enum Role {
@@ -40,6 +44,25 @@ model Candidate {
   gender      Gender?
   cvs         CV[]   
   applications     Application[]
+}
+
+model Employer {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+    company         Company   @relation(fields: [companyId], references: [id])
+  companyId       Int
+  name      String
+  phone     String
+  avatarUrl String?
+  gender      Gender
+  dob    DateTime
+  address String
+  position String
+  employeeId String @unique
+  createdAt DateTime @default(now())
+  updatedAt   DateTime  @updatedAt  @default(now())
+  jobs      Job[]
 }
 
 enum Gender {
@@ -72,10 +95,9 @@ model CV {
 
   format       CVFormat?  
   fileSize     Int?       
-
+  applications Application[] 
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt @default(now())
-  applications Application[] 
 }
 
 model Company {
@@ -98,7 +120,7 @@ model Company {
   coverUrl       String?                     
   userId    Int   @unique
   user      User  @relation(fields: [userId], references: [id])
-
+  employers      Employer[]
   jobs          Job[]
 }
 
@@ -167,6 +189,9 @@ model Job {
   updatedAt       DateTime  @updatedAt @default(now())
 
   company         Company   @relation(fields: [companyId], references: [id])
+  employerId     Int?
+  employer         Employer?   @relation(fields: [employerId], references: [id])
+
   companyId       Int
   applications    Application[]
   savedBy         SavedJob[]
@@ -188,6 +213,7 @@ model Application {
   message      String?
   appliedAt    DateTime   @default(now())
   status       ApplicationStatus @default(pending)
+  conversation Conversation?
 }
 
 enum ApplicationStatus {
@@ -205,4 +231,68 @@ model SavedJob {
   jobId     Int
   savedAt   DateTime @default(now())
   @@unique([userId, jobId]) 
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  title     String
+  body      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id         Int                 @id @default(autoincrement())
+  createdAt  DateTime            @default(now())
+  users      UserConversation[]
+  messages   Message[]
+
+  applicationId Int? @unique
+  application   Application? @relation(fields: [applicationId], references: [id])
+
+}
+
+model UserConversation {
+  id              Int           @id @default(autoincrement())
+  userId          Int
+  conversationId  Int
+  user            User          @relation(fields: [userId], references: [id])
+  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+}
+
+model Message {
+  id             String        @id @default(cuid())
+  senderId       Int
+  conversationId Int
+  content        String
+  createdAt      DateTime      @default(now())
+  
+  sender         User          @relation(fields: [senderId], references: [id])
+  conversation   Conversation  @relation(fields: [conversationId], references: [id])
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  author      String
+  title       String
+  slug        String   @unique
+  excerpt     String?
+  content     String
+  thumbnail   String?
+  tags        String[]
+  category    String?
+  status      PostStatus @default(DRAFT)
+  views       Int      @default(0)
+  likes       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import RichTextEditor from '@/components/ui/custom/editor';
 import MapPicker from '@/components/ui/map-picker';
-import { Company, CompanySchema } from '@/schema/company.schema';
+import { CompanySchema } from '@/schema/company.schema';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useSWR from 'swr';
@@ -22,7 +22,7 @@ import { json } from 'zod';
 function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
 	return (
 		<div className='flex items-center'>
-			<Label className='w-32 '>{label}</Label>
+			<Label className='w-32'>{label}</Label>
 			<div className='flex-1'>{children}</div>
 		</div>
 	);
@@ -63,7 +63,7 @@ function CompanyForm() {
 			reset({
 				name: profile.name,
 				website: profile.website,
-				phone: profile.user?.phone || '',
+				phone: profile.phone || '',
 				employeeCount: profile.employeeCount,
 				industry: profile.industry,
 				description: profile.description,
@@ -83,8 +83,8 @@ function CompanyForm() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
-			<CardContent className='space-y-5'>
+		<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+			<div className='space-y-6  bg-white p-6 rounded-sm shadow-xs border'>
 				<div className='grid gap-8 grid-cols-2'>
 					<FormRow label='Tên công ty:'>
 						<div className='w-full'>
@@ -142,90 +142,87 @@ function CompanyForm() {
 						</div>
 					)}
 				/>
-			</CardContent>
-
-			<CardHeader>
+			</div>
+			<div>
 				<CardTitle>Địa điểm</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<div className='grid grid-cols-3 gap-8'>
-					<FormRow label='Tỉnh/Thành phố:'>
-						<div className='w-full'>
-							<Select onValueChange={val => setValue('province', val)}>
-								<SelectTrigger className='w-full'>
-									<SelectValue placeholder='Chọn Tỉnh/TP' />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value='Hà Nội'>Hà Nội</SelectItem>
-									<SelectItem value='Hồ Chí Minh'>Hồ Chí Minh</SelectItem>
-									<SelectItem value='Đà Nẵng'>Đà Nẵng</SelectItem>
-								</SelectContent>
-							</Select>
-							{errors.province && <p className='text-red-500 text-sm'>{errors.province.message}</p>}
-						</div>
-					</FormRow>
+				<div className=' bg-white p-6 rounded-sm space-y-6 border shadow-xs'>
+					<div className='grid grid-cols-3 gap-8'>
+						<FormRow label='Tỉnh/Thành phố:'>
+							<div className='w-full'>
+								<Select onValueChange={val => setValue('province', val)}>
+									<SelectTrigger className='w-full'>
+										<SelectValue placeholder='Chọn Tỉnh/TP' />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value='Hà Nội'>Hà Nội</SelectItem>
+										<SelectItem value='Hồ Chí Minh'>Hồ Chí Minh</SelectItem>
+										<SelectItem value='Đà Nẵng'>Đà Nẵng</SelectItem>
+									</SelectContent>
+								</Select>
+								{errors.province && <p className='text-red-500 text-sm'>{errors.province.message}</p>}
+							</div>
+						</FormRow>
 
-					<FormRow label='Quận/Huyện:'>
-						<div className='w-full'>
-							<Select onValueChange={val => setValue('district', val)}>
-								<SelectTrigger className='w-full'>
-									<SelectValue placeholder='Chọn Quận/Huyện' />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value='Cầu Giấy'>Cầu Giấy</SelectItem>
-									<SelectItem value='Đống Đa'>Đống Đa</SelectItem>
-									<SelectItem value='Thanh Xuân'>Thanh Xuân</SelectItem>
-								</SelectContent>
-							</Select>
-							{errors.district && <p className='text-red-500 text-sm'>{errors.district.message}</p>}
-						</div>
-					</FormRow>
+						<FormRow label='Quận/Huyện:'>
+							<div className='w-full'>
+								<Select onValueChange={val => setValue('district', val)}>
+									<SelectTrigger className='w-full'>
+										<SelectValue placeholder='Chọn Quận/Huyện' />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value='Cầu Giấy'>Cầu Giấy</SelectItem>
+										<SelectItem value='Đống Đa'>Đống Đa</SelectItem>
+										<SelectItem value='Thanh Xuân'>Thanh Xuân</SelectItem>
+									</SelectContent>
+								</Select>
+								{errors.district && <p className='text-red-500 text-sm'>{errors.district.message}</p>}
+							</div>
+						</FormRow>
 
-					<FormRow label='Xã/Phường:'>
-						<div className='w-full'>
-							<Select onValueChange={val => setValue('ward', val)}>
-								<SelectTrigger className='w-full'>
-									<SelectValue placeholder='Chọn Xã/Phường' />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value='Dịch Vọng'>Dịch Vọng</SelectItem>
-									<SelectItem value='Mai Động'>Mai Động</SelectItem>
-									<SelectItem value='Phương Liệt'>Phương Liệt</SelectItem>
-								</SelectContent>
-							</Select>
-							{errors.ward && <p className='text-red-500 text-sm'>{errors.ward.message}</p>}
-						</div>
-					</FormRow>
+						<FormRow label='Xã/Phường:'>
+							<div className='w-full'>
+								<Select onValueChange={val => setValue('ward', val)}>
+									<SelectTrigger className='w-full'>
+										<SelectValue placeholder='Chọn Xã/Phường' />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value='Dịch Vọng'>Dịch Vọng</SelectItem>
+										<SelectItem value='Mai Động'>Mai Động</SelectItem>
+										<SelectItem value='Phương Liệt'>Phương Liệt</SelectItem>
+									</SelectContent>
+								</Select>
+								{errors.ward && <p className='text-red-500 text-sm'>{errors.ward.message}</p>}
+							</div>
+						</FormRow>
+					</div>
+
+					<div className='mt-6 space-y-6'>
+						<FormRow label='Địa chỉ cụ thể:'>
+							<div className='w-full'>
+								<Textarea {...register('addressDetail')} placeholder='Ví dụ: Số 10, Ngõ 5, Đường ABC' />
+								{errors.addressDetail && <p className='text-red-500 text-sm'>{errors.addressDetail.message}</p>}
+							</div>
+						</FormRow>
+						<MapPicker />
+					</div>
+
+					<div className='flex justify-end'>
+						<Button type='submit'>Lưu thông tin</Button>
+					</div>
 				</div>
-
-				<div className='mt-6 space-y-6'>
-					<FormRow label='Địa chỉ cụ thể:'>
-						<div className='w-full'>
-							<Textarea {...register('addressDetail')} placeholder='Ví dụ: Số 10, Ngõ 5, Đường ABC' />
-							{errors.addressDetail && <p className='text-red-500 text-sm'>{errors.addressDetail.message}</p>}
-						</div>
-					</FormRow>
-					<MapPicker />
-				</div>
-
-				<div className='flex justify-end'>
-					<Button type='submit'>Lưu thông tin</Button>
-				</div>
-			</CardContent>
+			</div>
 		</form>
 	);
 }
 
 export default function Page() {
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Thông tin công ty</CardTitle>
-			</CardHeader>
+		<div>
+			<CardTitle>Thông tin công ty</CardTitle>
 
 			<Suspense fallback={<LoadingCard></LoadingCard>}>
 				<CompanyForm></CompanyForm>
 			</Suspense>
-		</Card>
+		</div>
 	);
 }

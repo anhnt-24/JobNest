@@ -8,6 +8,7 @@ import { cvsService } from '@/service/cvs.service';
 import { Label } from '@/components/ui/label';
 import { useDropzone } from 'react-dropzone';
 import { Card, CardContent } from '@/components/ui/card';
+import { FaUpload } from 'react-icons/fa6';
 
 export function UploadCvModal() {
 	const [file, setFile] = useState<File | null>(null);
@@ -41,8 +42,8 @@ export function UploadCvModal() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className='px-6'>
-					<ArrowUp></ArrowUp> Tải CV lên
+				<Button className='rounded-full'>
+					<FaUpload className='size-4'></FaUpload> Tải lên
 				</Button>
 			</DialogTrigger>
 			<DialogContent className='max-w-3xl '>

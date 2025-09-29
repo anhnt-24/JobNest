@@ -9,6 +9,7 @@ export const cvsService = {
 		return api.post('/cvs/create', data);
 	},
 	getCvs: (query: any) => api.post('/cvs/me', query),
+	getAll: (query: any) => api.post('/cvs/get', query),
 	getCvById: (id: number) => api.get(`/cvs/${id}`),
 	updateCv: (id: number, data: any) => api.patch(`/cvs/${id}`, data),
 	deleteCv: (id: number) => api.delete(`/cvs/${id}`),

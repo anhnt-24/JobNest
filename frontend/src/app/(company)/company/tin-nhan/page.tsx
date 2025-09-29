@@ -9,13 +9,12 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, ArrowLeft, Search, Phone, Mail, FileText, Download, MoreVertical, Calendar, MessageSquare } from 'lucide-react';
 
-// Mock data for candidates
 const mockCandidates = [
 	{
 		id: '1',
 		name: 'Nguyễn Văn A',
 		email: 'nguyenvana@email.com',
-		phone: '0123456789',
+		phone: '012345678',
 		position: 'Backend Developer',
 		appliedDate: '2024-01-15',
 		status: 'Đã liên hệ',
@@ -52,7 +51,6 @@ const mockCandidates = [
 	},
 ];
 
-// Mock message history
 const mockMessages = {
 	'1': [
 		{
@@ -111,12 +109,10 @@ const MessagesPage = () => {
 	const [messages, setMessages] = useState({});
 	const messagesEndRef = useRef(null);
 
-	// Load mock messages
 	useEffect(() => {
 		setMessages(mockMessages);
 	}, []);
 
-	// Scroll to bottom when messages change
 	useEffect(() => {
 		scrollToBottom();
 	}, [messages, selectedCandidate]);
@@ -193,8 +189,7 @@ const MessagesPage = () => {
 	};
 
 	return (
-		<div className='flex h-screen bg-gray-100'>
-			{/* Sidebar - Danh sách ứng viên */}
+		<div className='flex h-screen  py-6'>
 			<div className='w-80 bg-white border-r border-gray-200 flex flex-col'>
 				<div className='p-4 border-b border-gray-200'>
 					<h2 className='text-xl font-semibold'>Tin nhắn</h2>
@@ -240,11 +235,9 @@ const MessagesPage = () => {
 				</div>
 			</div>
 
-			{/* Main content - Chat area */}
 			<div className='flex-1 flex flex-col'>
 				{selectedCandidate ? (
 					<>
-						{/* Chat header */}
 						<div className='bg-white border-b border-gray-200 p-4'>
 							<div className='flex items-center justify-between'>
 								<div className='flex items-center gap-3'>
@@ -285,7 +278,7 @@ const MessagesPage = () => {
 
 						{/* Messages area */}
 						<div className='flex-1 overflow-y-auto p-4 bg-gray-50'>
-							<div className='max-w-3xl mx-auto space-y-4'>
+							<div className=' mx-auto space-y-4'>
 								{(messages[selectedCandidate.id] || []).map((msg, index, array) => {
 									const showDate = index === 0 || formatDate(msg.timestamp) !== formatDate(array[index - 1].timestamp);
 
@@ -311,8 +304,6 @@ const MessagesPage = () => {
 								<div ref={messagesEndRef} />
 							</div>
 						</div>
-
-						{/* Message input */}
 						<div className='bg-white border-t border-gray-200 p-4'>
 							<div className='max-w-3xl mx-auto flex gap-2'>
 								<Textarea
@@ -335,15 +326,21 @@ const MessagesPage = () => {
 					</>
 				) : (
 					// Empty state when no candidate is selected
-					<div className='flex-1 flex items-center justify-center'>
-						<div className='text-center text-gray-500'>
-							<MessageSquare className='h-12 w-12 mx-auto mb-4 text-gray-300' />
-							<h3 className='text-lg font-medium mb-2'>Chọn một ứng viên để nhắn tin</h3>
-							<p>Tìm kiếm và chọn ứng viên từ danh sách bên trái để bắt đầu trò chuyện</p>
+					<div className='flex flex-col justify-between h-full'>
+						<div className='bg-white h-20 w-full border-b'> </div>
+
+						<div className='flex-1 flex items-center justify-center'>
+							<div className='text-center text-gray-500'>
+								<MessageSquare className='h-12 w-12 mx-auto mb-4 text-gray-300' />
+								<h3 className='text-lg font-medium mb-2'>Chọn một ứng viên để nhắn tin</h3>
+								<p>Tìm kiếm và chọn ứng viên từ danh sách bên trái để bắt đầu trò chuyện</p>
+							</div>
 						</div>
+						<div className='bg-white h-20 w-full border-t'> </div>
 					</div>
 				)}
 			</div>
+			<div className='w-20 bg-white border-l'></div>
 		</div>
 	);
 };

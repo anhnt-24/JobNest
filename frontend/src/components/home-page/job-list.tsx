@@ -1,28 +1,34 @@
-// components/job-listings.tsx
+'use client';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '../ui/button';
 import { ArrowLeft, ChevronLeft, ChevronRight, Lightbulb } from 'lucide-react';
 import { JobFilters } from './job-filters';
 import { JobCard } from './job-card';
+import { CardTitle } from '../ui/card';
+import { jobService } from '@/service/job.service';
+import useSWR from 'swr';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export function JobListings() {
+	const [page, setPage] = useState(1);
+	const { data: jobs, isLoading } = useSWR(['/job/listings', page], () => jobService.getAll({ page, limit: 9 }).then(res => res.data));
+	if (isLoading) return <></>;
+	const handlePrev = () => {
+		setPage(prev => (prev > 1 ? prev - 1 : prev));
+	};
+
+	const handleNext = () => {
+		setPage(prev => (prev < jobs?.meta?.totalPages ? prev + 1 : prev));
+	};
 	return (
 		<div>
-			<div className='max-w-6xl mx-auto px-4 py-6 font-sans w-full '>
-				{/* Header */}
+			<div className='max-w-7xl mx-auto py-6 font-sans w-full '>
 				<div className='flex justify-between'>
-					<h1 className='text-2xl font-bold mb-3'>Việc làm tốt nhất</h1>
-					<div className='flex items-center gap-2'>
-						<p className='underline text-sm'>Xem tất cả</p>
-						<div className='h-6'>
-							<Separator orientation='vertical'></Separator>
-						</div>
-						<button className='rounded-full text-primary border border-primary p-2 hover:bg-primary hover:text-primary-foreground cursor-pointer'>
-							<ChevronLeft size={20} className='!text-lg' />
-						</button>
-						<button className='rounded-full text-primary border border-primary p-2 hover:bg-primary hover:text-primary-foreground cursor-pointer'>
-							<ChevronRight size={20} />
-						</button>
+					<h1> Việc làm tốt nhất</h1>
+					<div className='flex items-center gap-1 text-primary cursor-pointer hover:text-primary/80'>
+						<p className='font-semibold '>Xem tất cả</p>
+						<ChevronRight />
 					</div>
 				</div>
 				<JobFilters />
@@ -37,21 +43,27 @@ export function JobListings() {
 				<Separator className='my-4' />
 
 				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-					<JobCard />
-					<JobCard />
-					<JobCard />
-					<JobCard />
+					{jobs?.items?.map(job => (
+						<JobCard job={job} />
+					))}
 				</div>
-				<div className='flex items-center justify-center gap-x-4'>
-					<button className='rounded-full text-primary border border-primary p-2 hover:bg-primary hover:text-primary-foreground cursor-pointer'>
+				<div className='flex items-center justify-center gap-x-4 mt-4'>
+					<button
+						onClick={handlePrev}
+						disabled={page === 1}
+						className='rounded-full text-primary border border-primary p-2 hover:bg-primary/5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
 						<ChevronLeft size={20} className='!text-lg' />
 					</button>
+
 					<p className='font-semibold'>
-						<span className='text-primary'>8</span>
-						<span className='text-gray-400'>/ 20 Trang</span>
+						<span className='text-primary'>{page}</span>
+						<span className='text-gray-400'>/ {jobs.meta.totalPages}</span>
 					</p>
 
-					<button className='rounded-full text-primary border border-primary p-2 hover:bg-primary hover:text-primary-foreground cursor-pointer'>
+					<button
+						onClick={handleNext}
+						disabled={page === jobs.meta.totalPages}
+						className='rounded-full text-primary border border-primary p-2 hover:bg-primary/5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
 						<ChevronRight size={20} />
 					</button>
 				</div>

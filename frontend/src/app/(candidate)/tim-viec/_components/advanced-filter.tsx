@@ -120,20 +120,6 @@ export default function AdvancedFilter() {
 					</RadioGroup>
 				</div>
 
-				{/* Loại công ty */}
-				<div>
-					<h3 className='mb-4'>Loại công ty</h3>
-					<RadioGroup defaultValue='all' className='space-y-2'>
-						{['Tất cả', 'Pro Company'].map((comp, i) => (
-							<div key={i} className='flex items-center space-x-2'>
-								<RadioGroupItem value={comp} id={`comp-${i}`} />
-								<Label htmlFor={`comp-${i}`}>{comp}</Label>
-							</div>
-						))}
-					</RadioGroup>
-				</div>
-
-				{/* Nút reset */}
 				<Button variant='outline' className='w-full'>
 					Xóa lọc
 				</Button>

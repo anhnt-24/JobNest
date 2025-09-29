@@ -132,9 +132,9 @@ export default function RichTextEditor({ title, value, onChange }: { title: stri
 
 	return (
 		<div className={cn('mx-auto transition-all duration-300', isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : '')}>
-			<div className='rounded-lg border border-editor-border bg-card '>
+			<div className='rounded-2xl overflow-hidden border border-editor-border bg-card '>
 				{/* Header */}
-				<div className='border-b border-editor-border bg-editor-toolbar-bg px-4 py-3 rounded-t-lg'>
+				<div className='border-b border-editor-border bg-editor-toolbar-bg px-4 py-3 rounded-t-2xl'>
 					<div className='flex items-center justify-between'>
 						<h5 className='font-medium text-foreground'>{title}</h5>
 						<div className='flex items-center gap-2'>
@@ -267,14 +267,14 @@ export default function RichTextEditor({ title, value, onChange }: { title: stri
 
 				{/* Editor Content */}
 				<CardContent className='p-0'>
-					<div className={cn('bg-editor-bg rounded-b-lg transition-all duration-200')}>
+					<div className={cn('bg-editor-bg rounded-b-2xl transition-all duration-200')}>
 						{preview ? (
 							<div className='p-6'>
 								<div className='prose prose-sm sm:prose lg:prose-lg xl:prose-xl mx-auto max-w-none' dangerouslySetInnerHTML={{ __html: editor.getHTML() }} />
 							</div>
 						) : (
 							<div className='relative'>
-								<EditorContent editor={editor} className='focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 rounded-b-lg' />
+								<EditorContent editor={editor} className='focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 rounded-b-2xl' />
 							</div>
 						)}
 					</div>

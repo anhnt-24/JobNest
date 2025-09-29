@@ -9,6 +9,9 @@ import { MinioModule } from './minio/minio.module';
 import { CvsModule } from './cv/cv.module';
 import { CompanyModule } from './company/company.module';
 import { JobsModule } from './jobs/job.module';
+import { EmployerModule } from './employer/employer.module';
+import { ConversationModule } from './conversation/conversation.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { JobsModule } from './jobs/job.module';
     CvsModule,
     CompanyModule,
     JobsModule,
+    EmployerModule,
+    ConversationModule,
+    PostsModule,
   ],
 })
 export class AppModule {}

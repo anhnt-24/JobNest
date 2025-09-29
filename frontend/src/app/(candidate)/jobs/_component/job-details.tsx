@@ -1,6 +1,6 @@
 'use client';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/ui/card';
 import { JobResponse } from '@/schema/job.schema';
 import { jobService } from '@/service/job.service';
 import { useParams } from 'next/navigation';
@@ -42,7 +42,7 @@ function JobDetails() {
 	return (
 		<>
 			<div className='space-y-2'>
-				<h2>Danh mục nghề liên quan</h2>
+				<CardTitle>Danh mục nghề liên quan</CardTitle>
 				<ul className='space-y-2'>
 					<li className='flex items-center gap-2'>
 						<Badge className='text-sm'>{job.categories.split(';').join('/')}</Badge>

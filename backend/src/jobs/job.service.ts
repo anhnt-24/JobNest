@@ -6,29 +6,49 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { ApplicationStatus, Job, JobStatus } from '@prisma/client';
+import { ApplicationStatus, Job, JobStatus, Role } from '@prisma/client';
 import { JobListQueryDto } from './dto/list-jobs-query.dto';
+import { ApplicationListQueryDto } from './dto/list-application-query.req';
+import { SavedJobListQueryDto } from './dto/list-saved-query.req';
 
 @Injectable()
 export class JobsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: number, dto: CreateJobDto): Promise<Job> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        company: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (!user?.company?.id) throw new NotFoundException('Company not found');
+  async create(user: any, dto: CreateJobDto): Promise<Job> {
+    let companyId = 0;
+    let employerId = 0;
+    if (user.role === Role.company) {
+      const data = await this.prisma.company.findUnique({
+        where: { userId: +user.userId },
+      });
+      if (!data)
+        throw new BadRequestException(
+          'User is not associated with any company',
+        );
+      companyId = data.id;
+    } else if (user.role === Role.employer) {
+      const employer = await this.prisma.employer.findUnique({
+        where: { userId: +user.userId },
+        include: { company: true },
+      });
+      if (!employer)
+        throw new BadRequestException(
+          'User is not associated with any employer',
+        );
+      if (!employer.company)
+        throw new BadRequestException(
+          'Employer is not associated with any company',
+        );
+      companyId = employer.company.id;
+      employerId = employer.id;
+    }
+
     const job = await this.prisma.job.create({
       data: {
         ...dto,
-        companyId: user.company.id,
+        companyId: companyId,
+        employerId: employerId,
       },
     });
     return job;
@@ -40,50 +60,48 @@ export class JobsService {
     return job;
   }
 
-  async findByCompany(
-    companyId: number,
-    page = 1,
-    limit = 10,
-    sortBy?: string,
-    order: 'asc' | 'desc' = 'desc',
-  ) {
-    const where = { companyId };
-    const skip = (page - 1) * limit;
+  async getAll(query: JobListQueryDto) {
+    const total = await this.prisma.job.count({
+      where: query.toPrismaArgs().where,
+    });
 
-    const orderBy = sortBy ? { [sortBy]: order } : { createdAt: 'desc' };
-
-    const [items, total] = await this.prisma.$transaction([
-      this.prisma.job.findMany({
-        where,
-        skip,
-        take: limit,
-        include: {
-          company: {
-            select: {
-              id: true,
-              name: true,
-              avatarUrl: true,
-            },
-          },
-        },
-      }),
-      this.prisma.job.count({ where }),
-    ]);
+    const rows = await this.prisma.job.findMany(query.toPrismaArgs());
 
     return {
-      items,
+      items: rows,
       meta: {
         total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
+        page: query.page,
+        limit: query.limit,
+        totalPages: Math.ceil(total / query.limit),
       },
     };
   }
 
-  async getAll(query: JobListQueryDto) {
+  async getListByMe(user: any, query: JobListQueryDto) {
+    if (user.role === Role.employer) {
+      const employer = await this.prisma.employer.findUnique({
+        where: { userId: +user.userId },
+      });
+      if (!employer)
+        throw new BadRequestException(
+          'User is not associated with any employer',
+        );
+      query.setEmployerId(employer.id);
+    } else if (user.role === Role.company) {
+      const company = await this.prisma.company.findUnique({
+        where: { userId: +user.userId },
+      });
+      if (!company)
+        throw new BadRequestException(
+          'User is not associated with any company',
+        );
+      query.setCompanyId(company.id);
+    } else {
+      throw new BadRequestException('Only employer or company can access');
+    }
     const total = await this.prisma.job.count({
-      where: query.toPrismaArgs().where, // chỉ lấy phần where cho count
+      where: query.toPrismaArgs().where,
     });
 
     const rows = await this.prisma.job.findMany(query.toPrismaArgs());
@@ -221,31 +239,71 @@ export class JobsService {
     return job.company;
   }
 
-  async getAppliedJobs(userId: number) {
+  async getMyAppliedJobs(userId: number, query: ApplicationListQueryDto) {
     const candidate = await this.prisma.candidate.findUnique({
       where: { userId },
     });
     if (!candidate) throw new Error('Candidate not found');
 
-    return this.prisma.application.findMany({
-      where: { candidateId: candidate.id },
-      include: {
-        job: {
-          include: { company: true },
-        },
-      },
-    });
-  }
+    query.setCandidateId(candidate.id);
 
-  async getSavedJobs(userId: number) {
-    return this.prisma.savedJob.findMany({
-      where: { userId },
-      include: {
-        job: {
-          include: { company: true },
-        },
-      },
+    const prismaArgs = query.toPrismaArgs();
+
+    const total = await this.prisma.application.count({
+      where: prismaArgs.where,
     });
+
+    const rows = await this.prisma.application.findMany(prismaArgs);
+
+    return {
+      items: rows,
+      meta: {
+        total,
+        page: query.page,
+        limit: query.limit,
+        totalPages: Math.ceil(total / query.limit),
+      },
+    };
+  }
+  async getAppliedJobs(query: ApplicationListQueryDto) {
+    const prismaArgs = query.toPrismaArgs();
+
+    const total = await this.prisma.application.count({
+      where: prismaArgs.where,
+    });
+
+    const rows = await this.prisma.application.findMany(prismaArgs);
+
+    return {
+      items: rows,
+      meta: {
+        total,
+        page: query.page,
+        limit: query.limit,
+        totalPages: Math.ceil(total / query.limit),
+      },
+    };
+  }
+  async getSavedJobs(userId: number, query: SavedJobListQueryDto) {
+    query.setUserId(userId);
+
+    const prismaArgs = query.toPrismaArgs();
+
+    const total = await this.prisma.savedJob.count({
+      where: prismaArgs.where,
+    });
+
+    const rows = await this.prisma.savedJob.findMany(prismaArgs);
+
+    return {
+      items: rows,
+      meta: {
+        total,
+        page: query.page,
+        limit: query.limit,
+        totalPages: Math.ceil(total / query.limit),
+      },
+    };
   }
 
   async isJobSaved(userId: number, jobId: number) {

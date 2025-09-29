@@ -17,12 +17,10 @@ async function bootstrap() {
       forbidNonWhitelisted: false,
     }),
   );
-  app.useGlobalInterceptors(new LoggingInterceptor());
-
   app.setGlobalPrefix(config.apiContext);
 
   const reflector = app.get(Reflector);
-  app.useGlobalGuards(new JwtAuthGuard(reflector));
+  // app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.enableCors();
 
   await app.listen(config.port);

@@ -11,6 +11,8 @@ import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from 
 import Cropper, { Point, Area } from 'react-easy-crop';
 import { candidateService } from '@/service/candidate.service';
 import { LoadingButton } from '../ui/custom/loading-button';
+import { Switch } from '../ui/switch';
+import { Separator } from '../ui/separator';
 export function ProfileStatusCard() {
 	const { user, setUser } = useAuth();
 	const handleUpload = async (file: File) => {
@@ -23,24 +25,59 @@ export function ProfileStatusCard() {
 			},
 		}));
 	};
+	const [jobStatus, setJobStatus] = useState(true);
+	const [allowSearch, setAllowSearch] = useState(true);
 	return (
-		<Card className='max-w-md p-6'>
-			<div className='flex items border-b pb-4 '>
+		<Card className='max-w-md p-6 gap-4'>
+			<div className='flex '>
 				<AvatarWithUpload user={user} onSave={handleUpload}></AvatarWithUpload>
-				<div>
+				<div className='space-y-0.5'>
 					<p className='text-sm text-gray-600'>Chào bạn trở lại,</p>
-					<h6 className='font-semibold'>Tuấn Anh Nguyễn</h6>
-					<Badge className='text-sm bg-primary flex items-center gap-1'>
-						<Check className='size-4' /> Đã xác thực
+					<h6 className='font-semibold text-lg mb-1 '>{user?.candidate.name}</h6>
+					<Badge className=' flex items-center '>
+						<Check className='size-5' /> Đã xác thực
 					</Badge>
-					<p className='text-sm text-gray-500 mt-1'>Thành viên từ 08/2023</p>
+					<p className='text-sm text-gray-500'>Thành viên từ 08/2023</p>
+				</div>
+			</div>
+			<Separator></Separator>
+			<div className='flex flex-col space-y-2'>
+				<div className='flex items-center justify-between'>
+					<div className='flex items-center gap-2 font-semibold text-primary text-lg'>
+						<Switch checked={jobStatus} onCheckedChange={setJobStatus} />
+						<span>Trạng thái tìm việc đang bật</span>
+					</div>
+				</div>
+				<p className='text-sm text-gray-600'>
+					Trạng thái <span className='font-semibold text-primary'>Bật tìm việc</span> sẽ tự động tắt sau <span className='font-semibold text-primary'>14 ngày</span>. Nếu bạn vẫn còn nhu cầu tìm việc,
+					hãy{' '}
+					<a href='#' className='text-blue-600 hover:underline text-sm'>
+						Bật tìm việc trở lại
+					</a>
+					.
+				</p>
+				<div className='flex items-center justify-between rounded-lg border p-2'>
+					<span className='font-medium'>1 CV đang được chọn</span>
+					<Button variant='secondary' size='sm'>
+						Thay đổi
+					</Button>
 				</div>
 			</div>
 
-			<CardFooter className='flex justify-end gap-2'>
-				<Button variant='outline'>Chỉnh sửa</Button>
-				<Button>Đăng xuất</Button>
-			</CardFooter>
+			{/* Cho phép NTD tìm kiếm hồ sơ */}
+			<div className='flex flex-col space-y-2'>
+				<div className='flex items-center gap-2 font-semibold text-primary text-lg'>
+					<Switch checked={allowSearch} onCheckedChange={setAllowSearch} />
+					<span>Cho phép NTD tìm kiếm hồ sơ</span>
+				</div>
+				<p className='text-sm text-gray-600'>Khi có cơ hội việc làm phù hợp, NTD sẽ liên hệ và trao đổi với bạn qua:</p>
+				<ul className='list-disc list-inside text-sm text-gray-700 space-y-1'>
+					<li>
+						Nhắn tin qua <span className='font-semibold'>JobNest' Connect</span>
+					</li>
+					<li>Email và Số điện thoại của bạn</li>
+				</ul>
+			</div>
 		</Card>
 	);
 }
@@ -111,14 +148,14 @@ export default function AvatarWithUpload({ user, onSave }: AvatarWithUploadProps
 
 	return (
 		<div className='relative w-32 h-32'>
-			<Avatar className='w-32 h-32 border border-gray-200 '>
-				<AvatarFallback className='text-2xl  text-white'>{getInitials(user?.name)}</AvatarFallback>
+			<Avatar className='w-28 h-28 border border-gray-200 '>
+				<AvatarFallback className='text-2xl text-white'>{getInitials(user?.name)}</AvatarFallback>
 				<AvatarImage src={user?.candidate?.avatarUrl} />
 			</Avatar>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button size='sm' className='absolute bottom-1 right-1 w-10 h-10 p-1 rounded-full bg-white border border-gray-300 shadow-md hover:bg-gray-100 flex items-center justify-center'>
+					<Button size='sm' className='absolute bottom-3 right-3 w-10 h-10 p-1 rounded-full bg-white border border-gray-300 shadow-md hover:bg-gray-100 flex items-center justify-center'>
 						<Camera className='w-5 h-5 text-gray-700' />
 					</Button>
 				</DialogTrigger>

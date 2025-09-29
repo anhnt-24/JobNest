@@ -14,6 +14,7 @@ export type JobFilter = {
   salaryTo?: number;
   deadlineBefore?: Date;
   companyId?: number;
+  employerId?: number;
 };
 
 const ALLOWED_ORDER_FIELDS = [
@@ -43,6 +44,7 @@ export function buildJobQuery(
       filter.status ? { status: filter.status } : {},
       filter.deadlineBefore ? { deadline: { lte: filter.deadlineBefore } } : {},
       filter.companyId ? { companyId: filter.companyId } : {},
+      filter.employerId ? { employerId: filter.employerId } : {},
     ],
   };
 
@@ -65,6 +67,12 @@ export class JobListQueryDto extends IntersectionType(
 ) {
   @IsOptional()
   orders?: Partial<Record<JobOrderField, Prisma.SortOrder>>;
+  setEmployerId(employerId: number) {
+    this.employerId = employerId;
+  }
+  setCompanyId(companyId: number) {
+    this.companyId = companyId;
+  }
 
   toPrismaArgs(): Prisma.JobFindManyArgs {
     const { page, limit, orders, ...filter } = this;

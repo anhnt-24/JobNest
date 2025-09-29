@@ -2,7 +2,7 @@
 import { api, nextApi, tokenStorage } from '@/lib/axios';
 import { authService } from '@/service/auth.service';
 import { useRouter } from 'next/navigation';
-import { createContext, useState, ReactNode, useEffect, useLayoutEffect } from 'react';
+import { createContext, useState, ReactNode, useEffect, useLayoutEffect, Dispatch } from 'react';
 import { toast } from 'sonner';
 
 interface AuthContextType {
@@ -11,7 +11,7 @@ interface AuthContextType {
 	candidateRegister: (data: any) => Promise<void>;
 	companyRegister: (data: any) => Promise<void>;
 	logout: () => Promise<void>;
-	setUser: (data: any | null) => Promise<void>;
+	setUser: Dispatch<any>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

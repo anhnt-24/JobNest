@@ -1,48 +1,20 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Bell, Lock, User, Globe, Moon, Sun, Eye } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Bell, Lock, User, Globe, Moon, Sun, Eye, Computer } from 'lucide-react';
 
 export default function SettingsPage() {
 	return (
-		<div className='max-w-4xl mx-auto space-y-8'>
-			<div className='bg-white p-6 rounded-lg border shadow-sm'>
-				<h2 className='text-xl font-semibold mb-6'>Cài đặt tài khoản</h2>
-
-				{/* Thông tin cá nhân */}
+		<Card>
+			<div className='space-y-6'>
+				<CardTitle className='mb-4'>Cài đặt tài khoản</CardTitle>
 				<div className='space-y-6'>
 					<div className='pb-6 border-b'>
-						<h3 className='flex items-center gap-2 font-medium mb-4'>
-							<User className='w-5 h-5' />
-							Thông tin cá nhân
-						</h3>
-						<div className='grid gap-4 max-w-md'>
-							<div>
-								<label className='block text-sm mb-2'>Ảnh đại diện</label>
-								<div className='flex items-center gap-4'>
-									<div className='w-20 h-20 rounded-full bg-gray-200'></div>
-									<Button variant='outline'>Thay đổi ảnh</Button>
-								</div>
-							</div>
-							<div>
-								<label className='block text-sm mb-2'>Họ và tên</label>
-								<Input type='text' placeholder='Nhập họ và tên' />
-							</div>
-							<div>
-								<label className='block text-sm mb-2'>Email</label>
-								<Input type='email' placeholder='your@email.com' />
-							</div>
-							<div>
-								<label className='block text-sm mb-2'>Số điện thoại</label>
-								<Input type='tel' placeholder='Nhập số điện thoại' />
-							</div>
-						</div>
-					</div>
-
-					{/* Bảo mật */}
-					<div className='pb-6 border-b'>
-						<h3 className='flex items-center gap-2 font-medium mb-4'>
+						<h3 className='flex items-center gap-2 font-semibold mb-4'>
 							<Lock className='w-5 h-5' />
 							Bảo mật
 						</h3>
@@ -63,74 +35,92 @@ export default function SettingsPage() {
 						</div>
 					</div>
 
-					{/* Thông báo */}
-					<div className='pb-6 border-b'>
-						<h3 className='flex items-center gap-2 font-medium mb-4'>
-							<Bell className='w-5 h-5' />
-							Cài đặt thông báo
-						</h3>
-						<div className='space-y-4'>
-							<div className='flex items-center justify-between'>
-								<div>
-									<p className='font-medium'>Thông báo qua email</p>
-									<p className='text-sm text-gray-500'>Nhận thông báo về tin nhắn và phỏng vấn qua email</p>
+					<div className='space-y-8'>
+						{/* Thông báo */}
+						<div className='pb-6 border-b'>
+							<h3 className='flex items-center gap-2 font-semibold mb-4'>
+								<Bell className='w-5 h-5' />
+								Cài đặt thông báo
+							</h3>
+							<div className='space-y-4'>
+								<div className='flex items-center justify-between'>
+									<div>
+										<p className='font-medium'>Thông báo qua email</p>
+										<p className='text-sm text-muted-foreground'>Nhận thông báo về tin nhắn và phỏng vấn qua email</p>
+									</div>
+									<Switch />
 								</div>
-								<div className='h-6 w-11 bg-gray-200 rounded-full relative cursor-pointer'>
-									<div className='h-5 w-5 bg-white rounded-full absolute top-0.5 left-0.5 shadow'></div>
-								</div>
-							</div>
-							<div className='flex items-center justify-between'>
-								<div>
-									<p className='font-medium'>Thông báo trên trình duyệt</p>
-									<p className='text-sm text-gray-500'>Hiển thị thông báo trên trình duyệt</p>
-								</div>
-								<div className='h-6 w-11 bg-blue-500 rounded-full relative cursor-pointer'>
-									<div className='h-5 w-5 bg-white rounded-full absolute top-0.5 right-0.5 shadow'></div>
+								<div className='flex items-center justify-between'>
+									<div>
+										<p className='font-medium'>Thông báo trên trình duyệt</p>
+										<p className='text-sm text-muted-foreground'>Hiển thị thông báo trên trình duyệt</p>
+									</div>
+									<Switch defaultChecked />
 								</div>
 							</div>
 						</div>
-					</div>
 
-					{/* Hiển thị */}
-					<div className='pb-6 border-b'>
-						<h3 className='flex items-center gap-2 font-medium mb-4'>
-							<Eye className='w-5 h-5' />
-							Hiển thị
-						</h3>
-						<div className='space-y-4'>
+						{/* Hiển thị */}
+						<div className='space-y-4 border-b pb-8'>
 							<div className='flex items-center justify-between'>
 								<div>
 									<p className='font-medium'>Chế độ tối</p>
-									<p className='text-sm text-gray-500'>Thay đổi giao diện sang tối/sáng</p>
+									<p className='text-sm text-muted-foreground'>Thay đổi giao diện sang tối/sáng</p>
 								</div>
-								<Button variant='outline' className='gap-2'>
-									<Sun className='w-4 h-4' />
-									Sáng
-								</Button>
+								<Select defaultValue='light'>
+									<SelectTrigger className='w-[140px]'>
+										<SelectValue placeholder='Chọn chế độ' />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value='light'>
+											<div className='flex items-center gap-2'>
+												<Sun className='w-4 h-4' />
+												Sáng
+											</div>
+										</SelectItem>
+										<SelectItem value='dark'>
+											<div className='flex items-center gap-2'>
+												<Moon className='w-4 h-4' />
+												Tối
+											</div>
+										</SelectItem>
+										<SelectItem value='system'>
+											<div className='flex items-center gap-2'>
+												<Computer className='w-4 h-4' />
+												Theo hệ thống
+											</div>
+										</SelectItem>
+									</SelectContent>
+								</Select>
 							</div>
 						</div>
-					</div>
 
-					{/* Ngôn ngữ */}
-					<div>
-						<h3 className='flex items-center gap-2 font-medium mb-4'>
-							<Globe className='w-5 h-5' />
-							Ngôn ngữ
-						</h3>
-						<div className='max-w-xs'>
-							<select className='w-full p-2 border rounded-md'>
-								<option value='vi'>Tiếng Việt</option>
-								<option value='en'>English</option>
-							</select>
+						{/* Ngôn ngữ */}
+						<div>
+							<h3 className='flex items-center gap-2 font-semibold mb-4'>
+								<Globe className='w-5 h-5' />
+								Ngôn ngữ
+							</h3>
+							<div className='max-w-xs'>
+								<Select defaultValue='vi'>
+									<SelectTrigger>
+										<SelectValue placeholder='Chọn ngôn ngữ' />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value='vi'>Tiếng Việt</SelectItem>
+										<SelectItem value='en'>English</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div className='flex justify-end gap-4'>
+			<div className='flex justify-end gap-2'>
 				<Button variant='outline'>Hủy</Button>
 				<Button>Lưu thay đổi</Button>
 			</div>
-		</div>
+		</Card>
 	);
 }

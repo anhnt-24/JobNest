@@ -5,7 +5,7 @@ import { Filter } from 'lucide-react';
 export function JobFilters() {
 	return (
 		<div className='my-4 flex items-center justify-between gap-4'>
-			<div className='relative flex items-center bg-white border rounded-lg py-1 px-2 w-fit'>
+			<div className='relative flex items-center bg-white border rounded-xs pl-2 w-fit'>
 				<h6 className='inline font-bold text-primary'>
 					<Filter className='inline' size={18}></Filter> Lọc theo:{' '}
 				</h6>

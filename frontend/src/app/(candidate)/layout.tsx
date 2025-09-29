@@ -5,7 +5,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
 	return (
 		<div className='flex flex-col min-h-screen '>
 			<Header />
-			<div className='mx-auto w-full max-w-7xl p-4 min-h-232'>{children}</div>
+			<div className='mx-auto w-full max-w-7xl py-4 min-h-232'>{children}</div>
 			<Footer />
 		</div>
 	);

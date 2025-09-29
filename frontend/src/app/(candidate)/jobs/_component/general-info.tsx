@@ -1,5 +1,5 @@
 'use client';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { JobResponse } from '@/schema/job.schema';
 import { jobService } from '@/service/job.service';
@@ -21,9 +21,9 @@ const fallbackJob: JobResponse = {
 	createdAt: new Date(),
 	updatedAt: new Date(),
 	deadline: new Date(),
-	education: '',
+	education: 'NONE',
 	experience: '',
-	level: '',
+	level: 'INTERN',
 	mustSkills: '',
 	niceSkills: '',
 	quantity: 0,
@@ -79,7 +79,7 @@ function GeneralInfo() {
 function Component() {
 	return (
 		<Card>
-			<h2>Thông tin chung</h2>
+			<CardTitle>Thông tin chung</CardTitle>
 			<Suspense fallback={<LoadingCard />}>
 				<GeneralInfo></GeneralInfo>
 			</Suspense>

@@ -9,5 +9,7 @@ export const authService = {
 	setAuth: (access_token: string, refresh_token: string) => nextApi.post('/auth/store-token', { access_token, refresh_token }),
 	getToken: () => nextApi.get('/auth/get-token'),
 	companyRegister: (data: any) => api.post('/auth/company-register', data),
+	employerRegister: (data: any) => api.post('/auth/employer-register', data),
+
 	me: () => api.get('/auth/me'),
 };

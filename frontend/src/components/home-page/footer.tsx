@@ -2,7 +2,7 @@ import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'luc
 
 export default function Footer() {
 	return (
-		<footer className='bg-gradient-to-r from-black to bg-orange-950 text-white pt-12 pb-6 relative'>
+		<footer className='bg-gradient-to-r from-black/90 to-green-900 text-white pt-12 pb-6 relative'>
 			<div className='container mx-auto px-4'>
 				<div className='grid grid-cols-1 md:grid-cols-4 gap-8 mb-8'>
 					{/* Column 1 - About */}
@@ -99,7 +99,7 @@ export default function Footer() {
 							</li>
 							<li className='flex items-center'>
 								<Mail className='w-5 h-5 mr-3' />
-								<span className='text-gray-300'>contact@jobn.vn</span>
+								<span className='text-gray-300'>contact@JobNest'.vn</span>
 							</li>
 							<li className='flex items-center'>
 								<Phone className='w-5 h-5 mr-3' />
@@ -110,7 +110,7 @@ export default function Footer() {
 				</div>
 
 				<div className='border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center relative'>
-					<p className='text-gray-400 text-sm mb-4 md:mb-0'>© 2025 JobN. Bảo lưu mọi quyền.</p>
+					<p className='text-gray-400 text-sm mb-4 md:mb-0'>© 2025 JobNest'. Bảo lưu mọi quyền.</p>
 					<div className='flex space-x-6'>
 						<a href='#' className='text-gray-400 hover:text-white text-sm transition'>
 							Điều khoản sử dụng

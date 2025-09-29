@@ -1,6 +1,6 @@
 'use client';
 import useSWR from 'swr';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -31,6 +31,7 @@ export function Profile() {
 		handleSubmit,
 		setValue,
 		reset,
+		control,
 		formState: { errors, isSubmitting },
 	} = useForm<UpdateCandidateDto>({
 		resolver: zodResolver(CandidateSchema),
@@ -67,7 +68,7 @@ export function Profile() {
 		}
 	}, [profile]);
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className='space-y-5 mt-4'>
+		<form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
 			<div className='space-y-2'>
 				<Label htmlFor='name'>
 					Họ và tên<span className='text-red-600'>*</span>
@@ -108,20 +109,26 @@ export function Profile() {
 
 			<div className='space-y-4'>
 				<Label>Giới tính</Label>
-				<RadioGroup value={profile?.gender} onValueChange={val => setValue('gender', val as CandidateProfileResponse['gender'])} className='flex items-center space-x-4'>
-					<div className='flex items-center space-x-2'>
-						<RadioGroupItem value='male' id='gender-male' />
-						<Label htmlFor='gender-male'>Nam</Label>
-					</div>
-					<div className='flex items-center space-x-2'>
-						<RadioGroupItem value='female' id='gender-female' />
-						<Label htmlFor='gender-female'>Nữ</Label>
-					</div>
-					<div className='flex items-center space-x-2'>
-						<RadioGroupItem value='other' id='gender-other' />
-						<Label htmlFor='gender-other'>Khác</Label>
-					</div>
-				</RadioGroup>
+				<Controller
+					name='gender'
+					control={control}
+					render={({ field }) => (
+						<RadioGroup value={field.value} onValueChange={field.onChange} className='flex items-center space-x-4'>
+							<div className='flex items-center space-x-2'>
+								<RadioGroupItem value='male' id='gender-male' />
+								<Label htmlFor='gender-male'>Nam</Label>
+							</div>
+							<div className='flex items-center space-x-2'>
+								<RadioGroupItem value='female' id='gender-female' />
+								<Label htmlFor='gender-female'>Nữ</Label>
+							</div>
+							<div className='flex items-center space-x-2'>
+								<RadioGroupItem value='other' id='gender-other' />
+								<Label htmlFor='gender-other'>Khác</Label>
+							</div>
+						</RadioGroup>
+					)}
+				/>
 				{errors.gender && <p className='text-red-500'>{errors.gender.message}</p>}
 			</div>
 
@@ -135,9 +142,7 @@ export function Profile() {
 export default function Page() {
 	return (
 		<Card>
-			<CardHeader>
-				<CardTitle>Cài đặt thông tin cá nhân</CardTitle>
-			</CardHeader>
+			<CardTitle>Cài đặt thông tin cá nhân</CardTitle>
 			<Suspense fallback={<LoadingCard></LoadingCard>}>
 				<Profile></Profile>
 			</Suspense>

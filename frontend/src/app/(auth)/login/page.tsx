@@ -33,11 +33,11 @@ export default function LoginPage() {
 				<p className='text-gray-600 mb-4'>
 					Bằng việc đăng nhập, bạn đồng ý với các{' '}
 					<a href='#' className='text-blue-600 hover:underline'>
-						Điều khoản dịch vụ
+						Điều khoản dịch vụ{' '}
 					</a>
-					và
+					và{' '}
 					<a href='#' className='text-blue-600 hover:underline'>
-						Chính sách quyền riêng tư
+						Chính sách quyền riêng tư{' '}
 					</a>
 					của JobNest'.
 				</p>

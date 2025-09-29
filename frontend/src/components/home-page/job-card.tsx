@@ -1,23 +1,43 @@
-// components/job-card.tsx
+'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '../ui/badge';
-import { Heart, HeartPlus } from 'lucide-react';
+import { Gem, Heart, HeartPlus, Zap } from 'lucide-react';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { AvatarFallback } from '@radix-ui/react-avatar';
+import useSWR from 'swr';
+import { jobService } from '@/service/job.service';
+import { CustomBadge } from '../ui/custom/custom-badge';
+import Link from 'next/link';
 
-export function JobCard() {
+export function JobCard({ job }: { job?: any }) {
+	const id = job.id;
+	const { data: isSaved, mutate } = useSWR(id ? `/jobs/${id}/toggle-save` : null, () => jobService.isJobSaved(Number(id)).then(res => res.data));
+	const handleSaveJob = async () => {
+		await jobService.toggleSave(id);
+		mutate(!!isSaved);
+	};
 	return (
-		<Card className='hover:shadow-md transition-shadow border-0 shadow-sm rounded-lg'>
-			<div className='flex gap-2'>
-				<Avatar className='rounded-md w-16 h-16 bg-amber-400'>
-					{' '}
-					{/* w-h = kích thước, rounded-md = bo nhẹ, bỏ full */}
-					<AvatarImage src='/avatars/01.png' alt='@user' />
-					<AvatarFallback>TA</AvatarFallback>
-				</Avatar>
+		<Card className='hover:border-primary group border border-gray-200 rounded-lg '>
+			<div className='flex gap-3'>
+				<Link href={`/jobs/${job.id}`}>
+					<Avatar className='rounded-xs w-18 h-18 '>
+						<AvatarImage src={job.company.avatarUrl} alt='@user' />
+						<AvatarFallback>TA</AvatarFallback>
+					</Avatar>
+				</Link>
+
 				<div>
-					<h6 className='line-clamp-2 font-bold hover:underline cursor-pointer'>Chuyên Viên Kinh Doanh/Tư Vấn Tuyển Sinh - B2C Tại Hà Nội, Hồ Chí Minh</h6>
-					<p className='text-xs text-gray-600 line-clamp-1'>CÔNG TY TNHH IVY GLOBAL SCHOOL VIỆT NAM</p>
+					<div className='space-x-1'>
+						{true && <CustomBadge type='top'></CustomBadge>}
+						{true && <CustomBadge type='gap'></CustomBadge>}
+					</div>
+
+					<Link href={`/jobs/${job.id}`}>
+						<h4 className='line-clamp-1  cursor-pointer group-hover:text-primary'>{job.title}</h4>
+					</Link>
+					<Link href={''}>
+						<p className='text-sm font-medium text-gray-400 line-clamp-1'>{job.company.name}</p>
+					</Link>
 				</div>
 			</div>
 
@@ -26,8 +46,8 @@ export function JobCard() {
 					<Badge variant={'secondary'}>10 - 35 triệu</Badge>
 					<Badge variant={'secondary'}>Hà Nội, Hồ Chí Minh</Badge>
 				</div>
-				<button className='rounded-full border border-red-600 text-red-600 p-2'>
-					<HeartPlus size={14}></HeartPlus>
+				<button onClick={handleSaveJob} className='rounded-full border border-primary text-primary p-1 cursor-pointer hover:bg-primary/5'>
+					{isSaved ? <Heart className='fill-primary size-6'></Heart> : <Heart className='size-6' />}
 				</button>
 			</div>
 		</Card>

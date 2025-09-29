@@ -9,6 +9,8 @@ import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import { JobResponse } from '@/schema/job.schema';
 import { FaBookmark } from 'react-icons/fa';
+import { FaClock, FaCoins, FaCreditCard, FaLocationDot, FaUserClock } from 'react-icons/fa6';
+import { ApplyJobDialog } from '@/components/candidate/apply-job-diaglog';
 
 const fallbackJob: JobResponse = {
 	id: 0,
@@ -50,11 +52,11 @@ export default function JobPosting({ id }: { id: number }) {
 	return (
 		<>
 			<Card>
-				<h1 className='text-2xl'>{job.title}</h1>
+				<CardTitle>{job.title}</CardTitle>
 				<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
 					<div className='flex items-center gap-4'>
 						<div className='size-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
-							<Coins className='text-primary-foreground'></Coins>
+							<FaCoins className='size-6 text-primary-foreground'></FaCoins>
 						</div>
 						<div>
 							<p className='text-muted-foreground'>Mức lương</p>
@@ -63,7 +65,7 @@ export default function JobPosting({ id }: { id: number }) {
 					</div>
 					<div className='flex items-center gap-4'>
 						<div className='size-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
-							<MapPin className='text-primary-foreground '></MapPin>
+							<FaLocationDot className='size-6 text-primary-foreground '></FaLocationDot>
 						</div>
 						<div>
 							<p className='text-muted-foreground'>Địa điểm </p>
@@ -71,8 +73,8 @@ export default function JobPosting({ id }: { id: number }) {
 						</div>
 					</div>
 					<div className='flex items-center gap-4'>
-						<div className='size-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
-							<TimerIcon className='text-primary-foreground '></TimerIcon>
+						<div className='size-12 min-w-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
+							<FaUserClock className='text-primary-foreground size-6' />
 						</div>
 						<div>
 							<p className='text-muted-foreground'>Kinh nghiệm</p>
@@ -92,9 +94,7 @@ export default function JobPosting({ id }: { id: number }) {
 				</div>
 
 				<div className='flex gap-2 w-full '>
-					<Button className='flex-1 '>
-						<Check className='h-4 w-4 mr-2' /> Ứng tuyển ngay
-					</Button>
+					<ApplyJobDialog job={job} className='flex-1'></ApplyJobDialog>
 					<Button onClick={handleSaveJob} variant='outline' className='px-3'>
 						<Bookmark className={`size-5 ${savedJobs && 'fill-primary'} `} />
 						Lưu tin
@@ -103,7 +103,7 @@ export default function JobPosting({ id }: { id: number }) {
 			</Card>
 			<Card>
 				<div className='space-y-2'>
-					<h1 className='border-l-6 border-primary px-2'>Ứng viên cũng tìm kiếm</h1>
+					<CardTitle className='border-l-4 border-primary px-2 py-0'>Ứng viên cũng tìm kiếm</CardTitle>
 					<p className='text-base text-muted-foreground '>Ứng viên xem việc làm này cũng tìm kiếm các từ khóa sau:</p>
 				</div>
 				<button className='flex border hover:border-primary hover:bg-primary/5 cursor-pointer bg-gray-100 w-fit rounded-4xl px-4 py-1 items-center gap-2 hover:text-primary'>
@@ -117,7 +117,7 @@ export default function JobPosting({ id }: { id: number }) {
 			</Card>
 			<Card>
 				<div className='space-y-2'>
-					<h1 className='border-l-6 border-primary px-2'>Chi tiết tin tuyển dụng</h1>
+					<CardTitle className='border-l-4 border-primary px-2 py-0'>Chi tiết tin tuyển dụng</CardTitle>
 					<Badge variant={'secondary'}>Chuyên môn {job.title}</Badge>
 				</div>
 				<CardContent className='space-y-6'>
@@ -170,44 +170,6 @@ export default function JobPosting({ id }: { id: number }) {
 						Xem số người đã ứng tuyển <ChevronDown className='h-4 w-4 ml-1' />
 					</Button>
 				</CardFooter>
-			</Card>
-			<Card>
-				<h1>Việc làm liên quan</h1>
-				<Card className='p-6 hover:shadow-md transition-shadow border  hover:border-primary '>
-					<div className='space-y-2'>
-						<div className='flex gap-2 items-start'>
-							<Avatar className='size-24 border border-gray-200'>
-								<AvatarImage className='size-full' src='/image.png' alt='@user' />
-							</Avatar>
-							<div className='flex-1 space-y-2'>
-								<div className='flex justify-between '>
-									<h3 className=' line-clamp-2 max-w-md'>Nhân Viên Vận Hành Sàn Thương Mại Điện Tử (Thu Nhập Lên Đến 60+++)</h3>
-									<p className='text-red-500 font-semibold border-red-500 mt-2'>30 - 60 triệu</p>
-								</div>
-								<p className='text-gray-600'>Công ty Cổ phần Anna Lee Group</p>
-							</div>
-						</div>
-
-						<div className='flex flex-wrap items-center gap-2 pt-2 justify-between'>
-							<div className='flex gap-2'>
-								<Badge className='flex items-center text-sm'>
-									<MapPin className='h-4 w-4 mr-1 ' />
-									<span>Hà Nội</span>
-								</Badge>
-								<Badge variant={'secondary'} className='flex items-center text-sm text-gray-500'>
-									<Clock className='h-4 w-4 mr-1' />
-									<span>Cập nhật 10 phút trước</span>
-								</Badge>
-							</div>
-							<div className='flex gap-4 justify-center'>
-								<Button>Ứng tuyển ngay</Button>
-								<button className='rounded-full border border-red-600 text-red-600 size-10 p-2'>
-									<HeartPlus size={18}></HeartPlus>
-								</button>
-							</div>
-						</div>
-					</div>
-				</Card>
 			</Card>
 		</>
 	);

@@ -5,6 +5,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { useState } from 'react';
 import { useAuth } from '@/hook/useAuth';
 import { AvatarImage } from '@radix-ui/react-avatar';
+import { FaBriefcase, FaFile } from 'react-icons/fa6';
+import { Button } from '../ui/button';
 
 export function UserDropdown() {
 	const [isCvOpen, setIsCvOpen] = useState(false);
@@ -15,7 +17,7 @@ export function UserDropdown() {
 			<DropdownMenuTrigger className='flex items-center gap-2 outline-none' asChild>
 				<div className='relative cursor-pointer'>
 					<Avatar className='h-10 w-10'>
-						<AvatarImage src={user?.candidate.avatarUrl || ''} />
+						<AvatarImage src={user?.candidate?.avatarUrl || ''} />
 						<AvatarFallback className='bg-gray-100 font-medium'>TA</AvatarFallback>
 					</Avatar>
 					<ChevronDown className='h-4 w-4 text-gray-500 bg-gray-200 border-white border-3 rounded-full absolute -right-1 -bottom-1' />
@@ -25,14 +27,14 @@ export function UserDropdown() {
 			<DropdownMenuContent className='w-100' align='end'>
 				<DropdownMenuLabel>
 					<div className='flex space-x-4'>
-						<Avatar className='h-14 w-14'>
-							<AvatarImage src={user?.candidate.avatarUrl} />
+						<Avatar className='size-18 border'>
+							<AvatarImage src={user?.candidate?.avatarUrl} />
 							<AvatarFallback>A</AvatarFallback>
 						</Avatar>
-						<div className='flex flex-col space-y-1'>
-							<p className=''>{user?.name}</p>
-							<p className='text-sm leading-none text-green-600'>Tài khoản đã xác thực</p>
-							<p className='text-sm leading-none text-muted-foreground'>
+						<div className='flex flex-col space-y'>
+							<p className='text-lg font-semibold'>{user?.candidate.name}</p>
+							<p className='text-sm  text-green-600'>Tài khoản đã xác thực</p>
+							<p className='text-sm  text-muted-foreground'>
 								ID {user?.id} | {user?.email}{' '}
 							</p>
 						</div>
@@ -43,8 +45,8 @@ export function UserDropdown() {
 
 				<Collapsible open={isJobOpen} onOpenChange={setIsJobOpen}>
 					<CollapsibleTrigger asChild>
-						<div className='flex items-center justify-between px-2 py-1.5  cursor-pointer hover:bg-accent rounded'>
-							<span>Quản lý tìm việc</span>
+						<div className='flex items-center justify-between px-2 py-2  cursor-pointer hover:bg-accent rounded'>
+							<button className='font-medium flex items-center gap-2'>Quản lý tìm việc</button>
 							{isJobOpen ? <ChevronUp className='h-4 w-4 text-muted-foreground' /> : <ChevronDown className='h-4 w-4 text-muted-foreground' />}
 						</div>
 					</CollapsibleTrigger>
@@ -61,11 +63,11 @@ export function UserDropdown() {
 				<Collapsible open={isCvOpen} onOpenChange={setIsCvOpen}>
 					<CollapsibleTrigger asChild>
 						<div className='flex items-center justify-between px-2 py-1.5 cursor-pointer hover:bg-accent rounded'>
-							<span>Quản lý CV & Cover letter</span>
+							<button className='font-medium flex items-center gap-2'>Quản lý CV & Cover letter</button>
 							{isCvOpen ? <ChevronUp className='h-4 w-4 text-muted-foreground' /> : <ChevronDown className='h-4 w-4 text-muted-foreground' />}
 						</div>
 					</CollapsibleTrigger>
-					<CollapsibleContent className='pl-2 '>
+					<CollapsibleContent className='pl-2'>
 						<DropdownMenuItem>CV của tôi</DropdownMenuItem>
 						<DropdownMenuItem>Cover Letter của tôi</DropdownMenuItem>
 						<DropdownMenuItem>Nhà tuyển dụng muốn kết nối với bạn</DropdownMenuItem>
@@ -75,15 +77,15 @@ export function UserDropdown() {
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem className='hover:bg-gray-100 text-base'>Cá nhân & Bảo mật</DropdownMenuItem>
-				<DropdownMenuItem className='text-base hover:bg-gray-100'>Nâng cấp tài khoản</DropdownMenuItem>
+				<DropdownMenuItem className='hover:bg-gray-100 text-base font-medium'>Cá nhân & Bảo mật</DropdownMenuItem>
+				<DropdownMenuItem className='text-base hover:bg-gray-100 font-medium'>Nâng cấp tài khoản</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem onClick={logout} className='cursor-pointer text-primary text-base hover:bg-orange-100'>
+				<Button onClick={logout} variant={'ghost'} className='text-start cursor-pointer !text-primary text-base hover:bg-orange-100 font-medium w-full'>
 					<LogOut className='text-primary'></LogOut>
 					Đăng xuất
-				</DropdownMenuItem>
+				</Button>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

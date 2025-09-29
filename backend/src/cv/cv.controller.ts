@@ -10,13 +10,17 @@ import {
   BadRequestException,
   Req,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CvService } from './cv.service';
 import { File as MulterFile } from 'multer';
 import { CvListQueryDto } from './dto/cv-list-query.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('cvs')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class CvController {
   constructor(private readonly cvService: CvService) {}
 
@@ -33,7 +37,12 @@ export class CvController {
 
   @Post('me')
   async getCvsByCandidate(@Req() req, @Body() query: CvListQueryDto) {
-    return this.cvService.getCvsByCandidate(+req.user.userId, query);
+    return this.cvService.getCvsByCandidate(Number(req.user.userId), query);
+  }
+
+  @Post('get')
+  async getAll(@Body() query: CvListQueryDto) {
+    return this.cvService.getAll(query);
   }
 
   @Patch(':id')

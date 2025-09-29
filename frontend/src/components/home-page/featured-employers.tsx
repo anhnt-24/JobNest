@@ -1,48 +1,47 @@
-// components/featured-employers.tsx
-import { Card, CardContent } from '@/components/ui/card';
+'use client';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '../ui/carousel';
 import Image from 'next/image';
 import { Gem } from 'lucide-react';
+import { FaGem } from 'react-icons/fa6';
+import { useRef } from 'react';
+import Autoplay from 'embla-carousel-autoplay';
 
 const FeaturedEmployers = () => {
+	const autoplayPlugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
 	const employers = [
-		{ name: 'Shinhan Bank', isTop: true },
-		{ name: 'MB', isTop: true },
-		{ name: 'Sun Life', isTop: true },
-		{ name: 'SALLIN TIRE', isTop: true },
-		{ name: 'SeABank', isTop: true },
-		{ name: 'Techcombank', isTop: false },
-		{ name: 'Vietcombank', isTop: true },
-		{ name: 'VinGroup', isTop: false },
+		{ name: 'Apollo', isTop: false, thumbnail: 'apollo.png' },
+		{ name: 'Chaillease', isTop: false, thumbnail: 'chaillease.png' },
+		{ name: 'Cnvcdp', isTop: false, thumbnail: 'cnvcdp.png' },
+		{ name: 'Edupia', isTop: false, thumbnail: 'edupia.png' },
+		{ name: 'Fpt', isTop: true, thumbnail: 'fpt.png' },
+		{ name: 'Lg', isTop: true, thumbnail: 'Lg.png' },
+		{ name: 'Mb', isTop: true, thumbnail: 'mb.png' },
+		{ name: 'Sailun', isTop: false, thumbnail: 'sailun.png' },
+		{ name: 'Spx', isTop: false, thumbnail: 'spx.png' },
+		{ name: 'Teky', isTop: false, thumbnail: 'teky.png' },
+		{ name: 'Vib', isTop: false, thumbnail: 'vib.png' },
+		{ name: 'Viettel', isTop: true, thumbnail: 'viettel.png' },
+		{ name: 'Vpbank', isTop: true, thumbnail: 'vpbank.png' },
 	];
 
 	return (
-		<div className='max-w-6xl mx-auto px-4 py-6 w-full'>
-			<h2 className='text-2xl font-bold mb-6'>Nhà tuyển dụng nổi bật</h2>
+		<div className='max-w-7xl mx-auto py-6 w-full '>
+			<h1 className='mb-4'>Nhà tuyển dụng nổi bật</h1>
 
-			<Carousel className='w-full h-50'>
-				<CarouselContent className=' gap-1 '>
+			<Carousel plugins={[autoplayPlugin.current]} className='w-full h-50'>
+				<CarouselContent className=''>
 					{employers.map((employer, index) => (
 						<CarouselItem key={index} className=' md:basis-1/2 lg:basis-1/5 '>
-							<Card className='hover:shadow-md transition-shadow cursor-pointer relative h-full hover:border-primary border'>
+							<Card className='hover:shadow-md transition-shadow cursor-pointer relative h-full hover:border-primary border p-6'>
 								<CardContent className='p-0 flex flex-col items-center h-full'>
-									{/* TOP Badge positioned at top-left corner */}
-									{employer.isTop && (
-										<Badge className='absolute top-2 left-2 z-10'>
-											<Gem />
-											TOP
-										</Badge>
-									)}
-
-									{/* Company image */}
-									<div className='w-20 h-20 relative'>
-										<Image src='/image.png' alt={employer.name} fill className='object-cover rounded-t-lg' />
-									</div>
-
-									{/* Company name */}
-									<div className=' w-full text-center'>
-										<span className='font-medium'>{employer.name}</span>
+									<Badge className='absolute top-2 left-2 z-10 bg-primary px-1.5 py-0.5 rounded-full font-semibold'>
+										<Gem />
+										TOP
+									</Badge>
+									<div className='w-40 h-40 relative'>
+										<Image src={`/company/${employer.thumbnail}`} alt={employer.name} fill className='object-contain rounded-t-lg' />
 									</div>
 								</CardContent>
 							</Card>

@@ -1,4 +1,3 @@
-// components/infinite-employer-carousel.tsx
 'use client';
 
 import Image from 'next/image';
@@ -6,14 +5,19 @@ import { useEffect, useRef } from 'react';
 
 const InfiniteEmployerCarousel = () => {
 	const employers = [
-		{ id: 1, name: 'Shinhan Bank' },
-		{ id: 2, name: 'MB' },
-		{ id: 3, name: 'Sun Life' },
-		{ id: 4, name: 'SALLIN TIRE' },
-		{ id: 5, name: 'SeABank' },
-		{ id: 6, name: 'Techcombank' },
-		{ id: 7, name: 'Vietcombank' },
-		{ id: 8, name: 'VinGroup' },
+		{ name: 'Apollo', isTop: false, thumbnail: 'apollo.png' },
+		{ name: 'Chaillease', isTop: false, thumbnail: 'chaillease.png' },
+		{ name: 'Cnvcdp', isTop: false, thumbnail: 'cnvcdp.png' },
+		{ name: 'Edupia', isTop: false, thumbnail: 'edupia.png' },
+		{ name: 'Fpt', isTop: true, thumbnail: 'fpt.png' },
+		{ name: 'Lg', isTop: true, thumbnail: 'Lg.png' },
+		{ name: 'Mb', isTop: true, thumbnail: 'mb.png' },
+		{ name: 'Sailun', isTop: false, thumbnail: 'sailun.png' },
+		{ name: 'Spx', isTop: false, thumbnail: 'spx.png' },
+		{ name: 'Teky', isTop: false, thumbnail: 'teky.png' },
+		{ name: 'Vib', isTop: false, thumbnail: 'vib.png' },
+		{ name: 'Viettel', isTop: true, thumbnail: 'viettel.png' },
+		{ name: 'Vpbank', isTop: true, thumbnail: 'vpbank.png' },
 	];
 
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -24,8 +28,6 @@ const InfiniteEmployerCarousel = () => {
 		const scroller = scrollerRef.current;
 
 		if (!container || !scroller) return;
-
-		// Nhân đôi items để tạo hiệu ứng vô hạn
 		const scrollerContent = Array.from(scroller.children);
 		scrollerContent.forEach(item => {
 			const duplicatedItem = item.cloneNode(true);
@@ -33,14 +35,12 @@ const InfiniteEmployerCarousel = () => {
 		});
 
 		let animationFrameId: number;
-		let speed = 1; // Tốc độ chạy
+		let speed = 1;
 
 		const animate = () => {
 			if (scroller) {
 				scroller.style.transform = `translateX(-${speed}px)`;
 				speed += 0.5;
-
-				// Reset vị trí khi scroll hết
 				if (speed >= scroller.scrollWidth / 2) {
 					speed = 0;
 				}
@@ -56,13 +56,13 @@ const InfiniteEmployerCarousel = () => {
 	}, []);
 
 	return (
-		<div className='w-full py-8'>
+		<div className='w-full p-12 my-8 bg-white'>
 			<div ref={containerRef} className='w-full overflow-hidden'>
 				<div ref={scrollerRef} className='flex w-max gap-4 py-2'>
 					{employers.map(employer => (
-						<div key={employer.id} className='flex flex-col items-center min-w-[150px] '>
-							<div className='w-24 h-24 relative rounded-full overflow-hidden border-2 border-gray-200 bg-white'>
-								<Image src={`/image.png`} alt={employer.name} fill className='object-contain p-2' />
+						<div className='flex flex-col items-center min-w-[150px] '>
+							<div className='size-32 relative'>
+								<Image src={`/company/${employer.thumbnail}`} alt={employer.name} fill className='object-contain' />
 							</div>
 							<span className='mt-2 text-sm font-semibold text-primary-foreground'>{employer.name}</span>
 						</div>

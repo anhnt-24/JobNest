@@ -51,4 +51,12 @@ export class JobFilterDto {
   @IsOptional()
   @IsDateString()
   deadlineBefore?: Date;
+
+  @IsOptional()
+  @IsInt()
+  companyId?: number;
+
+  @IsOptional()
+  @IsInt()
+  employerId?: number;
 }

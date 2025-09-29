@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -21,10 +21,11 @@ type FormValues = {
 	message: string;
 };
 
-export function ApplyJobDialog({ job }: { job: JobResponse }) {
+export function ApplyJobDialog({ job, className }: { job: JobResponse; className?: string }) {
+	const [open, setOpen] = useState(false);
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const { data: cvs, isLoading } = useSWR(['/cvs/me', page, limit], () => cvsService.getCvs({ page, limit }).then(res => res.data));
+	const { data: cvs, isLoading } = useSWR(open ? ['/cvs/me', page, limit] : null, () => cvsService.getCvs({ page, limit }).then(res => res.data));
 	const [selectedCV, setSelectedCV] = useState<any>();
 	const [selectedType, setSelectedType] = useState<string>('last');
 	const [selectedCV2, setSelectedCV2] = useState<any>();
@@ -55,12 +56,13 @@ export function ApplyJobDialog({ job }: { job: JobResponse }) {
 			await jobService.apply(job.id, selectedCV.id, data.message);
 		}
 		setLoading(false);
+		setOpen(false);
 	};
 	if (isLoading) return <></>;
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button size={'sm'}>Ứng tuyển ngay</Button>
+				<Button className={className}>Ứng tuyển ngay</Button>
 			</DialogTrigger>
 
 			<DialogContent className='max-w-3xl  px-0 '>
@@ -221,10 +223,12 @@ export function ApplyJobDialog({ job }: { job: JobResponse }) {
 						</div>
 					</div>
 
-					<DialogFooter className='flex  gap-2 px-4'>
-						<Button type='button' variant='outline' className='px-8'>
-							Hủy
-						</Button>
+					<DialogFooter className='flex  gap-2 px-4 pt-4'>
+						<DialogClose>
+							<Button type='button' variant='outline' className='px-8'>
+								Hủy
+							</Button>
+						</DialogClose>
 						<Button loading={loading} type='submit' className='flex-1'>
 							Nộp hồ sơ ứng tuyển
 						</Button>

@@ -16,16 +16,13 @@ export default function Header() {
 				<div className='flex items-center justify-between h-18'>
 					<div className='flex space-x-1 py-2 '>
 						<Link href='/' className='mr-2'>
-							<div className='text-2xl font-bold text-red-600'>
-								JobNest
-								<span className='text-red-500'>'</span>
-							</div>
+							<div className='text-2xl font-bold text-primary'>JobNest'</div>
 							<span className='hidden md:inline  text-gray-500 text-xs italic'>Nơi sự nghiệp bắt đầu</span>
 						</Link>
 						<JobsDropdown />
 						<NavItem text='Công cụ' />
 						<NavItem text='Cẩm nang' />
-						<NavItem icon={<Gem className='text-yellow-500 h-5 w-5' />} text='JobNest Pro' highlight />
+						<NavItem text='JobNest Pro' highlight />
 					</div>
 					<div className='flex items-center space-x-3'>
 						{user ? (
@@ -39,12 +36,14 @@ export default function Header() {
 							</>
 						) : (
 							<>
-								<Button variant='outline' className='rounded-xs text-base hidden md:flex'>
-									<Link href={'/register'}>Đăng ký</Link>
-								</Button>
-								<Button className='rounded-xs hidden md:inline-flex text-base'>
-									<Link href={'/login'}>Đăng nhập</Link>
-								</Button>
+								<Link href={'/register'}>
+									<Button variant='outline' className='rounded-xs text-base hidden md:flex'>
+										Đăng ký
+									</Button>
+								</Link>
+								<Link href={'/login'}>
+									<Button className='rounded-xs hidden md:inline-flex text-base'>Đăng nhập</Button>
+								</Link>
 								<div className='border-1 h-8' />
 							</>
 						)}
@@ -63,14 +62,14 @@ export default function Header() {
 	);
 }
 
-function NavItem({ icon, text, active = false, highlight = false }) {
+function NavItem({ text = '', active = false, highlight = false }) {
 	return (
 		<Link
 			href='#'
 			className={`flex items-center px-4 py-2 rounded-md whitespace-nowrap transition-colors font-medium ${
-				active ? 'text-blue-600 font-medium' : highlight ? 'text-yellow-600 ' : 'text-gray-800 hover:underline hover:text-red-600'
+				active ? 'text-blue-600 font-medium' : highlight ? 'text-yellow-600 ' : 'text-gray-800 hover:text-primary'
 			}`}>
-			<span className={`mr-2 ${highlight ? 'text-yellow-500' : 'text-current'}`}>{icon}</span>
+			<span className={`mr-2 ${highlight ? 'text-yellow-500' : 'text-current'}`}>{highlight && <Gem className='text-yellow-500 h-5 w-5' />}</span>
 			{text}
 		</Link>
 	);

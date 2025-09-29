@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 
 const companies = [
@@ -58,30 +58,26 @@ const companies = [
 
 export default function CompanyGrid() {
 	return (
-		<Card className='p-0 overflow-hidden pb-6'>
-			{/* Header */}
-			<div className='bg-gradient-to-r from-red-950 to-primary p-4 '>
-				<h2 className='text-primary-foreground'>Thương hiệu lớn tiêu biểu cùng lĩnh vực</h2>
-				<p className='text-gray-200 text-sm'>Những thương hiệu tuyển dụng đã khẳng định được vị thế trên thị trường.</p>
+		<Card>
+			<div className='border-b  pb-2'>
+				<CardTitle>Thương hiệu lớn tiêu biểu cùng lĩnh vực</CardTitle>
+				<p>Những thương hiệu tuyển dụng đã khẳng định được vị thế trên thị trường.</p>
 			</div>
-
-			<CardContent>
-				<div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-					{companies.map((c, idx) => (
-						<div key={idx} className='flex items-center gap-3 p-4 hover:shadow-md transition rounded-xl border border-primary'>
-							<Image src={c.logo ?? '/image.png'} alt={c.name} width={54} height={54} className='rounded-md border bg-white object-contain' />
-							<div>
-								<p className='font-medium leading-snug line-clamp-2 hover:text-primary'>{c.name}</p>
-								<p className='text-sm text-gray-500'>{c.industry}</p>
-							</div>
+			<div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+				{companies.map((c, idx) => (
+					<div key={idx} className='flex items-center gap-3 p-4 hover:shadow-md transition rounded-xl border border-primary'>
+						<Image src={c.logo ?? '/image.png'} alt={c.name} width={54} height={54} className='rounded-md border bg-white object-contain' />
+						<div>
+							<p className='font-medium leading-snug line-clamp-2 hover:text-primary'>{c.name}</p>
+							<p className='text-sm text-gray-500'>{c.industry}</p>
 						</div>
-					))}
-				</div>
-				<div className='flex items-center  mt-8 justify-center text-primary'>
-					<p className='font-semibold  hover:underline cursor-pointer'>Xem thêm</p>
-					<ArrowRight className='inline  size-5' />
-				</div>
-			</CardContent>
+					</div>
+				))}
+			</div>
+			<div className='flex items-center  mt-8 justify-center text-primary'>
+				<p className='font-semibold  hover:underline cursor-pointer'>Xem thêm</p>
+				<ArrowRight className='inline  size-5' />
+			</div>
 		</Card>
 	);
 }

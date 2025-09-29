@@ -19,18 +19,25 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { JobStatus } from '@prisma/client';
 import { JobListQueryDto } from './dto/list-jobs-query.dto';
+import { ApplicationListQueryDto } from './dto/list-application-query.req';
+import { SavedJobListQueryDto } from './dto/list-saved-query.req';
 @Controller('job')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
-  @Get('/applied')
-  async getAppliedJobs(@Req() req) {
-    return this.jobsService.getAppliedJobs(+req.user.userId);
+  @Post('/my-applied')
+  async getMyAppliedJobs(@Req() req, @Body() query: ApplicationListQueryDto) {
+    return this.jobsService.getMyAppliedJobs(+req.user.userId, query);
   }
-  @Get('/saved')
-  async getSavedJobs(@Req() req) {
-    return this.jobsService.getSavedJobs(+req.user.userId);
+  @Post('/applied')
+  async getAppliedJobs(@Body() query: ApplicationListQueryDto) {
+    return this.jobsService.getAppliedJobs(query);
+  }
+
+  @Post('/saved')
+  async getSavedJobs(@Req() req, @Body() query: SavedJobListQueryDto) {
+    return this.jobsService.getSavedJobs(+req.user.userId, query);
   }
 
   @Get(':id/is-saved')
@@ -39,7 +46,7 @@ export class JobsController {
   }
   @Post('create')
   async create(@Req() req, @Body() dto: CreateJobDto) {
-    return this.jobsService.create(+req.user.userId, dto);
+    return this.jobsService.create(req.user, dto);
   }
 
   @Get(':id')
@@ -48,8 +55,12 @@ export class JobsController {
   }
 
   @Post()
-  findRandom(@Body() query: JobListQueryDto) {
+  findAll(@Body() query: JobListQueryDto) {
     return this.jobsService.getAll(query);
+  }
+  @Post('/me')
+  findByEmployer(@Req() req, @Body() query: JobListQueryDto) {
+    return this.jobsService.getListByMe(req.user, query);
   }
 
   @Put(':id')

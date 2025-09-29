@@ -8,7 +8,6 @@ import { CvListQueryDto } from './dto/cv-list-query.dto';
 export class CvService {
   constructor(
     private prisma: PrismaService,
-
     private miniosService: MinioService,
   ) {}
 
@@ -40,6 +39,24 @@ export class CvService {
         fileSize,
       },
     });
+  }
+
+  async getAll(query: CvListQueryDto) {
+    const specifications = query.toPrismaArgs();
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.cV.findMany(specifications),
+      this.prisma.cV.count({ where: specifications.where }),
+    ]);
+
+    return {
+      items,
+      meta: {
+        total,
+        page: query.page,
+        limit: query.limit,
+        totalPages: Math.ceil(total / query.limit),
+      },
+    };
   }
 
   async getCvsByCandidate(userId: number, query: CvListQueryDto) {
