@@ -8,9 +8,8 @@ import {
 } from 'class-validator';
 
 export class UpdateCompanyDto {
-  @IsOptional()
   @IsString()
-  name?: string;
+  name: string;
 
   @IsOptional()
   @IsUrl()
@@ -18,12 +17,11 @@ export class UpdateCompanyDto {
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
   employeeCount?: number;
 
   @IsOptional()
-  @IsString()
-  industry?: string;
+  @IsInt()
+  industryId?: number;
 
   @IsOptional()
   @IsString()
@@ -31,19 +29,23 @@ export class UpdateCompanyDto {
 
   @IsOptional()
   @IsString()
-  province?: string;
+  phone?: string;
 
   @IsOptional()
   @IsString()
-  district?: string;
+  avatarUrl?: string;
 
   @IsOptional()
   @IsString()
-  ward?: string;
+  address?: string;
 
   @IsOptional()
   @IsString()
   addressDetail?: string;
+
+  @IsOptional()
+  @IsString()
+  taxCode?: string;
 
   @IsOptional()
   @IsNumber()
@@ -55,5 +57,8 @@ export class UpdateCompanyDto {
 
   @IsOptional()
   @IsString()
-  phone?: string;
+  coverUrl?: string;
+
+  @IsInt()
+  userId: number;
 }

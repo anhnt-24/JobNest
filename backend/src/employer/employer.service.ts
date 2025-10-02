@@ -51,7 +51,7 @@ export class EmployerService {
     });
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
     const employer = await this.prisma.employer.findUnique({ where: { id } });
     if (!employer) throw new NotFoundException('Employer không tồn tại');
 

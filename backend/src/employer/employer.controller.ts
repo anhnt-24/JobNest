@@ -36,15 +36,15 @@ export class EmployerController {
     return this.employerService.findOne(+id);
   }
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.employerService.remove(id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.employerService.delete(id);
   }
 
   @Post('get')
   async getAll(@Query() query: EmployerListQueryDto) {
     return this.employerService.getAll(query);
   }
-  @Post('get-by-company')
+  @Post('company')
   async getAllByCompany(@Req() req, @Query() query: EmployerListQueryDto) {
     return this.employerService.getAllByCompany(+req.user.userId, query);
   }
@@ -52,7 +52,7 @@ export class EmployerController {
   async update(@Req() req, @Body() dto: UpdateEmployerDto) {
     return this.employerService.update(+req.user.userId, dto);
   }
-  @Patch('/avatar')
+  @Patch('avatar')
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar(@Req() req, @UploadedFile() file: MulterFile) {
     return this.employerService.uploadAvatar(+req.user.userId, file);

@@ -16,18 +16,18 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { UpdateCandidateDto } from './dto/update-candidate.dto';
-import { CandidatesService } from './candidates.service';
+import { CandidatesService } from './candidate.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { File as MulterFile } from 'multer';
 
-@Controller('candidates')
+@Controller('candidate')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CandidatesController {
   constructor(private readonly candidatesService: CandidatesService) {}
 
   @Get('me')
-  @Roles(Role.candidate)
-  getProfile(@Request() req) {
+  @Roles(Role.CANDIDATE)
+  me(@Request() req) {
     return this.candidatesService.findOne(+req.user.userId);
   }
 
@@ -37,11 +37,8 @@ export class CandidatesController {
   }
 
   @Put('me')
-  @Roles(Role.candidate)
-  updateProfile(
-    @Request() req,
-    @Body() updateCandidateDto: UpdateCandidateDto,
-  ) {
+  @Roles(Role.CANDIDATE)
+  update(@Request() req, @Body() updateCandidateDto: UpdateCandidateDto) {
     return this.candidatesService.update(+req.user.userId, updateCandidateDto);
   }
 

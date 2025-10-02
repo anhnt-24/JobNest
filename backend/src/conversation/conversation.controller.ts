@@ -22,12 +22,12 @@ export class ConversationController {
 
   @Post('/application/:appId')
   async createConversation(@Param('appId') appId: string) {
-    return this.convoService.createConversation(Number(appId));
+    return this.convoService.create(Number(appId));
   }
 
   @Get('/me')
   async getUserConversations(@Req() req) {
-    return this.convoService.getUserConversations(Number(req.user.userId));
+    return this.convoService.getConversations(Number(req.user.userId));
   }
 
   @Get('/application/:appId')

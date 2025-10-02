@@ -9,6 +9,7 @@ import JobSearchBar from './_components/job-search-bar';
 import Pagination from '@/components/ui/custom/pagination';
 import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import RelatedJobs from './_components/related-jobs copy';
 function Page() {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
@@ -41,7 +42,6 @@ function Page() {
 					{jobs.items.length > 0 ? (
 						<>
 							<JobList jobs={jobs} />
-
 							<div className='float-right'>
 								<Pagination totalItems={jobs?.meta?.totalPages} pageSize={limit} currentPage={page} onPageChange={setPage} onPageSizeChange={setLimit} pageSizeOptions={[5, 10, 20, 50]} />
 							</div>
@@ -52,6 +52,7 @@ function Page() {
 							<p className='mt-4'>Chưa tìm thấy việc làm phù hợp với yêu cầu của bạn</p>
 						</div>
 					)}
+					<RelatedJobs></RelatedJobs>
 				</div>
 			</div>
 		</div>

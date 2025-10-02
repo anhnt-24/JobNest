@@ -13,6 +13,7 @@ import {
   JobType,
   JobStatus,
   Prisma,
+  ExperienceLevel,
 } from '@prisma/client';
 
 export class JobFilterDto {
@@ -31,6 +32,10 @@ export class JobFilterDto {
   @IsOptional()
   @IsEnum(EducationLevel)
   education?: EducationLevel;
+
+  @IsOptional()
+  @IsEnum(ExperienceLevel)
+  experience?: ExperienceLevel;
 
   @IsOptional()
   @IsEnum(JobStatus)

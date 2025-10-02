@@ -1,64 +1,88 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Pencil, Trash2, Eye, Plus, Filter, Search, Download, User, Mail, Phone, Calendar, FileText, Edit, Ellipsis, PencilLine, Trash } from 'lucide-react';
+import { Card, CardHeader } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Search, Filter, ArrowUpDown, Ellipsis, Sheet, Plus } from 'lucide-react';
 import Pagination from '@/components/ui/custom/pagination';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import { JobResponse } from '@/schema/job.schema';
-import JobStatusCell from './_component/job-status-cell';
-import CVTable from './_component/cv-table';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { FaEye, FaMagnifyingGlass, FaPencil, FaTrashCan } from 'react-icons/fa6';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import CVTable from '@/app/(employer)/employer/cv/_component/cv-table';
 
 export default function JobTable() {
 	const [selectedJob, setSelectedJob] = useState<JobResponse>();
 	const [cvDialogOpen, setCvDialogOpen] = useState(false);
+
+	const [page, setPage] = useState(1);
+	const [limit, setLimit] = useState(10);
+
+	const { data } = useSWR([`/api/jobs`, page, limit], () => jobService.getListByMe({ page, limit }).then(res => res.data));
 
 	const handleViewCV = (job: JobResponse) => {
 		setSelectedJob(job);
 		setCvDialogOpen(true);
 	};
 
-	const handleEdit = (id: string) => {
-		alert(`Chỉnh sửa job id: ${id}`);
-	};
-
+	const handleEdit = (id: string) => alert(`Chỉnh sửa job id: ${id}`);
 	const handleDelete = (id: number) => {
 		if (confirm('Bạn có chắc chắn muốn xóa tin tuyển dụng này?')) {
+			console.log('delete', id);
 		}
 	};
+	const handleAddJob = () => alert('Thêm tin tuyển dụng mới');
 
-	const handleAddJob = () => {
-		alert('Thêm tin tuyển dụng mới');
-	};
-
-	const [page, setPage] = useState(1);
-	const [limit, setLimit] = useState(10);
-
-	const { data } = useSWR([`/api/jobs`, page, limit], () => jobService.getListByMe({ page, limit }).then(res => res.data));
-	console.log(data);
 	return (
 		<>
-			<Card>
-				<CardHeader className='flex flex-row items-center justify-between space-y-0'>
-					<h2>Danh sách tin tuyển dụng</h2>
-					<Button onClick={handleAddJob}>
-						<Plus /> Thêm tin
+			<Card className='gap-6'>
+				{/* Header */}
+				<h2>Danh sách tin tuyển dụng</h2>
+
+				<div className='flex flex-col sm:flex-row gap-2 items-stretch sm:items-center'>
+					{/* Search */}
+					<Input placeholder='Tìm kiếm...' className='flex-1' />
+
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant={'sketch'}>
+								<Filter />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align='end' className='w-56'>
+							<DropdownMenuItem>Vị trí</DropdownMenuItem>
+							<DropdownMenuItem>Cấp bậc</DropdownMenuItem>
+							<DropdownMenuItem>Hình thức</DropdownMenuItem>
+							<DropdownMenuItem>Mức lương</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+
+					<Button variant={'sketch'} onClick={handleAddJob}>
+						<Sheet></Sheet>
 					</Button>
-				</CardHeader>
+					<Button onClick={handleAddJob}>
+						<Plus></Plus>
+						Thêm tin
+					</Button>
+				</div>
+
 				<div className='space-y-6'>
+					{/* Table */}
 					<div className='overflow-x-auto'>
-						<Table className='bg-white'>
+						<Table>
 							<TableHeader>
 								<TableRow>
 									<TableHead>#</TableHead>
-									<TableHead>Vị trí</TableHead>
-									<TableHead>Mức lương</TableHead>
+									<TableHead className='flex items-center gap-2 cursor-pointer'>
+										Vị trí <ArrowUpDown className='w-4 h-4' />
+									</TableHead>
+									<TableHead>
+										<span className='flex gap-2 items-center cursor-pointer'>
+											Mức lương <ArrowUpDown className='w-4 h-4' />
+										</span>
+									</TableHead>
 									<TableHead>Địa điểm</TableHead>
 									<TableHead>Cấp bậc</TableHead>
 									<TableHead>Kinh nghiệm</TableHead>
@@ -69,11 +93,11 @@ export default function JobTable() {
 									<TableHead>Thao tác</TableHead>
 								</TableRow>
 							</TableHeader>
+
 							<TableBody>
-								{data?.items?.map((job, idx) => (
+								{data?.items?.map(job => (
 									<TableRow key={job.id}>
 										<TableCell>{job.id}</TableCell>
-
 										<TableCell className='font-medium'>{job.title}</TableCell>
 										<TableCell>{job.salary}</TableCell>
 										<TableCell>{job.workingAddress}</TableCell>
@@ -82,25 +106,21 @@ export default function JobTable() {
 										<TableCell>{job.type}</TableCell>
 										<TableCell>{job.quantity}</TableCell>
 										<TableCell>{job.deadline?.split('T')[0]}</TableCell>
-										<JobStatusCell job={job}></JobStatusCell>
-
+										<TableCell>
+											<span className='text-green-700 font-semibold'>Active</span>
+										</TableCell>
 										<TableCell>
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>
-													<Button className='rounded-full' variant='ghost'>
+													<Button variant='ghost' className='rounded-full p-1'>
 														<Ellipsis />
 													</Button>
 												</DropdownMenuTrigger>
-
-												<DropdownMenuContent align='end' className='w-54 text-gray-600'>
-													<DropdownMenuItem onClick={() => console.log('edit', job.id)}>
-														<PencilLine className='mr-2  size-5 ' strokeWidth={1.5} /> Chỉnh sửa
-													</DropdownMenuItem>
-													<DropdownMenuItem onClick={() => handleViewCV(job)}>
-														<Eye className='mr-2  size-5' strokeWidth={1.5} /> Xem CV
-													</DropdownMenuItem>
-													<DropdownMenuItem onClick={() => handleDelete(job.id)} className='text-red-600'>
-														<Trash className='mr-2 size-5' strokeWidth={1.5} /> Xóa
+												<DropdownMenuContent align='end'>
+													<DropdownMenuItem onClick={() => handleEdit(job.id)}>Chỉnh sửa</DropdownMenuItem>
+													<DropdownMenuItem onClick={() => handleViewCV(job)}>Xem CV</DropdownMenuItem>
+													<DropdownMenuItem className='text-red-600' onClick={() => handleDelete(job.id)}>
+														Xóa
 													</DropdownMenuItem>
 												</DropdownMenuContent>
 											</DropdownMenu>
@@ -112,9 +132,11 @@ export default function JobTable() {
 					</div>
 
 					{data?.items?.length === 0 && <div className='text-center py-8 text-muted-foreground'>Không tìm thấy tin tuyển dụng nào phù hợp</div>}
+
 					<Pagination totalItems={200} pageSize={limit} currentPage={page} onPageChange={setPage} onPageSizeChange={setLimit} pageSizeOptions={[5, 10, 20, 50]} />
 				</div>
 			</Card>
+
 			{selectedJob && <CVTable job={selectedJob} />}
 		</>
 	);

@@ -30,7 +30,7 @@ export default function RegisterPage() {
 		<div className='flex  justify-between gap-12'>
 			<div className='max-w-2xl w-full'>
 				<div className='mb-4'>
-					<h1 className='text-2xl font-bold text-gray-800 mb-2'>Đăng ký tài khoản Nhà tuyển dụng</h1>
+					<h2 className='mb-2'>Đăng ký tài khoản Nhà tuyển dụng</h2>
 					<p className='text-gray-600'>Cùng tạo dựng lợi thế cho doanh nghiệp bằng trải nghiệm công nghệ tuyển dụng ứng dụng sâu AI & Hiring Funnel.</p>
 				</div>
 
@@ -153,7 +153,7 @@ export default function RegisterPage() {
 			{/* Right - Benefits */}
 			<div className='space-y-6'>
 				<div className='space-y-4'>
-					<h2 className='text-xl font-bold'>Vì sao nên tạo tài khoản JobNest' ngay hôm nay?</h2>
+					<h2>Vì sao nên tạo tài khoản JobNest' ngay hôm nay?</h2>
 					<ul className='space-y-3 text-gray-700 text-sm'>
 						<li className='flex items-center gap-2'>
 							<Check className='text-green-600 w-5 h-5' /> Nhận gợi ý công việc phù hợp với kỹ năng và kinh nghiệm của bạn

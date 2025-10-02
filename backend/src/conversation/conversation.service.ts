@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
-  async createConversation(applicationId: number) {
+  async create(applicationId: number) {
     let convo = await this.prisma.conversation.findFirst({
       where: { applicationId },
       include: { users: true },
@@ -35,7 +35,7 @@ export class ConversationService {
 
     return convo;
   }
-  async getUserConversations(userId: number) {
+  async getConversations(userId: number) {
     return this.prisma.conversation.findMany({
       where: {
         users: {

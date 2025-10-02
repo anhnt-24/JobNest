@@ -52,10 +52,10 @@ export default function JobPosting({ id }: { id: number }) {
 	return (
 		<>
 			<Card>
-				<CardTitle>{job.title}</CardTitle>
+				<h2>{job.title}</h2>
 				<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
 					<div className='flex items-center gap-4'>
-						<div className='size-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
+						<div className='size-12 flex items-center justify-center rounded-full bg-primary '>
 							<FaCoins className='size-6 text-primary-foreground'></FaCoins>
 						</div>
 						<div>
@@ -64,7 +64,7 @@ export default function JobPosting({ id }: { id: number }) {
 						</div>
 					</div>
 					<div className='flex items-center gap-4'>
-						<div className='size-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
+						<div className='size-12 flex items-center justify-center rounded-full bg-primary '>
 							<FaLocationDot className='size-6 text-primary-foreground '></FaLocationDot>
 						</div>
 						<div>
@@ -73,7 +73,7 @@ export default function JobPosting({ id }: { id: number }) {
 						</div>
 					</div>
 					<div className='flex items-center gap-4'>
-						<div className='size-12 min-w-12 flex items-center justify-center rounded-full bg-gradient-to-b from-primary to-primary/40 '>
+						<div className='size-12 min-w-12 flex items-center justify-center rounded-full bg-primary '>
 							<FaUserClock className='text-primary-foreground size-6' />
 						</div>
 						<div>
@@ -103,7 +103,7 @@ export default function JobPosting({ id }: { id: number }) {
 			</Card>
 			<Card>
 				<div className='space-y-2'>
-					<CardTitle className='border-l-4 border-primary px-2 py-0'>Ứng viên cũng tìm kiếm</CardTitle>
+					<h2 className='border-l-4 border-primary px-2 py-0'>Ứng viên cũng tìm kiếm</h2>
 					<p className='text-base text-muted-foreground '>Ứng viên xem việc làm này cũng tìm kiếm các từ khóa sau:</p>
 				</div>
 				<button className='flex border hover:border-primary hover:bg-primary/5 cursor-pointer bg-gray-100 w-fit rounded-4xl px-4 py-1 items-center gap-2 hover:text-primary'>
@@ -117,7 +117,7 @@ export default function JobPosting({ id }: { id: number }) {
 			</Card>
 			<Card>
 				<div className='space-y-2'>
-					<CardTitle className='border-l-4 border-primary px-2 py-0'>Chi tiết tin tuyển dụng</CardTitle>
+					<h2 className='border-l-4 border-primary px-2 py-0'>Chi tiết tin tuyển dụng</h2>
 					<Badge variant={'secondary'}>Chuyên môn {job.title}</Badge>
 				</div>
 				<CardContent className='space-y-6'>

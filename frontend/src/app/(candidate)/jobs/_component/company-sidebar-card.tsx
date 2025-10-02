@@ -18,7 +18,7 @@ export function CompanyCard() {
 				<Avatar className='size-20 border rounded-xs '>
 					<AvatarImage src={company?.avatarUrl} />
 				</Avatar>
-				<h3 className=''>{company?.name}</h3>
+				<h3>{company?.name}</h3>
 			</div>
 
 			<div className='flex items-center  gap-2'>

@@ -31,8 +31,7 @@ export function UrgentJobList() {
 						<p className='text-gray-200'>Nhanh tay ứng tuyển để không bỏ lỡ cơ hội!</p>
 					</div>
 					<div className='flex items-center gap-1 text-primary cursor-pointer hover:text-primary/80'>
-						<p className='font-semibold text-yellow-400 text-lg border-b border-yellow-500'>Xem tất cả</p>
-						<ChevronRight />
+						<p className='font-semibold text-yellow-300 border-b border-yellow-300'>Xem tất cả</p>
 					</div>
 				</div>
 

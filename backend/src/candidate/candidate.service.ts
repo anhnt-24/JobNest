@@ -1,4 +1,4 @@
-import { MinioService } from './../minio/minio.service';
+import { MinioService } from '../minio/minio.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCandidateDto } from './dto/update-candidate.dto';
@@ -24,7 +24,7 @@ export class CandidatesService {
     });
 
     if (!candidate) {
-      throw new NotFoundException('Candidate not found');
+      throw new NotFoundException('Candidate not found.');
     }
 
     return candidate;
@@ -35,7 +35,7 @@ export class CandidatesService {
       where: { userId },
     });
     if (!candidate) {
-      throw new NotFoundException('Candidate not found');
+      throw new NotFoundException('Candidate not found.');
     }
     return this.prisma.candidate.update({
       where: { userId },
@@ -57,7 +57,7 @@ export class CandidatesService {
       where: { userId },
     });
     if (!candidate) {
-      throw new NotFoundException('Không tìm thấy ứng viên');
+      throw new NotFoundException('Không tìm thấy ứng viên.');
     }
     const imageUrl = await this.minioService.uploadFile(file);
     await this.prisma.candidate.update({

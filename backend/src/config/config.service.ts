@@ -23,7 +23,7 @@ export class ConfigService {
   }
 
   get minioEndpoint(): string {
-    return process.env.MINIO_ENDPOINT || 'localhost'; // ❌ KHÔNG có http://
+    return process.env.MINIO_ENDPOINT || 'localhost';
   }
 
   get minioPort(): number {
@@ -31,7 +31,7 @@ export class ConfigService {
   }
 
   get minioUseSSL(): boolean {
-    return process.env.MINIO_USE_SSL === 'true'; // ❗ boolean chứ không phải string
+    return process.env.MINIO_USE_SSL === 'true';
   }
 
   get minioAccessKey(): string {

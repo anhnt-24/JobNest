@@ -33,7 +33,7 @@ export function UserDropdown() {
 						</Avatar>
 						<div className='flex flex-col space-y'>
 							<p className='text-lg font-semibold'>{user?.candidate.name}</p>
-							<p className='text-sm  text-green-600'>Tài khoản đã xác thực</p>
+							<p className='text-sm  text-primary'>Tài khoản đã xác thực</p>
 							<p className='text-sm  text-muted-foreground'>
 								ID {user?.id} | {user?.email}{' '}
 							</p>
@@ -82,7 +82,7 @@ export function UserDropdown() {
 
 				<DropdownMenuSeparator />
 
-				<Button onClick={logout} variant={'ghost'} className='text-start cursor-pointer !text-primary text-base hover:bg-orange-100 font-medium w-full'>
+				<Button onClick={logout} variant={'ghost'} className='text-start cursor-pointer !text-primary text-base hover:bg-primary/5 font-medium w-full'>
 					<LogOut className='text-primary'></LogOut>
 					Đăng xuất
 				</Button>

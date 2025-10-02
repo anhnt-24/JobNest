@@ -1,3 +1,4 @@
+import { Employer } from '.prisma/client';
 import {
   Injectable,
   NotFoundException,
@@ -18,7 +19,7 @@ export class JobsService {
   async create(user: any, dto: CreateJobDto): Promise<Job> {
     let companyId = 0;
     let employerId = 0;
-    if (user.role === Role.company) {
+    if (user.role === Role.COMPANY) {
       const data = await this.prisma.company.findUnique({
         where: { userId: +user.userId },
       });
@@ -27,7 +28,7 @@ export class JobsService {
           'User is not associated with any company',
         );
       companyId = data.id;
-    } else if (user.role === Role.employer) {
+    } else if (user.role === Role.EMPLOYER) {
       const employer = await this.prisma.employer.findUnique({
         where: { userId: +user.userId },
         include: { company: true },
@@ -79,7 +80,7 @@ export class JobsService {
   }
 
   async getListByMe(user: any, query: JobListQueryDto) {
-    if (user.role === Role.employer) {
+    if (user.role === Role.EMPLOYER) {
       const employer = await this.prisma.employer.findUnique({
         where: { userId: +user.userId },
       });
@@ -88,7 +89,7 @@ export class JobsService {
           'User is not associated with any employer',
         );
       query.setEmployerId(employer.id);
-    } else if (user.role === Role.company) {
+    } else if (user.role === Role.COMPANY) {
       const company = await this.prisma.company.findUnique({
         where: { userId: +user.userId },
       });
@@ -173,7 +174,7 @@ export class JobsService {
         jobId,
         cvId,
         message,
-        status: ApplicationStatus.pending,
+        status: ApplicationStatus.PENDING,
       },
     });
   }

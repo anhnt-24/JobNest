@@ -2,7 +2,7 @@ import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'luc
 
 export default function Footer() {
 	return (
-		<footer className='bg-gradient-to-r from-black/90 to-green-900 text-white pt-12 pb-6 relative'>
+		<footer className='bg-gradient-to-r from-black/90 to-green-900 text-white pt-12 pb-6 relative mt-auto'>
 			<div className='container mx-auto px-4'>
 				<div className='grid grid-cols-1 md:grid-cols-4 gap-8 mb-8'>
 					{/* Column 1 - About */}

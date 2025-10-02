@@ -26,7 +26,7 @@ export class CvController {
 
   @Post('create')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadCv(
+  async upload(
     @Req() req,
     @UploadedFile() file: MulterFile,
     @Body('title') title: string,
@@ -46,14 +46,14 @@ export class CvController {
   }
 
   @Patch(':id')
-  async updateCv(
+  async update(
     @Param('id') id: string,
     @Body() data: { title?: string; thumbnailUrl?: string },
   ) {
     return this.cvService.updateCv(Number(id), data);
   }
   @Delete(':id')
-  async deleteCv(@Param('id') id: string) {
+  async delete(@Param('id') id: string) {
     return this.cvService.deleteCv(Number(id));
   }
 }

@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react'; // icon loading
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-	"inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xs text-base font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5 shrink-0 [&_svg]:shrink-0 outline-none aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+	"inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xs text-base  transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5 shrink-0 [&_svg]:shrink-0 outline-none aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
 	{
 		variants: {
 			variant: {
@@ -15,12 +15,13 @@ const buttonVariants = cva(
 				secondary: 'bg-secondary text-secondary-foreground  hover:bg-secondary/80',
 				ghost: 'hover:brightness-95 dark:hover:bg-accent/50',
 				link: 'text-primary underline-offset-4 hover:underline',
+				sketch: ' border-input  border hover:bg-gray-100 underline-offset-4 text-gray-700 ',
 				popover: 'text-muted-foreground border hover:text-white hover:bg-primary/90',
 			},
 			size: {
 				default: 'h-10 px-4 py-1 has-[>svg]:px-4 ',
 				sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2 text-sm [&_svg:not([class*='size-'])]:size-4 ",
-				md: "h-9 gap-1.5 px-3 has-[>svg]:px-2 text-sm [&_svg:not([class*='size-'])]:size-4 ",
+				md: "h-9 gap-1.5 px-4 has-[>svg]:px-2 text-base [&_svg:not([class*='size-'])]:size-5 ",
 				lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
 				icon: 'size-9',
 			},

@@ -88,7 +88,7 @@ export class JobsController {
   }
 
   @Post(':id/toggle-save')
-  saveJob(@Param('id') jobId: string, @Req() req) {
+  toggleSaveJob(@Param('id') jobId: string, @Req() req) {
     return this.jobsService.toggleSaveJob(+req.user.userId, Number(jobId));
   }
 

@@ -15,5 +15,5 @@ export class UpdateCandidateDto {
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  birthday?: Date;
+  dob?: Date;
 }

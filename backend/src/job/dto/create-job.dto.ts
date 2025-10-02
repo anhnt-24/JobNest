@@ -4,9 +4,15 @@ import {
   IsInt,
   IsEnum,
   IsDateString,
-  IsNumber,
+  IsArray,
+  ArrayNotEmpty,
 } from 'class-validator';
-import { JobLevel, JobType, EducationLevel } from '@prisma/client';
+import {
+  JobLevel,
+  JobType,
+  EducationLevel,
+  ExperienceLevel,
+} from '@prisma/client';
 
 export class CreateJobDto {
   @IsString()
@@ -40,8 +46,8 @@ export class CreateJobDto {
   salary?: string;
 
   @IsOptional()
-  @IsString()
-  experience?: string;
+  @IsEnum(ExperienceLevel)
+  experience?: ExperienceLevel;
 
   @IsOptional()
   @IsInt()
@@ -58,20 +64,23 @@ export class CreateJobDto {
   type: JobType;
 
   @IsOptional()
-  @IsString()
-  categories?: string;
+  @IsInt()
+  categoryId?: number;
 
   @IsOptional()
-  @IsString()
-  mustSkills?: string;
+  @IsArray()
+  @IsString({ each: true })
+  mustSkills?: string[];
 
   @IsOptional()
-  @IsString()
-  niceSkills?: string;
+  @IsArray()
+  @IsString({ each: true })
+  niceSkills?: string[];
 
   @IsOptional()
-  @IsString()
-  areaTags?: string;
+  @IsArray()
+  @IsString({ each: true })
+  areaTags?: string[];
 
   @IsOptional()
   @IsDateString()

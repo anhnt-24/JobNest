@@ -25,8 +25,8 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Get('me')
-  @Roles(Role.company)
-  getMyCompany(@Request() req) {
+  @Roles(Role.COMPANY)
+  me(@Request() req) {
     return this.companyService.findByUserId(+req.user.userId);
   }
 
@@ -36,8 +36,8 @@ export class CompanyController {
   }
 
   @Put('me')
-  @Roles(Role.company)
-  updateMyCompany(@Request() req, @Body() updateCompanyDto: UpdateCompanyDto) {
+  @Roles(Role.COMPANY)
+  update(@Request() req, @Body() updateCompanyDto: UpdateCompanyDto) {
     return this.companyService.updateByUserId(
       +req.user.userId,
       updateCompanyDto,
@@ -45,14 +45,14 @@ export class CompanyController {
   }
 
   @Patch('avatar')
-  @Roles(Role.company)
+  @Roles(Role.COMPANY)
   @UseInterceptors(FileInterceptor('avatar'))
-  async uploadLogo(@Request() req, @UploadedFile() file: MulterFile) {
+  async uploadAvatar(@Request() req, @UploadedFile() file: MulterFile) {
     return this.companyService.updateLogo(+req.user.userId, file);
   }
 
   @Patch('cover')
-  @Roles(Role.company)
+  @Roles(Role.COMPANY)
   @UseInterceptors(FileInterceptor('cover'))
   async uploadCover(@Request() req, @UploadedFile() file: MulterFile) {
     return this.companyService.updateCover(+req.user.userId, file);

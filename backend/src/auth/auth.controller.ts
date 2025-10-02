@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/req/register.req';
-import { LoginDto } from './dto/req/login.req';
-import { RefreshTokenDto } from './dto/req/refresh-token.req';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Public } from './decorators/public.decorator';
-import { CreateCompanyDto } from './dto/req/company-register.req';
+import { CreateCompanyDto } from './dto/company-register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { CreateEmployerDto } from './dto/req/employer-create.req';
+import { CreateEmployerDto } from './dto/employer-create.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +27,7 @@ export class AuthController {
 
   @Public()
   @Post('refresh')
-  async refreshToken(@Body() dto: RefreshTokenDto) {
+  async refresh(@Body() dto: RefreshTokenDto) {
     return this.authService.refreshToken(dto.refresh_token);
   }
 

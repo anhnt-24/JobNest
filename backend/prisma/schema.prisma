@@ -21,16 +21,16 @@ model User {
   company          Company?
   employer          Employer?
   savedJobs        SavedJob[]
- notifications Notification[] 
-conversations  UserConversation[]
+  notifications Notification[]  
+  conversations  UserConversation[]
   messages       Message[]
 } 
 
 enum Role {
-  candidate
-  employer
-  admin
-  company
+  CANDIDATE
+  EMPLOYER
+  ADMIN
+  COMPANY
 }
 
 model Candidate {
@@ -40,9 +40,10 @@ model Candidate {
   phone       String?
   avatarUrl   String?
   name        String
-  birthday    DateTime?
+  dob         DateTime?
   gender      Gender?
   cvs         CV[]   
+  following CandidateFollower[] 
   applications     Application[]
 }
 
@@ -50,7 +51,7 @@ model Employer {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    Int      @unique
-    company         Company   @relation(fields: [companyId], references: [id])
+  company         Company   @relation(fields: [companyId], references: [id])
   companyId       Int
   name      String
   phone     String
@@ -66,9 +67,9 @@ model Employer {
 }
 
 enum Gender {
-  male
-  female
-  other
+  MALE
+  FEMALE
+  OTHER
 }
 
 enum CVType {
@@ -88,35 +89,64 @@ model CV {
   id           Int        @id @default(autoincrement())
   candidate    Candidate  @relation(fields: [candidateId], references: [id])
   candidateId  Int
+
   title        String
-  fileUrl      String?    
-  thumbnailUrl String?
   type         CVType     @default(UPLOADED)
 
-  format       CVFormat?  
-  fileSize     Int?       
+  fileUrl      String?       
+  thumbnailUrl String?       
+  format       CVFormat?     
+  fileSize     Int?          
+
+  template     Template?  @relation(fields: [templateId], references: [id])
+  templateId   Int?    
+  content  Json?         
+  
   applications Application[] 
+
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([candidateId])    
 }
+
+model Template {
+  id        Int      @id @default(autoincrement())
+  name      String  
+  description String?
+  contentJson Json  
+  cvs       CV[]   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Industry {
+  id       Int      @id @default(autoincrement())
+  name     String
+  companies Company[]
+}
+
 
 model Company {
   id            Int      @id @default(autoincrement())
   name          String
   website       String?
-  employeeCount Int?                        
-  industry      String?                     
+  employeeCount Int?     
+
+  industry   Industry? @relation(fields: [industryId], references: [id])
+  industryId Int?                   
+  
   description   String?                     
   phone       String?
   avatarUrl   String?
-  province      String?                     
-  district      String?                     
-  ward          String?                     
-  addressDetail String?                     
+  address      String?                     
+  addressDetail String?   
+  taxCode       String?  
 
   latitude      Float?                      
   longitude     Float?                      
-
+  followers    CandidateFollower[] 
   coverUrl       String?                     
   userId    Int   @unique
   user      User  @relation(fields: [userId], references: [id])
@@ -124,9 +154,18 @@ model Company {
   jobs          Job[]
 }
 
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// JOB
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+model CandidateFollower {
+  id          Int       @id @default(autoincrement())
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId Int
+  company     Company   @relation(fields: [companyId], references: [id])
+  companyId   Int
+
+  createdAt   DateTime  @default(now())
+
+  @@unique([candidateId, companyId]) 
+}
+
 
 
 enum JobLevel {
@@ -161,30 +200,50 @@ enum JobStatus {
   PAUSED
 }
 
+enum ExperienceLevel {
+  NONE       
+  SIX_MONTH   
+  ONE_TWO_YEARS
+  TWO_THREE_YEARS
+  THREE_FIVE_YEARS
+  FIVE_PLUS
+}
+
+
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String
+  jobs  Job[]
+}
+
+
 model Job {
   id              Int       @id @default(autoincrement())
   title           String 
   description     String                         
-  requirements    String?                        
+  requirements    String?
+
   benefits        String?                        
   workingAddress  String?                        
   workingTime     String?                        
   applicationMethod   String?                        
 
   salary          String?                           
-  experience      String?                        
+  experience      ExperienceLevel @default(NONE)                        
   quantity        Int?                           
   level           JobLevel                       
   education       EducationLevel?                
-  type            JobType                        
-
-  categories      String?                        
-  mustSkills      String?                        
-  niceSkills      String?                        
-  areaTags        String?                        
+  type              JobType  
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])                      
+  
+  mustSkills  String[]  @default([])  // required skills
+  niceSkills  String[]  @default([])  // optional skills
+  areaTags    String[]  @default([])                        
 
   deadline        DateTime?                     
-  status String @default("OPEN") 
+  status  JobStatus @default(OPEN) 
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt @default(now())
 
@@ -212,15 +271,15 @@ model Application {
 
   message      String?
   appliedAt    DateTime   @default(now())
-  status       ApplicationStatus @default(pending)
+  status       ApplicationStatus @default(PENDING)
   conversation Conversation?
 }
 
 enum ApplicationStatus {
-  pending
-  reviewed
-  accepted
-  rejected
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
 }
 
 model SavedJob {
@@ -239,7 +298,6 @@ model Notification {
   userId    Int
   title     String
   body      String
-  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 

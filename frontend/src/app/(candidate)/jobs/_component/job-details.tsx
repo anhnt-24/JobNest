@@ -42,7 +42,7 @@ function JobDetails() {
 	return (
 		<>
 			<div className='space-y-2'>
-				<CardTitle>Danh mục nghề liên quan</CardTitle>
+				<h3>Danh mục nghề liên quan</h3>
 				<ul className='space-y-2'>
 					<li className='flex items-center gap-2'>
 						<Badge className='text-sm'>{job.categories.split(';').join('/')}</Badge>
@@ -51,7 +51,7 @@ function JobDetails() {
 			</div>
 
 			<div className='space-y-2'>
-				<h2>Kỹ năng cần có</h2>
+				<h3>Kỹ năng cần có</h3>
 				<ul className='space-y-2'>
 					{job.mustSkills.split(';').map(skill => (
 						<li key={skill} className='flex items-center gap-2'>
@@ -63,7 +63,7 @@ function JobDetails() {
 			</div>
 
 			<div className='space-y-2'>
-				<h2>Kỹ năng nên có</h2>
+				<h3>Kỹ năng nên có</h3>
 				<ul className='space-y-2'>
 					{job.niceSkills?.split(';').map(skill => (
 						<li key={skill} className='flex items-center gap-2'>
@@ -75,7 +75,7 @@ function JobDetails() {
 			</div>
 			{/* Location Section */}
 			<div className='space-y-2'>
-				<h2>Khu vực</h2>
+				<h3>Khu vực</h3>
 				<div className='flex flex-wrap gap-2'>
 					{job.areaTags.split(';').map(location => (
 						<Badge variant={'secondary'} key={location} className='text-sm'>

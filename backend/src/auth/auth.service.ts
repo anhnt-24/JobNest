@@ -7,12 +7,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '../config/config.service';
 import * as bcrypt from 'bcryptjs';
-import { RegisterDto } from './dto/req/register.req';
-import { LoginDto } from './dto/req/login.req';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 import { Role } from '@prisma/client';
 import { RedisService } from 'src/redis/redis.service';
-import { CreateCompanyDto } from './dto/req/company-register.req';
-import { CreateEmployerDto } from './dto/req/employer-create.req';
+import { CreateCompanyDto } from './dto/company-register.dto';
+import { CreateEmployerDto } from './dto/employer-create.dto';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +46,7 @@ export class AuthService {
     const userExists = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
-    if (userExists) throw new BadRequestException('Email đã tồn tại');
+    if (userExists) throw new BadRequestException('Email đã tồn tại.');
 
     const hash = await bcrypt.hash(dto.password, 10);
     const user = await this.prisma.$transaction(async (tx) => {
@@ -54,7 +54,7 @@ export class AuthService {
         data: {
           email: dto.email,
           password: hash,
-          role: Role.candidate,
+          role: Role.CANDIDATE,
           active: true,
         },
       });
@@ -108,11 +108,12 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new BadRequestException('Email hoặc mật khẩu không đúng');
-    if (!user.active) throw new BadRequestException('Tài khoản đã bị khóa');
+    if (!user) throw new BadRequestException('Email hoặc mật khẩu không đúng.');
+    if (!user.active) throw new BadRequestException('Tài khoản đã bị khóa.');
 
     const match = await bcrypt.compare(dto.password, user.password);
-    if (!match) throw new BadRequestException('Email hoặc mật khẩu không đúng');
+    if (!match)
+      throw new BadRequestException('Email hoặc mật khẩu không đúng.');
 
     const payload = {
       sub: user.id.toString(),
@@ -143,11 +144,11 @@ export class AuthService {
         `refresh_token:${decoded.sub}`,
       );
       if (cachedToken !== refresh_token) {
-        throw new BadRequestException('Invalid refresh token');
+        throw new BadRequestException('Invalid refresh token.');
       }
 
       if (!user) {
-        throw new BadRequestException('Invalid refresh token');
+        throw new BadRequestException('Invalid refresh token.');
       }
       const payload = {
         sub: user.id.toString(),
@@ -182,7 +183,7 @@ export class AuthService {
         data: {
           email: dto.email,
           password: hash,
-          role: Role.company,
+          role: Role.COMPANY,
           active: true,
         },
       });
@@ -265,7 +266,7 @@ export class AuthService {
         data: {
           email: email,
           password: hash,
-          role: Role.employer,
+          role: Role.EMPLOYER,
           active: true,
         },
       });

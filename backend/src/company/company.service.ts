@@ -24,7 +24,7 @@ export class CompanyService {
       },
     });
 
-    if (!company) throw new NotFoundException('Chưa có thông tin công ty');
+    if (!company) throw new NotFoundException('Chưa có thông tin công ty.');
     return company;
   }
 
@@ -32,13 +32,13 @@ export class CompanyService {
     const company = await this.prisma.company.findUnique({
       where: { id },
     });
-    if (!company) throw new NotFoundException('Không tìm thấy công ty');
+    if (!company) throw new NotFoundException('Không tìm thấy công ty.');
     return company;
   }
 
   async updateByUserId(userId: number, dto: UpdateCompanyDto) {
     const company = await this.prisma.company.findFirst({ where: { userId } });
-    if (!company) throw new NotFoundException('Chưa có thông tin công ty');
+    if (!company) throw new NotFoundException('Chưa có thông tin công ty.');
     return this.prisma.company.update({
       where: { id: company.id },
       data: {
