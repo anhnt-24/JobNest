@@ -19,10 +19,10 @@ async function bootstrap() {
   );
   app.setGlobalPrefix(config.apiContext);
 
-  const reflector = app.get(Reflector);
+  // const reflector = app.get(Reflector);
   // app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.enableCors();
-
+  app.useGlobalInterceptors(new LoggingInterceptor());
   await app.listen(config.port);
   console.log(
     `Application is running on: http://localhost:${config.port}${config.apiContext}`,

@@ -12,6 +12,8 @@ import { JobsModule } from './job/job.module';
 import { EmployerModule } from './employer/employer.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { PostsModule } from './posts/posts.module';
+import { CategoryModule } from './category/category.module';
+import { IndustryModule } from './industry/industry.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { PostsModule } from './posts/posts.module';
     EmployerModule,
     ConversationModule,
     PostsModule,
+    CategoryModule,
+    IndustryModule,
   ],
 })
 export class AppModule {}

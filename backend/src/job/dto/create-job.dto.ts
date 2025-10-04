@@ -5,7 +5,6 @@ import {
   IsEnum,
   IsDateString,
   IsArray,
-  ArrayNotEmpty,
 } from 'class-validator';
 import {
   JobLevel,

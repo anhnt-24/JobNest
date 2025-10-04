@@ -249,9 +249,9 @@ export class AuthService {
     }
     return user;
   }
-  async registerEmployer(companyUserId, dto: CreateEmployerDto) {
+  async registerEmployer(userId, dto: CreateEmployerDto) {
     const company = await this.prisma.company.findUnique({
-      where: { userId: companyUserId },
+      where: { userId: userId },
     });
     if (!company) throw new BadRequestException('Công ty không tồn tại');
     const userExists = await this.prisma.user.findUnique({

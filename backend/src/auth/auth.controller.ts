@@ -8,6 +8,8 @@ import { CreateCompanyDto } from './dto/company-register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { CreateEmployerDto } from './dto/employer-create.dto';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -44,6 +46,7 @@ export class AuthController {
   }
 
   @Post('employer-register')
+  @Roles(Role.COMPANY)
   @UseGuards(JwtAuthGuard, RolesGuard)
   registerEmployer(@Req() req, @Body() dto: CreateEmployerDto) {
     return this.authService.registerEmployer(+req.user.userId, dto);
