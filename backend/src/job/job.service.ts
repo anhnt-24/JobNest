@@ -16,34 +16,19 @@ import { SavedJobListQueryDto } from './dto/list-saved-query.req';
 export class JobsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(user: any, dto: CreateJobDto): Promise<Job> {
-    let companyId = 0;
-    let employerId = 0;
-    if (user.role === Role.COMPANY) {
-      const data = await this.prisma.company.findUnique({
-        where: { userId: +user.userId },
-      });
-      if (!data)
-        throw new BadRequestException(
-          'User is not associated with any company',
-        );
-      companyId = data.id;
-    } else if (user.role === Role.EMPLOYER) {
-      const employer = await this.prisma.employer.findUnique({
-        where: { userId: +user.userId },
-        include: { company: true },
-      });
-      if (!employer)
-        throw new BadRequestException(
-          'User is not associated with any employer',
-        );
-      if (!employer.company)
-        throw new BadRequestException(
-          'Employer is not associated with any company',
-        );
-      companyId = employer.company.id;
-      employerId = employer.id;
-    }
+  async create(userId: any, dto: CreateJobDto) {
+    const employer = await this.prisma.employer.findUnique({
+      where: { userId: +userId },
+      include: { company: true },
+    });
+    if (!employer)
+      throw new BadRequestException('User is not associated with any employer');
+    if (!employer.company)
+      throw new BadRequestException(
+        'Employer is not associated with any company',
+      );
+    const companyId = employer.company.id;
+    const employerId = employer.id;
 
     const job = await this.prisma.job.create({
       data: {
@@ -56,7 +41,12 @@ export class JobsService {
   }
 
   async findOne(id: number): Promise<Job> {
-    const job = await this.prisma.job.findUnique({ where: { id } });
+    const job = await this.prisma.job.findUnique({
+      where: { id },
+      include: {
+        company: true,
+      },
+    });
     if (!job) throw new NotFoundException('Job not found');
     return job;
   }

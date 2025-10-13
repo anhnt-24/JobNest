@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const CandidateSchema = z.object({
+export const candidateSchema = z.object({
 	name: z.string().min(1, 'Vui lòng nhập họ tên'),
 	phone: z
 		.string()
@@ -8,16 +8,16 @@ export const CandidateSchema = z.object({
 		.max(15, 'Số điện thoại không hợp lệ')
 		.regex(/^[0-9]+$/, 'Số điện thoại chỉ được chứa chữ số')
 		.optional(),
-	birthday: z.date('Vui lòng chọn ngày sinh'),
-	gender: z.enum(['male', 'female', 'other'], 'Vui lòng chọn giới tính'),
+	dob: z.date('Vui lòng chọn ngày sinh'),
+	gender: z.enum(['MALE', 'FEMALE', 'OTHER'], 'Vui lòng chọn giới tính'),
 });
 
-export const CandidateProfileResponseSchema = CandidateSchema.extend({
+export const candidateResponseSchema = candidateSchema.extend({
 	id: z.number().int(),
 	userId: z.number().int(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
 
-export type UpdateCandidateDto = z.infer<typeof CandidateSchema>;
-export type CandidateProfileResponse = z.infer<typeof CandidateProfileResponseSchema>;
+export type UpdateCandidateReq = z.infer<typeof candidateSchema>;
+export type CandidateProfileRes = z.infer<typeof candidateResponseSchema>;

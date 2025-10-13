@@ -20,8 +20,8 @@ export class UpdateCompanyDto {
   employeeCount?: number;
 
   @IsOptional()
-  @IsInt()
-  industryId?: number;
+  @IsString()
+  industry?: string;
 
   @IsOptional()
   @IsString()
@@ -41,10 +41,6 @@ export class UpdateCompanyDto {
 
   @IsOptional()
   @IsString()
-  addressDetail?: string;
-
-  @IsOptional()
-  @IsString()
   taxCode?: string;
 
   @IsOptional()
@@ -58,7 +54,4 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   coverUrl?: string;
-
-  @IsInt()
-  userId: number;
 }

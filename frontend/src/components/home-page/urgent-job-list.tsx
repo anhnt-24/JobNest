@@ -24,7 +24,7 @@ export function UrgentJobList() {
 	};
 	return (
 		<div>
-			<div className='max-w-7xl mx-auto pb-6 font-sans w-full border-primary border  rounded-xs'>
+			<div className='max-w-7xl mx-auto pb-6 my-8 font-sans w-full border-primary border  rounded-xs'>
 				<div className='flex justify-between px-4 bg-primary'>
 					<div className='py-2'>
 						<h2 className='text-white'>Việc làm cần tuyển gấp</h2>

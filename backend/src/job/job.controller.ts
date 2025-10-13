@@ -1,11 +1,10 @@
+import { Public } from './../auth/decorators/public.decorator';
 import {
   Controller,
   Post,
   Body,
   Get,
   Param,
-  Query,
-  Patch,
   Delete,
   ParseIntPipe,
   UseGuards,
@@ -17,10 +16,11 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { JobStatus } from '@prisma/client';
+import { JobStatus, Role } from '@prisma/client';
 import { JobListQueryDto } from './dto/list-jobs-query.dto';
 import { ApplicationListQueryDto } from './dto/list-application-query.req';
 import { SavedJobListQueryDto } from './dto/list-saved-query.req';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 @Controller('job')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class JobsController {
@@ -45,10 +45,12 @@ export class JobsController {
     return this.jobsService.isJobSaved(+req.user.userId, Number(jobId));
   }
   @Post('create')
+  @Roles(Role.EMPLOYER)
   async create(@Req() req, @Body() dto: CreateJobDto) {
-    return this.jobsService.create(req.user, dto);
+    return this.jobsService.create(req.user.userId, dto);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.jobsService.findOne(id);

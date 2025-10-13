@@ -27,28 +27,30 @@ const FeaturedEmployers = () => {
 	];
 
 	return (
-		<div className='max-w-7xl mx-auto py-6 w-full '>
-			<h1 className='mb-4'>Nhà tuyển dụng nổi bật</h1>
+		<div className='bg-white'>
+			<div className='max-w-7xl mx-auto py-6 w-full '>
+				<h1 className='mb-4'>Nhà tuyển dụng nổi bật</h1>
 
-			<Carousel plugins={[autoplayPlugin.current]} className='w-full h-50'>
-				<CarouselContent className=''>
-					{employers.map((employer, index) => (
-						<CarouselItem key={index} className=' md:basis-1/2 lg:basis-1/5 '>
-							<Card className='hover:shadow-md transition-shadow cursor-pointer relative h-full hover:border-primary border p-6'>
-								<CardContent className='p-0 flex flex-col items-center h-full'>
-									<Badge className='absolute top-2 left-2 z-10 bg-primary px-1.5 py-0.5 rounded-full font-semibold'>
-										<Gem />
-										TOP
-									</Badge>
-									<div className='w-40 h-40 relative'>
-										<Image src={`/company/${employer.thumbnail}`} alt={employer.name} fill className='object-contain rounded-t-lg' />
-									</div>
-								</CardContent>
-							</Card>
-						</CarouselItem>
-					))}
-				</CarouselContent>
-			</Carousel>
+				<Carousel plugins={[autoplayPlugin.current]} className='w-full h-50'>
+					<CarouselContent className=''>
+						{employers.map((employer, index) => (
+							<CarouselItem key={index} className=' md:basis-1/2 lg:basis-1/5 '>
+								<Card className='hover:shadow-md transition-shadow cursor-pointer relative h-full hover:border-primary border p-6'>
+									<CardContent className='p-0 flex flex-col items-center h-full'>
+										<Badge className='absolute top-2 left-2 z-10 bg-primary px-1.5 py-0.5 rounded-full font-semibold'>
+											<Gem />
+											TOP
+										</Badge>
+										<div className='w-40 h-40 relative'>
+											<Image src={`/company/${employer.thumbnail}`} alt={employer.name} fill className='object-contain rounded-t-lg' />
+										</div>
+									</CardContent>
+								</Card>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+				</Carousel>
+			</div>
 		</div>
 	);
 };

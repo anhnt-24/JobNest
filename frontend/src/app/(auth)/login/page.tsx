@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { LoginForm, loginSchema } from '@/schema/auth.schema';
+import { LoginReq, loginSchema } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/hook/useAuth';
 
@@ -14,21 +14,21 @@ export default function LoginPage() {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm<LoginForm>({
+	} = useForm<LoginReq>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: { email: '', password: '' },
 		mode: 'onSubmit',
 	});
 	const { login } = useAuth();
 
-	const onSubmit = async (values: LoginForm) => {
-		login(values.email, values.password);
+	const onSubmit = async (values: LoginReq) => {
+		return login(values);
 	};
 	return (
 		<div className='flex gap-12'>
 			<div className='w-full max-w-2xl'>
-				<h1 className='text-2xl font-bold mb-2'>
-					Chào mừng bạn đến với <span className='text-red-600'>JobNest'</span>
+				<h1 className=' mb-2'>
+					Chào mừng bạn đến với <span className='text-primary'>JobNest'</span>
 				</h1>
 				<p className='text-gray-600 mb-4'>
 					Bằng việc đăng nhập, bạn đồng ý với các{' '}
@@ -56,24 +56,24 @@ export default function LoginPage() {
 						</div>
 
 						<div className='space-y-1'>
-							<Label>Email *</Label>
+							<Label required>Email</Label>
 							<Input {...register('email')} placeholder='Email' className='bg-white' />
-							{errors.email && <p className='text-red-600 text-sm mt-1'>{errors.email.message}</p>}
+							{errors.email && <p className='text-red-600  mt-1'>{errors.email.message}</p>}
 						</div>
 
 						<div className='space-y-1'>
-							<Label>Mật khẩu *</Label>
+							<Label required>Mật khẩu</Label>
 							<div className='relative'>
 								<Input {...register('password')} placeholder='Mật khẩu' type='password' className='bg-white' />
 
-								{errors.password && <p className='text-red-600 text-sm mt-1'>{errors.password.message}</p>}
+								{errors.password && <p className='text-red-600  mt-1'>{errors.password.message}</p>}
 							</div>
 							<a href='#' className='my-2 text-blue-600 hover:underline float-right'>
 								Quên mật khẩu?
 							</a>
 						</div>
 
-						<Button className='w-full text-white' type='submit'>
+						<Button className='w-full text-white' type='submit' loading={isSubmitting}>
 							Đăng nhập bằng Email
 						</Button>
 
@@ -88,7 +88,7 @@ export default function LoginPage() {
 			</div>
 
 			<div className='space-y-4'>
-				<h2 className='text-xl font-bold'>Đăng nhập để truy cập ngay vào hàng ngàn đánh giá và dữ liệu lương thị trường việc làm</h2>
+				<h1>Đăng nhập để truy cập ngay vào hàng ngàn đánh giá và dữ liệu lương thị trường việc làm</h1>
 				<ul className='space-y-3 text-gray-700 text-sm'>
 					<li className='flex items-center gap-2'>
 						<Check className='text-green-600 w-5 h-5' /> Xem trước mức lương để có thể lợi thế khi thoả thuận

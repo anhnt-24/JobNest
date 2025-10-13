@@ -63,8 +63,8 @@ export class CreateJobDto {
   type: JobType;
 
   @IsOptional()
-  @IsInt()
-  categoryId?: number;
+  @IsString()
+  category?: string;
 
   @IsOptional()
   @IsArray()

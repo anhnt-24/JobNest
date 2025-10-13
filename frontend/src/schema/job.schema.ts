@@ -1,47 +1,55 @@
 import { z } from 'zod';
+import { companyResponseSchema } from './company.schema';
+export const JobLevels = ['INTERN', 'FRESHER', 'JUNIOR', 'MID', 'SENIOR', 'MANAGER', 'DIRECTOR'] as const;
+export const JobLevelSchema = z.enum(JobLevels);
 
-export const Levels = ['INTERN', 'JUNIOR', 'MID', 'SENIOR', 'LEADER'] as const;
-export type Level = (typeof Levels)[number];
-export const LevelSchema = z.enum(Levels);
+export const JobTypes = ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'FREELANCE', 'INTERNSHIP'] as const;
 
-export const Educations = ['NONE', 'ASSOCIATE', 'BACHELOR', 'MASTER', 'DOCTOR'] as const;
-export type Education = (typeof Educations)[number];
-export const EducationSchema = z.enum(Educations);
+export const EducationLevels = ['NONE', 'HIGH_SCHOOL', 'COLLEGE', 'BACHELOR', 'MASTER', 'DOCTORATE'] as const;
 
-export const JobTypes = ['FULL_TIME', 'PART_TIME', 'INTERNSHIP', 'CONTRACT'] as const;
-export type Type = (typeof JobTypes)[number];
+export const ExperienceLevels = ['NONE', 'SIX_MONTH', 'ONE_TWO_YEARS', 'TWO_THREE_YEARS', 'THREE_FIVE_YEARS', 'FIVE_PLUS'] as const;
+
 export const JobTypeSchema = z.enum(JobTypes);
+export const EducationLevelSchema = z.enum(EducationLevels);
+export const ExperienceLevelSchema = z.enum(ExperienceLevels);
+
+export const JobStatuses = ['OPEN', 'CLOSED', 'PAUSED', 'PENDING'] as const;
+export const JobStatusSchema = z.enum(JobStatuses);
 
 export const JobSchema = z.object({
 	title: z.string().min(1, 'Title is required'),
-	description: z.string().min(1),
-	requirements: z.string().min(1),
-	benefits: z.string(),
-	workingAddress: z.string().min(1),
-	workingTime: z.string().min(1),
-	applicationMethod: z.string(),
-	salary: z.string(),
-	quantity: z.number().int().positive(),
-	deadline: z.date(),
-	experience: z.string(),
-	level: LevelSchema,
-	education: EducationSchema,
+	description: z.string().min(1, 'Description is required'),
+	requirements: z.string().optional(),
+	benefits: z.string().optional(),
+	workingAddress: z.string().optional(),
+	workingTime: z.string().optional(),
+	applicationMethod: z.string().optional(),
+	salary: z.string().optional(),
+	experience: ExperienceLevelSchema.default('NONE'),
+	quantity: z.number().int().positive().optional(),
+	level: JobLevelSchema,
+	education: EducationLevelSchema.optional(),
 	type: JobTypeSchema,
-
-	categories: z.string(),
-	mustSkills: z.string(),
-	niceSkills: z.string().optional(),
-	areaTags: z.string(),
+	category: z.string().optional(),
+	mustSkills: z.array(z.string()).default([]),
+	niceSkills: z.array(z.string()).default([]),
+	areaTags: z.array(z.string()).default([]),
+	deadline: z.coerce.date().optional(),
+	status: JobStatusSchema.default('PENDING'),
+	companyId: z.number().int(),
+	employerId: z.number().int().optional(),
 });
+
+export const UpdateJobSchema = JobSchema.partial();
+
+export type CreateJobReq = z.infer<typeof JobSchema>;
+export type UpdateJobReq = z.infer<typeof UpdateJobSchema>;
+
 export const JobResponseSchema = JobSchema.extend({
 	id: z.number().int(),
-	thumbnailUrl: z.string(),
-	status: z.string(),
-	companyId: z.number(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
+	company: companyResponseSchema,
 });
 
-export type CreateJobDto = z.infer<typeof JobSchema>;
-export type UpdateJobDto = z.infer<typeof JobSchema>;
-export type JobResponse = z.infer<typeof JobResponseSchema>;
+export type JobRes = z.infer<typeof JobResponseSchema>;

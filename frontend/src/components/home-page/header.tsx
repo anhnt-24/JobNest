@@ -25,7 +25,7 @@ export default function Header() {
 						<NavItem text='JobNest Pro' highlight />
 					</div>
 					<div className='flex items-center space-x-3'>
-						{user ? (
+						{user !== null && user.role === 'CANDIDATE' ? (
 							<>
 								<button className='p-2 text-gray-600 bg-gray-100 hover:text-blue-600 rounded-full hover:bg-gray-100 transition-colors relative'>
 									<MessageCircleMore className='h-6 w-6' />

@@ -1,3 +1,4 @@
+'use client';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ChevronDown, ChevronUp, LogOut } from 'lucide-react';
@@ -32,7 +33,7 @@ export function UserDropdown() {
 							<AvatarFallback>A</AvatarFallback>
 						</Avatar>
 						<div className='flex flex-col space-y'>
-							<p className='text-lg font-semibold'>{user?.candidate.name}</p>
+							<p className='text-lg font-semibold'>{user?.candidate?.name}</p>
 							<p className='text-sm  text-primary'>Tài khoản đã xác thực</p>
 							<p className='text-sm  text-muted-foreground'>
 								ID {user?.id} | {user?.email}{' '}

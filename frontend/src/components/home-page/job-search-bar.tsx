@@ -19,7 +19,7 @@ export function JobSearchBar() {
 	const images = ['/banner/banner (1).jpeg', '/banner/banner (1).jpg', '/banner/banner (1).png', '/banner/banner (2).jpg', '/banner/banner (3).jpg'];
 	const [focused, setFocused] = useState(false);
 	return (
-		<div className='bg-gradient-to-b from-black/90 to-green-900 flex h-112 justify-center items-center relative'>
+		<div className='bg-gradient-to-b from-emerald-950 to-emerald-700 flex h-112 justify-center items-center relative '>
 			<div className='absolute top-0 left-0 bottom-0'>
 				<img src={'/left.png'} className='h-full'></img>
 			</div>
@@ -28,7 +28,7 @@ export function JobSearchBar() {
 			'>
 				<div className='my-auto'>
 					<div className='text-center mb-6'>
-						<h1 className=' font-bold text-3xl text-primary-foreground'>Hãy chia sẻ nhu cầu công việc của bạn</h1>
+						<h1 className=' font-bold text-4xl text-white'>Hãy chia sẻ nhu cầu công việc của bạn</h1>
 					</div>
 
 					<div className='flex gap-4'>
@@ -54,7 +54,7 @@ export function JobSearchBar() {
 								</DropdownMenu>
 							</div>
 						</div>
-						<Button className='py-8 px-12 bg-primary text-white rounded-xs text-lg font-semibold'>
+						<Button className='py-8 px-16  text-white rounded-xs  text-lg font-medium'>
 							<Search className='size-6' />
 							Tìm kiếm
 						</Button>

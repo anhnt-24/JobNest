@@ -1,11 +1,10 @@
 import { z } from 'zod';
+import { UserResponseSchema } from './user.schema';
 
 export const loginSchema = z.object({
 	email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
 	password: z.string().min(1, 'Vui lòng nhập mật khẩu').min(6, 'Mật khẩu phải ≥ 6 ký tự').max(128, 'Mật khẩu quá dài'),
 });
-
-export type LoginForm = z.infer<typeof loginSchema>;
 
 export const registerSchema = z
 	.object({
@@ -18,8 +17,6 @@ export const registerSchema = z
 		path: ['confirmPassword'],
 		message: 'Mật khẩu xác nhận không khớp',
 	});
-
-export type RegisterForm = z.infer<typeof registerSchema>;
 
 export const companyRegisterSchema = z
 	.object({
@@ -38,4 +35,13 @@ export const companyRegisterSchema = z
 		message: 'Mật khẩu xác nhận không khớp',
 	});
 
-export type CompanyRegisterForm = z.infer<typeof companyRegisterSchema>;
+export const authResponseSchema = z.object({
+	user: UserResponseSchema,
+	access_token: z.string(),
+	refresh_token: z.string(),
+});
+export type CompanyRegisterReq = z.infer<typeof companyRegisterSchema>;
+export type LoginReq = z.infer<typeof loginSchema>;
+export type RegisterReq = z.infer<typeof registerSchema>;
+
+export type AuthResponse = z.infer<typeof authResponseSchema>;

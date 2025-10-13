@@ -49,14 +49,14 @@ const JobCategories = () => {
 	];
 
 	return (
-		<div>
+		<div className='bg-white py-4'>
 			<div className='max-w-7xl mx-auto py-6 w-full'>
 				<h1 className='mb-4'>Top ngành nghề nổi bật</h1>
-				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 '>
+				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 '>
 					{categories.map((category, index) => {
 						const Icon = category.icon;
 						return (
-							<Card key={index} className=' hover:border-primary  hover:-translate-y-2 transition  cursor-pointer p-6'>
+							<Card key={index} className=' bg-gray-100 hover:bg-white hover:border-primary  border-transparent hover:-translate-y-2 transition  cursor-pointer p-6'>
 								<div className='flex flex-col items-center gap-2 size-full'>
 									<Image src={category.icon} height={500} width={500} className='size-28 object-cover mb-2 rounded-sm' alt='icon'></Image>
 									<span className=' font-semibold text-lg text-center line-clamp-1  '>{category.name}</span>

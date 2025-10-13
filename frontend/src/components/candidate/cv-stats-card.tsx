@@ -24,8 +24,6 @@ export default function CVStatsCard({ views = 0 }: CVStatsCardProps) {
 
 				<p className='text-sm text-gray-600 text-left max-w-[220px]'>Mỗi lượt Nhà tuyển dụng xem CV mang đến một cơ hội để bạn gần hơn với công việc phù hợp.</p>
 			</div>
-
-			{/* CTA */}
 			<Button>Khám phá ngay</Button>
 		</Card>
 	);

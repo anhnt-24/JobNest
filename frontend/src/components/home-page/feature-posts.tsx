@@ -53,7 +53,7 @@ const posts: Post[] = [
 
 export default function FeaturedPosts() {
 	return (
-		<div className='max-w-7xl mx-auto space-y-4 '>
+		<div className='max-w-7xl mx-auto space-y-4 py-6 '>
 			<div className='flex items-center justify-between '>
 				<h1>Bài viết nổi bật</h1>
 				<Link href='#' className='flex items-center  font-semibold text-primary hover:text-primary'>
@@ -72,7 +72,7 @@ export default function FeaturedPosts() {
 							{posts[0].title}
 						</Link>
 						<p className='text-gray-400'>{posts[0].description}</p>
-						<Link href={posts[0].link} className='text-primary font-semibold text-lg hover:text-primary  mt-auto'>
+						<Link href={posts[0].link} className='text-primary hover:underline font-semibold text-lg hover:text-primary  mt-auto'>
 							Bắt đầu đọc <ChevronRight className='inline size-6'></ChevronRight>
 						</Link>
 					</div>
@@ -80,7 +80,7 @@ export default function FeaturedPosts() {
 
 				<div className='grid grid-cols-1 col-span-2 sm:grid-cols-2 gap-4'>
 					{posts.slice(1).map(post => (
-						<div key={post.id} className='flex flex-col bg-white rounded-xs shadow-xs overflow-hidden'>
+						<Card key={post.id} className='p-0 gap-0 overflow-hidden'>
 							<div className='h-40 overflow-hidden'>
 								<Image src={post.image} alt={post.title} width={400} height={400} className=' w-full h-full  object-cover hover:scale-110 transition' />
 							</div>
@@ -89,10 +89,10 @@ export default function FeaturedPosts() {
 									{post.title}
 								</Link>
 							</div>
-							<Link href={post.link} className=' mt-auto font-semibold text-primary hover:text-primary/90 p-2 pt-0'>
+							<Link href={post.link} className=' mt-auto font-semibold text-primary hover:underline p-2 pt-0'>
 								Bắt đầu đọc <ChevronRight className='inline size-5'></ChevronRight>
 							</Link>
-						</div>
+						</Card>
 					))}
 				</div>
 			</div>

@@ -9,6 +9,7 @@ import { jobService } from '@/service/job.service';
 import useSWR from 'swr';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function JobListings() {
 	const [page, setPage] = useState(1);
@@ -19,7 +20,8 @@ export function JobListings() {
 	};
 
 	const handleNext = () => {
-		setPage(prev => (prev < jobs?.meta?.totalPages ? prev + 1 : prev));
+		if (!jobs?.meta) return;
+		setPage(prev => (prev < jobs.meta.totalPages ? prev + 1 : prev));
 	};
 	return (
 		<div>
@@ -41,12 +43,16 @@ export function JobListings() {
 				</p>
 
 				<Separator className='my-4' />
+				{jobs?.items?.length > 0 ? (
+					<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+						{jobs?.items?.map(job => (
+							<JobCard job={job} />
+						))}
+					</div>
+				) : (
+					<Image alt='empty' src={'/illustration/undraw_no-data_ig65.png'} height={1000} width={1000} className='size-[30%] mx-auto  object-contain'></Image>
+				)}
 
-				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-					{jobs?.items?.map(job => (
-						<JobCard job={job} />
-					))}
-				</div>
 				<div className='flex items-center justify-center gap-x-4 mt-4'>
 					<button
 						onClick={handlePrev}

@@ -124,7 +124,6 @@ model Template {
 model Industry {
   id       Int      @id @default(autoincrement())
   name     String
-  companies Company[]
 }
 
 
@@ -134,8 +133,7 @@ model Company {
   website       String?
   employeeCount Int?     
 
-  industry   Industry? @relation(fields: [industryId], references: [id])
-  industryId Int?                   
+  industry  String?                   
   
   description   String?                     
   phone       String?
@@ -198,6 +196,7 @@ enum JobStatus {
   OPEN
   CLOSED
   PAUSED
+  PENDING
 }
 
 enum ExperienceLevel {
@@ -214,7 +213,6 @@ enum ExperienceLevel {
 model Category {
   id    Int    @id @default(autoincrement())
   name  String
-  jobs  Job[]
 }
 
 
@@ -235,15 +233,14 @@ model Job {
   level           JobLevel                       
   education       EducationLevel?                
   type              JobType  
-  categoryId  Int?
-  category    Category? @relation(fields: [categoryId], references: [id])                      
+  category   String?                    
   
-  mustSkills  String[]  @default([])  // required skills
-  niceSkills  String[]  @default([])  // optional skills
+  mustSkills  String[]  @default([])  
+  niceSkills  String[]  @default([])  
   areaTags    String[]  @default([])                        
 
   deadline        DateTime?                     
-  status  JobStatus @default(OPEN) 
+  status  JobStatus @default(PENDING) 
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt @default(now())
 

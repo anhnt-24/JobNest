@@ -17,10 +17,10 @@ export function JobCard({ job }: { job?: any }) {
 		mutate(!!isSaved);
 	};
 	return (
-		<Card className='hover:border-primary group border border-gray-200 rounded-lg '>
+		<Card className='p-4 hover:border-primary group  rounded-lg border border-transparent '>
 			<div className='flex gap-3'>
 				<Link href={`/jobs/${job.id}`}>
-					<Avatar className='rounded-xs w-18 h-18 '>
+					<Avatar className='rounded-sm w-18 h-18 '>
 						<AvatarImage src={job.company.avatarUrl} alt='@user' />
 						<AvatarFallback>TA</AvatarFallback>
 					</Avatar>
@@ -33,7 +33,7 @@ export function JobCard({ job }: { job?: any }) {
 					</div>
 
 					<Link href={`/jobs/${job.id}`}>
-						<h4 className='line-clamp-1  cursor-pointer group-hover:text-primary'>{job.title}</h4>
+						<h4 className='line-clamp-1 font-medium  cursor-pointer group-hover:text-primary'>{job.title}</h4>
 					</Link>
 					<Link href={''}>
 						<p className='text-sm font-medium text-gray-400 line-clamp-1'>{job.company.name}</p>

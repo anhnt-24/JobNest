@@ -13,16 +13,11 @@ export class IndustryService {
     });
   }
   async findAll() {
-    return this.prisma.industry.findMany({
-      include: {
-        companies: true,
-      },
-    });
+    return this.prisma.industry.findMany();
   }
   async findOne(id: number) {
     const industry = await this.prisma.industry.findUnique({
       where: { id },
-      include: { companies: true },
     });
 
     if (!industry) {

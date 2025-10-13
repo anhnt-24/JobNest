@@ -56,7 +56,7 @@ const InfiniteEmployerCarousel = () => {
 	}, []);
 
 	return (
-		<div className='w-full p-12 my-8 bg-white'>
+		<div className='w-full p-24 bg-white'>
 			<div ref={containerRef} className='w-full overflow-hidden'>
 				<div ref={scrollerRef} className='flex w-max gap-4 py-2'>
 					{employers.map(employer => (
@@ -64,7 +64,6 @@ const InfiniteEmployerCarousel = () => {
 							<div className='size-32 relative'>
 								<Image src={`/company/${employer.thumbnail}`} alt={employer.name} fill className='object-contain' />
 							</div>
-							<span className='mt-2 text-sm font-semibold text-primary-foreground'>{employer.name}</span>
 						</div>
 					))}
 				</div>
