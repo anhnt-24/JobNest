@@ -19,6 +19,8 @@ export class CompanyService {
           select: {
             id: true,
             email: true,
+            name: true,
+            avatarUrl: true,
           },
         },
       },
@@ -36,43 +38,32 @@ export class CompanyService {
     return company;
   }
 
-  async updateByUserId(userId: number, dto: UpdateCompanyDto) {
+  async updateByUserId(userId: number, data: UpdateCompanyDto) {
     const company = await this.prisma.company.findFirst({ where: { userId } });
     if (!company) throw new NotFoundException('Chưa có thông tin công ty.');
+    const { name, phone, ...res } = data;
     return this.prisma.company.update({
       where: { id: company.id },
       data: {
-        ...dto,
+        ...res,
+        user: {
+          update: {
+            name: name,
+            phone: phone,
+          },
+        },
       },
       include: {
         user: {
           select: {
             id: true,
             email: true,
+            name: true,
+            avatarUrl: true,
           },
         },
       },
     });
-  }
-
-  async updateLogo(userId: number, file: MulterFile) {
-    const company = await this.prisma.company.findFirst({
-      where: {
-        user: {
-          id: userId,
-        },
-      },
-    });
-    if (!company) throw new NotFoundException('Chưa có thông tin công ty');
-
-    const logoUrl = await this.minioService.uploadFile(file);
-    const data = await this.prisma.company.update({
-      where: { id: company.id },
-      data: {
-        avatarUrl: logoUrl,
-      },
-    });
-    return data.avatarUrl;
   }
 
   async updateCover(userId: number, file: MulterFile) {
@@ -92,6 +83,6 @@ export class CompanyService {
         coverUrl: logoUrl,
       },
     });
-    return data.avatarUrl;
+    return data.coverUrl;
   }
 }

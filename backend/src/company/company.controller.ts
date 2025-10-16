@@ -44,13 +44,6 @@ export class CompanyController {
     );
   }
 
-  @Patch('avatar')
-  @Roles(Role.COMPANY)
-  @UseInterceptors(FileInterceptor('avatar'))
-  async uploadAvatar(@Request() req, @UploadedFile() file: MulterFile) {
-    return this.companyService.updateLogo(+req.user.userId, file);
-  }
-
   @Patch('cover')
   @Roles(Role.COMPANY)
   @UseInterceptors(FileInterceptor('cover'))

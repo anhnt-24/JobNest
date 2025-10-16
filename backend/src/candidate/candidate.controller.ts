@@ -41,10 +41,4 @@ export class CandidatesController {
   update(@Request() req, @Body() updateCandidateDto: UpdateCandidateDto) {
     return this.candidatesService.update(+req.user.userId, updateCandidateDto);
   }
-
-  @Patch('/avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  async uploadAvatar(@Request() req, @UploadedFile() file: MulterFile) {
-    return this.candidatesService.uploadAvatar(+req.user.userId, file);
-  }
 }

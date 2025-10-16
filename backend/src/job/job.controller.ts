@@ -30,6 +30,7 @@ export class JobsController {
   async getMyAppliedJobs(@Req() req, @Body() query: ApplicationListQueryDto) {
     return this.jobsService.getMyAppliedJobs(+req.user.userId, query);
   }
+
   @Post('/applied')
   async getAppliedJobs(@Body() query: ApplicationListQueryDto) {
     return this.jobsService.getAppliedJobs(query);
@@ -40,7 +41,7 @@ export class JobsController {
     return this.jobsService.getSavedJobs(+req.user.userId, query);
   }
 
-  @Get(':id/is-saved')
+  @Get('is-saved/:id')
   async isJobSaved(@Param('id') jobId: string, @Req() req) {
     return this.jobsService.isJobSaved(+req.user.userId, Number(jobId));
   }
@@ -75,7 +76,7 @@ export class JobsController {
     return this.jobsService.remove(id);
   }
 
-  @Post(':id/apply')
+  @Post('apply/:id')
   applyForJob(
     @Param('id') jobId: string,
     @Body() body: { cvId: number; message?: string },
@@ -89,24 +90,24 @@ export class JobsController {
     );
   }
 
-  @Post(':id/toggle-save')
+  @Post('save/:id')
   toggleSaveJob(@Param('id') jobId: string, @Req() req) {
     return this.jobsService.toggleSaveJob(+req.user.userId, Number(jobId));
   }
 
-  @Put(':id/status')
+  @Put('status/:id')
   updateStatus(
     @Param('id') id: string,
     @Body() { status }: { status: JobStatus },
   ) {
     return this.jobsService.updateStatus(+id, status);
   }
-  @Get(':id/cvs')
+  @Get('cv/:id')
   async getCVs(@Param('id') id: string) {
     return this.jobsService.getCVsByJob(+id);
   }
 
-  @Get(':id/company')
+  @Get('company/:id')
   async getCompany(@Param('id') id: string) {
     return this.jobsService.getCompanyByJob(+id);
   }

@@ -39,7 +39,16 @@ export function buildEmployerQuery(
       filter.userId ? { userId: filter.userId } : {},
       filter.companyId ? { companyId: filter.companyId } : {},
       filter.name
-        ? { name: { contains: filter.name, mode: 'insensitive' } }
+        ? {
+            user: {
+              is: {
+                name: {
+                  contains: filter.name,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          }
         : {},
       filter.position
         ? { position: { contains: filter.position, mode: 'insensitive' } }

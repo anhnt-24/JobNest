@@ -9,9 +9,6 @@ import {
   Req,
   UseGuards,
   Put,
-  Patch,
-  UseInterceptors,
-  UploadedFile,
   Body,
 } from '@nestjs/common';
 import { EmployerService } from './employer.service';
@@ -19,8 +16,6 @@ import { UpdateEmployerDto } from './dto/update-employer.dto';
 import { EmployerListQueryDto } from './dto/employer-query.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { File as MulterFile } from 'multer';
 
 @Controller('employer')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -51,10 +46,5 @@ export class EmployerController {
   @Put('update')
   async update(@Req() req, @Body() dto: UpdateEmployerDto) {
     return this.employerService.update(+req.user.userId, dto);
-  }
-  @Patch('avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  async uploadAvatar(@Req() req, @UploadedFile() file: MulterFile) {
-    return this.employerService.uploadAvatar(+req.user.userId, file);
   }
 }

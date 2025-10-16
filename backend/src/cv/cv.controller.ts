@@ -19,7 +19,7 @@ import { CvListQueryDto } from './dto/cv-list-query.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@Controller('cvs')
+@Controller('cv')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CvController {
   constructor(private readonly cvService: CvService) {}

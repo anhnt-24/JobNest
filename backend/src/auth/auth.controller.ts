@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -11,6 +21,8 @@ import { CreateEmployerDto } from './dto/employer-create.dto';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
+import { FileInterceptor } from '@nestjs/platform-express';
+import { File as MulterFile } from 'multer';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -55,5 +67,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   me(@Req() req) {
     return this.authService.me(+req.user.userId);
+  }
+  @Patch('/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async uploadAvatar(@Req() req, @UploadedFile() file: MulterFile) {
+    return this.authService.uploadAvatar(+req.user.userId, file);
   }
 }

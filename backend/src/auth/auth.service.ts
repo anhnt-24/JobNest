@@ -13,6 +13,8 @@ import { Role } from '@prisma/client';
 import { RedisService } from 'src/redis/redis.service';
 import { CreateCompanyDto } from './dto/company-register.dto';
 import { CreateEmployerDto } from './dto/employer-create.dto';
+import { File as MulterFile } from 'multer';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +23,7 @@ export class AuthService {
     private jwtService: JwtService,
     private config: ConfigService,
     private redisService: RedisService,
+    private minioService: MinioService,
   ) {}
 
   private generateTokens(payload: {
@@ -53,6 +56,7 @@ export class AuthService {
       const user = await tx.user.create({
         data: {
           email: dto.email,
+          name: dto.name,
           password: hash,
           role: Role.CANDIDATE,
           active: true,
@@ -61,7 +65,6 @@ export class AuthService {
 
       await tx.candidate.create({
         data: {
-          name: dto.name,
           userId: user.id,
         },
       });
@@ -90,22 +93,6 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
-      include: {
-        company: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-        candidate: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-      },
     });
 
     if (!user) throw new BadRequestException('Email hoặc mật khẩu không đúng.');
@@ -185,12 +172,13 @@ export class AuthService {
           password: hash,
           role: Role.COMPANY,
           active: true,
+          name: dto.name,
+          phone: dto.phone,
         },
       });
 
       await tx.company.create({
         data: {
-          name: dto.name,
           userId: +newUser.id,
         },
       });
@@ -219,29 +207,6 @@ export class AuthService {
   async me(id: number) {
     const { ...data } = await this.prisma.user.findUnique({
       where: { id },
-      include: {
-        company: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-        candidate: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-        employer: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
-        },
-      },
     });
     const { password, ...user } = data;
     if (!user) {
@@ -260,12 +225,14 @@ export class AuthService {
     if (userExists) throw new BadRequestException('Email đã tồn tại');
 
     const hash = await bcrypt.hash('12356789', 10);
-    const { email, ...data } = dto;
+    const { email, name, phone, ...data } = dto;
     const user = await this.prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
           email: email,
           password: hash,
+          name: name,
+          phone: phone,
           role: Role.EMPLOYER,
           active: true,
         },
@@ -298,5 +265,21 @@ export class AuthService {
       access_token: tokens.accessToken,
       refresh_token: tokens.refreshToken,
     };
+  }
+  async uploadAvatar(id: number, file: MulterFile) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      throw new NotFoundException('Không tìm thấy ứng viên.');
+    }
+    const imageUrl = await this.minioService.uploadFile(file);
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        avatarUrl: imageUrl,
+      },
+    });
+    return imageUrl;
   }
 }

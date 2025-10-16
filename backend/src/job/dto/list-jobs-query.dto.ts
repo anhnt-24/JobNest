@@ -1,11 +1,5 @@
 import { IntersectionType } from '@nestjs/mapped-types';
-import {
-  EducationLevel,
-  JobLevel,
-  JobStatus,
-  JobType,
-  Prisma,
-} from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { JobFilterDto } from './job-filter-dto';
 import { PaginationDto } from 'src/common/type/pagination.req';
 import { IsOptional } from 'class-validator';
@@ -15,7 +9,6 @@ const ALLOWED_ORDER_FIELDS = [
   'salary',
   'title',
   'deadline',
-  'companyId',
 ] as const;
 type JobOrderField = (typeof ALLOWED_ORDER_FIELDS)[number];
 
@@ -39,6 +32,8 @@ export function buildJobQuery(
       filter.deadlineBefore ? { deadline: { lte: filter.deadlineBefore } } : {},
       filter.companyId ? { companyId: filter.companyId } : {},
       filter.employerId ? { employerId: filter.employerId } : {},
+      filter.category ? { category: filter.category } : {},
+      filter.workingAddress ? { workingAddress: filter.workingAddress } : {},
     ],
   };
 
@@ -78,7 +73,19 @@ export class JobListQueryDto extends IntersectionType(
       orderBy,
       skip: (page - 1) * limit,
       take: limit,
-      include: { company: true },
+      include: {
+        company: {
+          select: {
+            user: {
+              select: {
+                name: true,
+                id: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
     };
   }
 }

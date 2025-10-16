@@ -12,7 +12,6 @@ import {
   JobLevel,
   JobType,
   JobStatus,
-  Prisma,
   ExperienceLevel,
 } from '@prisma/client';
 
@@ -64,4 +63,12 @@ export class JobFilterDto {
   @IsOptional()
   @IsInt()
   employerId?: number;
+
+  @IsOptional()
+  @IsString()
+  workingAddress?: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
 }

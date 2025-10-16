@@ -79,8 +79,13 @@ export class ApplicationListQueryDto extends IntersectionType(
             company: {
               select: {
                 id: true,
-                name: true,
-                avatarUrl: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    avatarUrl: true,
+                  },
+                },
               },
             },
           },

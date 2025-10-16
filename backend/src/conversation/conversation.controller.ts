@@ -20,9 +20,11 @@ export class ConversationController {
     private chatGateway: ChatGateway,
   ) {}
 
-  @Post('/application/:appId')
-  async createConversation(@Param('appId') appId: string) {
-    return this.convoService.create(Number(appId));
+  @Post('')
+  async createConversation(
+    @Body() body: { userIds: number[]; appId?: number },
+  ) {
+    return this.convoService.create(body.userIds, body.appId);
   }
 
   @Get('/me')

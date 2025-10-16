@@ -71,7 +71,17 @@ export class SavedJobListQueryDto extends IntersectionType(
         user: true,
         job: {
           include: {
-            company: true,
+            company: {
+              select: {
+                user: {
+                  select: {
+                    name: true,
+                    id: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
           },
         },
       },

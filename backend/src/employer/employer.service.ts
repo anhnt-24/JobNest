@@ -1,16 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateEmployerDto } from './dto/update-employer.dto';
 import { EmployerListQueryDto } from './dto/employer-query.dto';
-import { File as MulterFile } from 'multer';
-import { MinioService } from 'src/minio/minio.service';
 @Injectable()
 export class EmployerService {
-  constructor(
-    private prisma: PrismaService,
-    private minioService: MinioService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
     return this.prisma.employer.findMany({
@@ -30,23 +24,39 @@ export class EmployerService {
   async me(userId: number) {
     const employer = await this.prisma.employer.findUnique({
       where: { userId },
-      include: { user: true, company: true },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        company: true,
+      },
     });
     if (!employer) throw new NotFoundException('Employer không tồn tại');
     return employer;
   }
 
-  async update(userId: number, dto: UpdateEmployerDto) {
+  async update(userId: number, data: UpdateEmployerDto) {
     const employer = await this.prisma.employer.findUnique({
       where: { userId },
     });
     if (!employer) throw new NotFoundException('Employer không tồn tại');
-
+    const { name, phone, ...res } = data;
     return this.prisma.employer.update({
       where: { userId },
       data: {
-        ...dto,
-        dob: dto.dob ? new Date(dto.dob) : employer.dob,
+        ...res,
+        user: {
+          update: {
+            name: data.name,
+            phone: data.phone,
+          },
+        },
+        dob: res.dob ? new Date(res.dob) : employer.dob,
       },
     });
   }
@@ -97,21 +107,5 @@ export class EmployerService {
         totalPages: Math.ceil(total / query.limit),
       },
     };
-  }
-  async uploadAvatar(userId: number, file: MulterFile) {
-    const employer = await this.prisma.employer.findUnique({
-      where: { userId },
-    });
-    if (!employer) {
-      throw new NotFoundException('Không tìm thấy nhà tuyển dụng');
-    }
-    const imageUrl = await this.minioService.uploadFile(file);
-    await this.prisma.employer.update({
-      where: { userId },
-      data: {
-        avatarUrl: imageUrl,
-      },
-    });
-    return imageUrl;
   }
 }
