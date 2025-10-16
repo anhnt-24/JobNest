@@ -6,7 +6,6 @@ function Layout({ children }: { children: React.ReactNode }) {
 		<>
 			<div className='w-full mt-24'>
 				<JobSearchBar />
-
 				<Breadcrumb className='mb-4'>
 					<BreadcrumbList>
 						<BreadcrumbItem>

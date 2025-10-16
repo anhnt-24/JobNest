@@ -1,56 +1,140 @@
 'use client';
 
-import { useState } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { ChevronDown, Filter } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Filter } from 'lucide-react';
+import { JobListQuery } from '@/schema/job.schema';
 
-export default function AdvancedFilter() {
-	const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 50]);
+interface AdvancedFilterProps {
+	filter: JobListQuery;
+	setFilter: React.Dispatch<React.SetStateAction<JobListQuery>>;
+}
+
+export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProps) {
+	const [salaryRange, setSalaryRange] = useState<[number, number]>([filter.salaryFrom ?? 0, filter.salaryTo ?? 50]);
+
+	const handleChange = <K extends keyof JobListQuery>(key: K, value: JobListQuery[K]) => {
+		setFilter(prev => ({ ...prev, [key]: value, page: 1 })); // reset page khi lọc
+	};
+
+	const handleClear = () => {
+		setFilter(prev => ({
+			...prev,
+			level: undefined,
+			type: undefined,
+			education: undefined,
+			experience: undefined,
+			status: undefined,
+			salaryFrom: undefined,
+			salaryTo: undefined,
+			category: undefined,
+			workingAddress: undefined,
+			page: 1,
+		}));
+		setSalaryRange([0, 50]);
+	};
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setFilter(prev => ({
+				...prev,
+				salaryFrom: salaryRange[0],
+				salaryTo: salaryRange[1],
+				page: 1,
+			}));
+		}, 400);
+
+		return () => clearTimeout(timeout);
+	}, [salaryRange, setFilter]);
 
 	return (
-		<div className='  flex-1 bg-white border rounded-lg  overflow-hidden'>
-			<div className='flex items-center gap-2 font-bold text-xl  border-b sticky top-0 bg-white p-4'>
-				<Filter className='size-5 text-primary ' />
+		<div className=' rounded-lg overflow-hidden'>
+			{/* Header */}
+			<div className='flex items-center gap-2 font-bold text-xl border-b sticky top-0 p-4 bg-white'>
+				<Filter className='size-5 text-primary' />
 				Lọc nâng cao
 			</div>
-			<div className='p-4 max-h-250 overflow-y-auto space-y-4'>
+
+			<div className='p-4 max-h-200 overflow-y-auto space-y-6 bg-white rounded-b-lg'>
+				{/* Danh mục nghề */}
 				<div>
-					<h3 className='mb-4'>Theo danh mục nghề</h3>
-					<div className='space-y-4'>
-						{['Sales Bán lẻ/Dịch vụ tiêu dùng', 'Kinh doanh/Bán hàng khác', 'Sales Giáo dục/Khoá học', 'Nhân sự', 'Quản lý kinh doanh'].map((item, idx) => (
-							<div key={idx} className='flex items-center gap-2'>
-								<Checkbox id={`cate-${idx}`} />
-								<Label htmlFor={`cate-${idx}`}>{item}</Label>
-							</div>
-						))}
-					</div>
+					<h3 className='mb-2 font-medium'>Danh mục nghề</h3>
+					<Select value={filter.category ?? 'all'} onValueChange={val => handleChange('category', val === 'all' ? undefined : val)}>
+						<SelectTrigger className='w-full'>
+							<SelectValue placeholder='Tất cả danh mục' />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='all'>Tất cả</SelectItem>
+							<SelectItem value='Sales'>Kinh doanh / Bán hàng</SelectItem>
+							<SelectItem value='HR'>Nhân sự</SelectItem>
+							<SelectItem value='IT'>Công nghệ thông tin</SelectItem>
+							<SelectItem value='Marketing'>Marketing</SelectItem>
+							<SelectItem value='Finance'>Tài chính / Kế toán</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 
-				<div>
-					<h3 className='mb-4'>Kinh nghiệm</h3>
-					<RadioGroup defaultValue='all' className='grid grid-cols-2 gap-2'>
-						{['Tất cả', 'Không yêu cầu', 'Dưới 1 năm', '1 năm', '2 năm', '3 năm', '4 năm', '5 năm', 'Trên 5 năm'].map((exp, i) => (
-							<div key={i} className='flex items-center space-x-2 space-y-2'>
-								<RadioGroupItem value={exp} id={`exp-${i}`} />
-								<Label htmlFor={`exp-${i}`}>{exp}</Label>
+				{/* Cấp bậc */}
+				<div className='space-y-2'>
+					<h3 className='mb-2 font-medium'>Cấp bậc</h3>
+					<RadioGroup value={filter.level ?? 'none'} onValueChange={val => handleChange('level', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-2'>
+						{[
+							{ value: 'none', label: 'Tất cả' },
+							{ value: 'INTERN', label: 'Thực tập sinh' },
+							{ value: 'FRESHER', label: 'Mới tốt nghiệp' },
+							{ value: 'JUNIOR', label: 'Nhân viên' },
+							{ value: 'MID', label: 'Chuyên viên' },
+							{ value: 'SENIOR', label: 'Cao cấp' },
+							{ value: 'MANAGER', label: 'Quản lý' },
+							{ value: 'DIRECTOR', label: 'Giám đốc' },
+						].map((lvl, i) => (
+							<div key={i} className='flex items-center space-x-2'>
+								<RadioGroupItem value={lvl.value} id={`level-${i}`} />
+								<Label htmlFor={`level-${i}`}>{lvl.label}</Label>
 							</div>
 						))}
 					</RadioGroup>
 				</div>
 
+				{/* Hình thức làm việc */}
 				<div>
-					<h3 className='mb-4'>Cấp bậc</h3>
-					<RadioGroup defaultValue='all' className='space-y-2'>
-						{['Tất cả', 'Nhân viên', 'Trưởng nhóm', 'Trưởng/Phó phòng', 'Quản lý / Giám sát', 'Trưởng chi nhánh', 'Phó giám đốc', 'Giám đốc', 'Thực tập sinh'].map((level, i) => (
+					<h3 className='mb-2 font-medium'>Hình thức làm việc</h3>
+					<RadioGroup value={filter.type ?? 'none'} onValueChange={val => handleChange('type', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-2'>
+						{[
+							{ value: 'none', label: 'Tất cả' },
+							{ value: 'FULL_TIME', label: 'Toàn thời gian' },
+							{ value: 'PART_TIME', label: 'Bán thời gian' },
+							{ value: 'CONTRACT', label: 'Hợp đồng' },
+							{ value: 'FREELANCE', label: 'Tự do' },
+							{ value: 'INTERNSHIP', label: 'Thực tập' },
+						].map((type, i) => (
 							<div key={i} className='flex items-center space-x-2'>
-								<RadioGroupItem value={level} id={`level-${i}`} />
-								<Label htmlFor={`level-${i}`}>{level}</Label>
+								<RadioGroupItem value={type.value} id={`type-${i}`} />
+								<Label htmlFor={`type-${i}`}>{type.label}</Label>
+							</div>
+						))}
+					</RadioGroup>
+				</div>
+
+				{/* Kinh nghiệm */}
+				<div>
+					<h3 className='mb-2 font-medium'>Kinh nghiệm</h3>
+					<RadioGroup value={filter.experience ?? 'none'} onValueChange={val => handleChange('experience', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-2'>
+						{[
+							{ value: 'none', label: 'Tất cả' },
+							{ value: 'NONE', label: 'Chưa có kinh nghiệm' },
+							{ value: 'SIX_MONTH', label: 'Dưới 6 tháng' },
+							{ value: 'ONE_TWO_YEARS', label: '1 - 2 năm' },
+							{ value: 'TWO_THREE_YEARS', label: '2 - 3 năm' },
+							{ value: 'THREE_FIVE_YEARS', label: '3 - 5 năm' },
+							{ value: 'FIVE_PLUS', label: 'Trên 5 năm' },
+						].map((exp, i) => (
+							<div key={i} className='flex items-center space-x-2'>
+								<RadioGroupItem value={exp.value} id={`exp-${i}`} />
+								<Label htmlFor={`exp-${i}`}>{exp.label}</Label>
 							</div>
 						))}
 					</RadioGroup>
@@ -58,70 +142,33 @@ export default function AdvancedFilter() {
 
 				{/* Mức lương */}
 				<div>
-					<h3 className='mb-4'>Mức lương (triệu)</h3>
-					<RadioGroup defaultValue='all' className='grid grid-cols-2 gap-4'>
-						{['Tất cả', 'Dưới 10', '10-15', '15-20', '20-25', '25-30', '30-50', 'Trên 50', 'Thỏa thuận'].map((sal, i) => (
-							<div key={i} className='flex items-center space-x-2'>
-								<RadioGroupItem value={sal} id={`sal-${i}`} />
-								<Label htmlFor={`sal-${i}`}>{sal}</Label>
-							</div>
-						))}
-					</RadioGroup>
-
-					{/* Slider chọn khoảng lương */}
-					<div className='mt-4'>
-						<Slider value={salaryRange} onValueChange={(val: [number, number]) => setSalaryRange(val)} min={0} max={100} step={5} />
-						<p className='text-sm mt-2 text-gray-500'>
-							Từ {salaryRange[0]} - {salaryRange[1]} triệu
-						</p>
-					</div>
+					<h3 className='mb-2 font-medium'>Mức lương (triệu đồng)</h3>
+					<Slider value={salaryRange} onValueChange={(val: [number, number]) => setSalaryRange(val)} min={0} max={100} step={5} />
+					<p className='text-sm mt-2 text-gray-500'>
+						Từ {salaryRange[0]} - {salaryRange[1]} triệu
+					</p>
 				</div>
 
-				{/* Lĩnh vực công ty */}
+				{/* Địa điểm làm việc */}
 				<div>
-					<h3 className='mb-2'>Lĩnh vực công ty</h3>
-					<Select>
-						<SelectTrigger>
-							<SelectValue placeholder='Tất cả lĩnh vực' />
+					<h3 className='mb-2 font-medium'>Địa điểm làm việc</h3>
+					<Select value={filter.workingAddress ?? 'all'} onValueChange={val => handleChange('workingAddress', val === 'all' ? undefined : val)}>
+						<SelectTrigger className='w-full'>
+							<SelectValue placeholder='Tất cả địa điểm' />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value='all'>Tất cả lĩnh vực</SelectItem>
-							<SelectItem value='it'>Công nghệ</SelectItem>
-							<SelectItem value='finance'>Tài chính</SelectItem>
+							<SelectItem value='all'>Tất cả</SelectItem>
+							<SelectItem value='Hà Nội'>Hà Nội</SelectItem>
+							<SelectItem value='Hồ Chí Minh'>Hồ Chí Minh</SelectItem>
+							<SelectItem value='Đà Nẵng'>Đà Nẵng</SelectItem>
+							<SelectItem value='Cần Thơ'>Cần Thơ</SelectItem>
+							<SelectItem value='Bắc Giang'>Bắc Giang</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>
 
-				{/* Lĩnh vực công việc */}
-				<div>
-					<h3 className='mb-2'>Lĩnh vực công việc</h3>
-					<Select>
-						<SelectTrigger>
-							<SelectValue placeholder='Tất cả lĩnh vực' />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value='all'>Tất cả lĩnh vực</SelectItem>
-							<SelectItem value='sales'>Kinh doanh</SelectItem>
-							<SelectItem value='marketing'>Marketing</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-
-				{/* Hình thức làm việc */}
-				<div>
-					<h3 className='mb-4'>Hình thức làm việc</h3>
-					<RadioGroup defaultValue='all' className='space-y-2'>
-						{['Tất cả', 'Toàn thời gian', 'Bán thời gian', 'Thực tập', 'Khác'].map((type, i) => (
-							<div key={i} className='flex items-center space-x-2'>
-								<RadioGroupItem value={type} id={`type-${i}`} />
-								<Label htmlFor={`type-${i}`}>{type}</Label>
-							</div>
-						))}
-					</RadioGroup>
-				</div>
-
-				<Button variant='outline' className='w-full'>
-					Xóa lọc
+				<Button variant='outline' className='w-full' onClick={handleClear}>
+					Xóa bộ lọc
 				</Button>
 			</div>
 		</div>

@@ -7,13 +7,14 @@ import { Bookmark, Clock, Heart, HeartPlus, MapPin } from 'lucide-react';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import Link from 'next/link';
+import LoadingCard from '@/components/ui/custom/skeleton';
 function RelatedJobs() {
-	const { data: jobs, isLoading } = useSWR([`/timviec`], () => jobService.getAll({}).then(res => res.data));
-	if (isLoading) return <></>;
+	const { data: jobs, isLoading } = useSWR([`/timviec`], () => jobService.getAll({ page: 1, limit: 10 }).then(res => res.data));
 	return (
 		<Card>
 			<CardTitle>Việc làm liên quan</CardTitle>
-			{jobs.items?.map(job => (
+			{isLoading && <LoadingCard></LoadingCard>}
+			{jobs?.items?.map(job => (
 				<div className='p-4  hover:shadow-md transition-shadow border hover:bg-primary/5  hover:border-primary'>
 					<Link href={`/jobs/${job.id}`} className='space-y-2'>
 						<div className='flex gap-2 items-start'>

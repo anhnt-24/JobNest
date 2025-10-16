@@ -14,7 +14,7 @@ interface SaveJobButtonProps {
 }
 
 export function SaveJobButton({ jobId, iconOnly = false, rounded = false, iconType = 'bookmark', size = 'default' }: SaveJobButtonProps) {
-	const { data: savedJobs, mutate } = useSWR(jobId ? `/jobs/${jobId}/toggle-save` : null, () => jobService.isJobSaved(Number(jobId)).then(res => res.data));
+	const { data: savedJobs, mutate } = useSWR(jobId ? `/jobs/${jobId}/toggle-save` : null, () => jobService.isSaved(Number(jobId)).then(res => res.data));
 
 	const handleSaveJob = async () => {
 		await jobService.toggleSave(jobId);

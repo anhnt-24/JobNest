@@ -3,16 +3,15 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, User, Briefcase, Settings, Save, Send, File, Bell } from 'lucide-react';
-import { FaBell, FaFile, FaGear, FaHouse, FaPaperPlane, FaUser } from 'react-icons/fa6';
+import { FaBell, FaFile, FaGear, FaHouse, FaPaperPlane, FaSuitcase, FaUser } from 'react-icons/fa6';
 import { FaSave } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
 
 const tabData = [
 	{ href: '/', label: 'Trang chủ', icon: <FaHouse className='size-6' /> },
-	{ href: '/profile', label: 'Tài khoản', icon: <FaUser className='size-6' /> },
+	{ href: '/candidate/profile', label: 'Tài khoản', icon: <FaUser className='size-6' /> },
 	{ href: '/profile', label: 'Cài đặt', icon: <FaGear className='size-6' /> },
-	{ href: '/candidate/save-job', label: 'Việc làm đã lưu', icon: <FaSave className='size-6' /> },
-	{ href: '/candidate/applied-jobs', label: 'Việc làm đã ứng tuyển', icon: <FaPaperPlane className='size-6' /> },
+	{ href: '/candidate/tab', label: 'Việc làm ', icon: <FaSuitcase className='size-6' /> },
 	{ href: '/candidate/cv', label: 'Quản lý cv', icon: <FaFile className='size-6' /> },
 
 	{ href: '/jobs', label: 'Thông báo', icon: <FaBell className='size-6' /> },
@@ -39,7 +38,7 @@ export function HorizontalTabs() {
 	return (
 		<div className='top-18 right-0 left-0 fixed z-10 flex justify-center items-center p-6 bg-primary shadow-sm'>
 			<div className='max-w-7xl w-full relative'>
-				<nav ref={navRef} className='flex items-center justify-between relative'>
+				<nav ref={navRef} className='flex items-center  gap-16 relative'>
 					{tabData.map(tab => {
 						const isActive = pathname === tab.href;
 						return (

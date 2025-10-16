@@ -42,9 +42,6 @@ export const JobSchema = z.object({
 
 export const UpdateJobSchema = JobSchema.partial();
 
-export type CreateJobReq = z.infer<typeof JobSchema>;
-export type UpdateJobReq = z.infer<typeof UpdateJobSchema>;
-
 export const JobResponseSchema = JobSchema.extend({
 	id: z.number().int(),
 	createdAt: z.coerce.date(),
@@ -52,4 +49,43 @@ export const JobResponseSchema = JobSchema.extend({
 	company: companyResponseSchema,
 });
 
+export const JobFilterSchema = z.object({
+	title: z.string().optional(),
+	level: JobLevelSchema.optional(),
+	type: JobTypeSchema.optional(),
+	education: EducationLevelSchema.optional(),
+	experience: ExperienceLevelSchema.optional(),
+	status: JobStatusSchema.optional(),
+
+	salaryFrom: z.coerce.number().int().min(0).optional(),
+	salaryTo: z.coerce.number().int().min(0).optional(),
+
+	deadlineBefore: z.coerce.date().optional(),
+	companyId: z.coerce.number().int().optional(),
+	employerId: z.coerce.number().int().optional(),
+
+	workingAddress: z.string().optional(),
+	category: z.string().optional(),
+});
+
+export const JobOrderFields = ['createdAt', 'salary', 'deadline'] as const;
+export const SortOrders = ['asc', 'desc'] as const;
+
+export const JobListQuerySchema = JobFilterSchema.extend({
+	page: z.coerce.number().int().min(1).default(1).optional(),
+	limit: z.coerce.number().int().min(1).max(100).default(10).optional(),
+	orders: z
+		.object({
+			createdAt: z.enum(['asc', 'desc']).optional(),
+			salary: z.enum(['asc', 'desc']).optional(),
+			deadline: z.enum(['asc', 'desc']).optional(),
+		})
+		.optional(),
+});
+
+export type CreateJobReq = z.infer<typeof JobSchema>;
+export type UpdateJobReq = z.infer<typeof UpdateJobSchema>;
+
 export type JobRes = z.infer<typeof JobResponseSchema>;
+export type JobFilter = z.infer<typeof JobFilterSchema>;
+export type JobListQuery = z.infer<typeof JobListQuerySchema>;

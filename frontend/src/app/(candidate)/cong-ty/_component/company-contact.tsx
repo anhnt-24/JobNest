@@ -1,10 +1,10 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CompanyResponse } from '@/schema/company.schema';
+import { CompanyRes } from '@/schema/company.schema';
 import { MapPin, Map } from 'lucide-react';
 
-export default function CompanyContact({ company }: { company: CompanyResponse }) {
+export default function CompanyContact({ company }: { company: CompanyRes }) {
 	return (
 		<Card>
 			<CardTitle className='border-b'>Thông tin liên hệ</CardTitle>
@@ -13,9 +13,7 @@ export default function CompanyContact({ company }: { company: CompanyResponse }
 					<MapPin className='size-6 text-primary inline mr-2' />
 					Địa chỉ công ty
 				</p>
-				<p className=' text-gray-600'>
-					{company?.addressDetail}, {company?.ward}, {company?.district}, {company?.province}
-				</p>
+				<p className=' text-gray-600'>{company?.addressDetail}</p>
 			</div>
 			<hr />
 			<div className='space-y-2'>

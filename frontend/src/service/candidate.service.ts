@@ -1,8 +1,8 @@
 import { api } from '@/lib/axios';
-import { CandidateProfileRes, UpdateCandidateReq } from '@/schema/candidate.schema';
+import { CandidateRes, UpdateCandidateReq } from '@/schema/candidate.schema';
 export const candidateService = {
-	getProfile: () => api.get<CandidateProfileRes>('/candidate/me'),
-	updateProfile: (req: UpdateCandidateReq) => api.put<CandidateProfileRes>('/candidate/me', req),
+	me: () => api.get<CandidateRes>('/candidate/me'),
+	update: (req: UpdateCandidateReq) => api.put<CandidateRes>('/candidate/me', req),
 	uploadAvatar: (file: File) => {
 		const formData = new FormData();
 		formData.append('avatar', file);

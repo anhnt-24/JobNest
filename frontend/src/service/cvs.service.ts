@@ -1,16 +1,16 @@
 import { api } from '@/lib/axios';
 
-export const cvsService = {
-	createCv: (file: File, title: string) => {
+export const cvService = {
+	create: (file: File, title: string) => {
 		const data = new FormData();
 		if (file) data.append('file', file as File);
 		data.append('title', title);
 
-		return api.post('/cvs/create', data);
+		return api.post('/cv/create', data);
 	},
-	getCvs: (query: any) => api.post('/cvs/me', query),
-	getAll: (query: any) => api.post('/cvs/get', query),
-	getCvById: (id: number) => api.get(`/cvs/${id}`),
-	updateCv: (id: number, data: any) => api.patch(`/cvs/${id}`, data),
-	deleteCv: (id: number) => api.delete(`/cvs/${id}`),
+	me: (query: any) => api.post('/cv/me', query),
+	getAll: (query: any) => api.post('/cv', query),
+	getByID: (id: number) => api.get(`/cv/${id}`),
+	update: (id: number, data: any) => api.patch(`/cv/${id}`, data),
+	delete: (id: number) => api.delete(`/cv/${id}`),
 };

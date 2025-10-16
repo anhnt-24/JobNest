@@ -8,7 +8,7 @@ import { Download, User, Mail, Phone, Calendar, FileText, ArrowUpDown, Filter, M
 import { Badge } from '@/components/ui/badge';
 import Pagination from '@/components/ui/custom/pagination';
 import useSWR from 'swr';
-import { cvsService } from '@/service/cvs.service';
+import { cvService } from '@/service/cvs.service';
 import Link from 'next/link';
 import { jobService } from '@/service/job.service';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';

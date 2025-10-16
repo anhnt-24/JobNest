@@ -34,14 +34,14 @@ export function Profile() {
 	});
 
 	const [date, setDate] = useState<Date>();
-	const { data: profile } = useSWR('/candidate/profile', () => candidateService.getProfile().then(res => res.data), { suspense: true });
+	const { data: profile } = useSWR('/candidate/profile', () => candidateService.me().then(res => res.data), { suspense: true });
 	const onSubmit = async (data: UpdateCandidateReq) => {
 		try {
 			const payload = {
 				...data,
 				dob: data.dob,
 			};
-			await candidateService.updateProfile(payload);
+			await candidateService.update(payload);
 			toast.success('Cập nhật hồ sơ thành công!');
 		} catch (err: any) {
 			console.log(err);

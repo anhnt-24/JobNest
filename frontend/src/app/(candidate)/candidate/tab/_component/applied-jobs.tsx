@@ -9,9 +9,9 @@ import Pagination from '@/components/ui/custom/pagination';
 import { useState } from 'react';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
-import Link from 'next/link';
 import { CustomBadge } from '@/components/ui/custom/custom-badge';
 import LoadingCard from '@/components/ui/custom/skeleton';
+import Empty from '@/components/ui/custom/empty';
 
 export function AppliedJobs() {
 	const [limit, setLimit] = useState(5);
@@ -38,6 +38,8 @@ export function AppliedJobs() {
 					<LoadingCard />
 				) : (
 					<div className='space-y-4'>
+						{data?.items?.length === 0 && <Empty></Empty>}
+
 						{data?.items?.map(res => (
 							<div className='p-4 hover:shadow-md transition-shadow border border-gray-200  bg-primary/5 hover:bg-primary/10 cursor-pointer '>
 								<div className=''>
@@ -85,7 +87,7 @@ export function AppliedJobs() {
 					</div>
 				)}
 				<div className='float-right'>
-					<Pagination pageSize={limit} currentPage={page} onPageChange={setPage} onPageSizeChange={setLimit} totalItems={data?.meta.totalPages}></Pagination>
+					<Pagination pageSize={limit} currentPage={page} onPageChange={setPage} onPageSizeChange={setLimit} totalItems={data?.meta.total}></Pagination>
 				</div>
 			</div>
 		</>

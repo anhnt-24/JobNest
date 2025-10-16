@@ -20,4 +20,4 @@ export const candidateResponseSchema = candidateSchema.extend({
 });
 
 export type UpdateCandidateReq = z.infer<typeof candidateSchema>;
-export type CandidateProfileRes = z.infer<typeof candidateResponseSchema>;
+export type CandidateRes = z.infer<typeof candidateResponseSchema>;

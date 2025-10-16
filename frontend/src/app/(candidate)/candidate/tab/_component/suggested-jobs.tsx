@@ -13,7 +13,6 @@ export function SuggestedJobs() {
 				<h2>Việc làm phù hợp</h2>
 				<p className='text-gray-600'>Những công việc phù hợp nhất với bạn dựa trên mong muốn, kỹ năng và kinh nghiệm.</p>
 			</div>
-
 			<div className='space-y-4'>
 				<div className='p-4 hover:shadow-md transition-shadow border hover:bg-primary/10  bg-primary/5  '>
 					<div className='space-y-2'>

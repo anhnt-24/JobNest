@@ -8,23 +8,23 @@ import CompanyJobs from '../_component/company-jobs';
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 import { companyService } from '@/service/company.service';
-import { CompanyResponse } from '@/schema/company.schema';
+import { CompanyRes } from '@/schema/company.schema';
 
 export default function Page() {
 	const params = useParams();
 	const id = params.id;
-	const { data: company } = useSWR(id ? `/company/${id}` : null, () => companyService.getCompanyById(Number(id)).then(res => res.data));
+	const { data: company } = useSWR(id ? `/company/${id}` : null, () => companyService.getById(Number(id)).then(res => res.data));
 	return (
-		<div>
-			<CompanyCard company={company as CompanyResponse}></CompanyCard>
+		<div className='pt-8'>
+			<CompanyCard company={company as CompanyRes}></CompanyCard>
 			<div className='flex pt-2 gap-6 '>
 				<div className='flex-2  space-y-6'>
-					<CompanyIntro company={company as CompanyResponse}></CompanyIntro>
+					<CompanyIntro company={company as CompanyRes}></CompanyIntro>
 					<CompanyGrid />
-					<CompanyJobs></CompanyJobs>
+					<CompanyJobs id={company?.id}></CompanyJobs>
 				</div>
 				<div className='flex-1 space-y-6 '>
-					<CompanyContact company={company as CompanyResponse}></CompanyContact>
+					<CompanyContact company={company as CompanyRes}></CompanyContact>
 					<CompanyShare></CompanyShare>
 				</div>
 			</div>

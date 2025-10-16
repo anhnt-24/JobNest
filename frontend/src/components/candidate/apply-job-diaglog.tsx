@@ -6,13 +6,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { JobResponse } from '@/schema/job.schema';
+import { JobRes } from '@/schema/job.schema';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Edit } from 'lucide-react';
 import { UploadCvModal } from './form-upload-cv';
 import useSWR from 'swr';
-import { cvsService } from '@/service/cvs.service';
+import { cvService } from '@/service/cvs.service';
 import { jobService } from '@/service/job.service';
+import { toast } from 'sonner';
 
 type FormValues = {
 	cvOption: 'last' | 'library' | 'upload';
@@ -21,11 +22,11 @@ type FormValues = {
 	message: string;
 };
 
-export function ApplyJobDialog({ job, className }: { job: JobResponse; className?: string }) {
+export function ApplyJobDialog({ job, className }: { job: JobRes; className?: string }) {
 	const [open, setOpen] = useState(false);
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const { data: cvs, isLoading } = useSWR(open ? ['/cvs/me', page, limit] : null, () => cvsService.getCvs({ page, limit }).then(res => res.data));
+	const { data: cvs, isLoading } = useSWR(open ? ['/cvs/me', page, limit] : null, () => cvService.me({ page, limit }).then(res => res.data));
 	const [selectedCV, setSelectedCV] = useState<any>();
 	const [selectedType, setSelectedType] = useState<string>('last');
 	const [selectedCV2, setSelectedCV2] = useState<any>();
@@ -44,21 +45,34 @@ export function ApplyJobDialog({ job, className }: { job: JobResponse; className
 
 	const onSubmit = async (data: FormValues) => {
 		setLoading(true);
-		if (data.cvOption === 'last') setSelectedCV(cvs.items[0]);
-		if (data.cvOption === 'library') setSelectedCV(selectedCV2);
-		if (data.cvOption === 'upload') {
-			if (file) {
-				const res = await cvsService.createCv(file, title);
-				setSelectedCV(res.data);
+		try {
+			let cv = selectedCV;
+
+			if (data.cvOption === 'last') {
+				cv = cvs.items[0];
+				setSelectedCV(cv);
+			} else if (data.cvOption === 'library') {
+				cv = selectedCV2;
+				setSelectedCV(cv);
+			} else if (data.cvOption === 'upload' && file) {
+				const res = await cvService.create(file, title);
+				cv = res.data;
+				setSelectedCV(cv);
 			}
+
+			if (cv) {
+				await jobService.apply(job.id, cv.id, data.message);
+				toast.success('Ứng tuyển thành công!');
+			}
+		} catch (error: any) {
+			console.error(error);
+			toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại.');
+		} finally {
+			setLoading(false);
+			setOpen(false);
 		}
-		if (selectedCV) {
-			await jobService.apply(job.id, selectedCV.id, data.message);
-		}
-		setLoading(false);
-		setOpen(false);
 	};
-	if (isLoading) return <></>;
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
@@ -71,7 +85,6 @@ export function ApplyJobDialog({ job, className }: { job: JobResponse; className
 						Ứng tuyển công việc <span className='text-primary'>{job?.title}</span>
 					</DialogTitle>
 				</DialogHeader>
-
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className='space-y-2  p-4 bg-gray-100 max-h-180 h-180 overflow-y-scroll'>
 						<Label className='text-lg font-semibold text-gray-800'>Chọn CV để ứng tuyển</Label>

@@ -47,19 +47,22 @@ export class ConversationService {
     const conversations = await this.prisma.conversation.findMany({
       where: { users: { some: { userId } } },
       include: {
-        users: { include: { user: true } },
-        messages: {
-          orderBy: { createdAt: 'desc' },
-          take: 1,
+        users: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+              },
+            },
+          },
         },
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    return conversations.map((c) => ({
-      ...c,
-      lastMessage: c.messages[0] ?? null,
-    }));
+    return conversations;
   }
 
   async sendMessage(conversationId: number, senderId: number, content: string) {

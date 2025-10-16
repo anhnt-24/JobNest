@@ -1,11 +1,10 @@
-// components/ui/empty.tsx
 import Image from 'next/image';
 
 type EmptyType = 'noData' | 'error' | 'notFound' | 'notification';
 
 interface EmptyProps {
 	type?: EmptyType;
-	title?: string; // luôn truyền khi dùng
+	title?: string;
 	imageSrc?: string;
 	alt?: string;
 	height?: number;

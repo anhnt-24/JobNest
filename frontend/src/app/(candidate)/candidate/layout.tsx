@@ -25,11 +25,11 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
 				</BreadcrumbList>
 			</Breadcrumb>
 
-			<div className=' flex-1 flex gap-4 '>
+			<div className=' flex-1 flex gap-6'>
 				<HorizontalTabs></HorizontalTabs>
 
-				<div className='flex-2 space-y-4'>{children}</div>
-				<div className='flex-1 space-y-4'>
+				<div className='flex-2 space-y-6'>{children}</div>
+				<div className='flex-1 space-y-6'>
 					<ProfileStatusCard />
 					<CVStatsCard />
 					<SidebarJobCard></SidebarJobCard>

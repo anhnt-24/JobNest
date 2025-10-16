@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { ArrowUp, FileUp } from 'lucide-react';
-import { cvsService } from '@/service/cvs.service';
+import { cvService } from '@/service/cvs.service';
 import { Label } from '@/components/ui/label';
 import { useDropzone } from 'react-dropzone';
 import { Card, CardContent } from '@/components/ui/card';
 export function UploadCvModal({ file, setFile, title, setTitle }: { file: File | null; setFile: Function; title: string; setTitle: (title: string) => void }) {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		cvsService.createCv(file as File, title);
+		cvService.create(file as File, title);
 		setFile(null);
 		setTitle('');
 		alert('CV đã được tải lên thành công!');

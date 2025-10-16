@@ -1,11 +1,11 @@
 import { api } from '@/lib/axios';
-import { CompanyResponse } from '@/schema/company.schema';
+import { CompanyRes } from '@/schema/company.schema';
 
 export const companyService = {
-	getMyInfo: () => api.get<CompanyResponse>('/company/me'),
-	getCompanyById: (id: number) => api.get<CompanyResponse>(`/company/${id}`),
-	updateCompanyInfo: (data: any) => api.put<CompanyResponse>('/company/me', data),
-	updateCompanyLogo: (logo: File) => {
+	me: () => api.get<CompanyRes>('/company/me'),
+	getById: (id: number) => api.get<CompanyRes>(`/company/${id}`),
+	update: (data: any) => api.put<CompanyRes>('/company', data),
+	uploadAvatar: (logo: File) => {
 		const formData = new FormData();
 		formData.append('avatar', logo);
 		return api.patch<string>('/company/avatar', formData, {
@@ -14,7 +14,7 @@ export const companyService = {
 			},
 		});
 	},
-	updateCompanyCover: (cover: File) => {
+	uploadCover: (cover: File) => {
 		const formData = new FormData();
 		formData.append('cover', cover);
 		return api.patch<string>('/company/cover', formData, {

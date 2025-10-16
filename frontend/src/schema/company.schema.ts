@@ -8,7 +8,7 @@ export const companySchema = z
 		taxCode: z.number().int().min(1, 'Số nhân viên phải ≥ 1'),
 		industry: z.string().trim().min(1).max(200),
 		description: z.string().trim().min(1).max(2000),
-		address: z.string().trim().min(1).max(300),
+		addressDetail: z.string().trim().min(1).max(300),
 		latitude: z.number('Vĩ độ phải là số').gte(-90, 'Vĩ độ ≥ -90').lte(90, 'Vĩ độ ≤ 90'),
 		longitude: z.number('Kinh độ phải là số').gte(-180, 'Kinh độ ≥ -180').lte(180, 'Kinh độ ≤ 180'),
 		phone: z

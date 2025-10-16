@@ -4,11 +4,11 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Globe, PlusIcon } from 'lucide-react';
-import { CompanyResponse } from '@/schema/company.schema';
+import { CompanyRes } from '@/schema/company.schema';
 import { Avatar } from '@/components/ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
 
-export default function CompanyBanner({ company }: { company: CompanyResponse }) {
+export default function CompanyBanner({ company }: { company: CompanyRes }) {
 	return (
 		<div className='mb-4 p-0 rounded-2xl overflow-hidden relative'>
 			<div className='relative h-100 w-full'>

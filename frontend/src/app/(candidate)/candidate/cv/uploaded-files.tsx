@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Edit, Download, Share2, Ellipsis, Link, Copy, Trash, Star } from 'lucide-react';
 import { UploadCvModal } from './upload-file-form';
 import useSWR from 'swr';
-import { cvsService } from '@/service/cvs.service';
+import { cvService } from '@/service/cvs.service';
 import Pagination from '@/components/ui/custom/pagination';
 import { useState } from 'react';
 import { FaFilePdf, FaFileWord, FaFileImage, FaFileAlt } from 'react-icons/fa';
@@ -13,27 +13,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import Image from 'next/image';
 import Empty from '@/components/ui/custom/empty';
-
-export function renderCVIcon(format: string, className?: string) {
-	switch (format) {
-		case 'PDF':
-			return <FaFilePdf className={className + ' text-red-500'} />;
-		case 'DOC':
-		case 'DOCX':
-			return <FaFileWord className={className + ' text-blue-500'} />;
-		case 'PNG':
-		case 'JPG':
-		case 'JPEG':
-			return <FaFileImage className={className + ' text-green-500'} />;
-		default:
-			return <FaFileAlt className={className + ' text-gray-500'} />;
-	}
-}
-
+import { DeleteCvButton } from './_component/delete-cv-btn';
+import { toast } from 'sonner';
+import { RenameCvButton } from './_component/rename-cv-diaglog';
 export function UploadedFiles() {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const { data: cvs, isLoading } = useSWR(['/cvs/me', page, limit], () => cvsService.getCvs({ page, limit }).then(res => res.data));
+	const { data: cvs, isLoading, mutate } = useSWR(['/cvs/me', page, limit], () => cvService.me({ page, limit }).then(res => res.data));
 	if (isLoading) return <>1</>;
 	return (
 		<Card className='p-6'>
@@ -75,8 +61,12 @@ export function UploadedFiles() {
 															<Ellipsis className='size-4' />
 														</Button>
 													</DropdownMenuTrigger>
-													<DropdownMenuContent className='w-56 text-gray-600' align='end'>
-														<DropdownMenuItem>
+													<DropdownMenuContent className='w-64 text-gray-600' align='end'>
+														<DropdownMenuItem
+															onClick={() => {
+																navigator.clipboard.writeText(cv.url);
+																toast.success('Đã sao chép liên kết!');
+															}}>
 															<Link className='mr-2 h-4 w-4 text-inherit' />
 															<span>Sao chép liên kết</span>
 														</DropdownMenuItem>
@@ -84,18 +74,9 @@ export function UploadedFiles() {
 															<Share2 className='mr-2 h-4 w-4 text-inherit' />
 															<span>Chia sẻ trên Facebook</span>
 														</DropdownMenuItem>
-														<DropdownMenuItem>
-															<Copy className='mr-2 h-4 w-4 text-inherit' />
-															<span>Tạo bản sao</span>
-														</DropdownMenuItem>
-														<DropdownMenuItem>
-															<Edit className='mr-2 h-4 w-4 text-inherit' />
-															<span>Đổi tên</span>
-														</DropdownMenuItem>
-														<DropdownMenuItem className='text-red-500'>
-															<Trash className='mr-2 h-4 w-4 text-inherit' />
-															<span>Xoá</span>
-														</DropdownMenuItem>
+
+														<RenameCvButton id={cv.id} title={cv.title} mutate={() => mutate()} />
+														<DeleteCvButton id={cv.id} title={cv.title} onDeleted={() => mutate()} />
 													</DropdownMenuContent>
 												</DropdownMenu>
 											</div>
