@@ -8,10 +8,10 @@ import JobList from './_components/job-list';
 import Pagination from '@/components/ui/custom/pagination';
 import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import RelatedJobs from './_components/related-jobs copy';
 import { JobListQuery } from '@/schema/job.schema';
 import LoadingCard from '../../candidate/profile/skeleton';
 import { Card } from '@/components/ui/card';
+import RelatedJobs from '@/components/candidate/related-jobs';
 const orderMap: Record<string, Partial<Record<'createdAt' | 'salary' | 'deadline', 'asc' | 'desc'>>> = {
 	newest: { createdAt: 'desc' },
 	salaryHigh: { salary: 'desc' },
@@ -66,7 +66,9 @@ function Page() {
 				Tuyển dụng <span className='text-primary font-semibold'>{jobs?.meta.total}</span> việc làm {title} tại Hà Nội [Update 20/08/2025]
 			</p>
 			<div className='flex gap-6'>
-				<AdvancedFilter filter={filter} setFilter={setFilter} />
+				<div className='sticky top-90'>
+					<AdvancedFilter filter={filter} setFilter={setFilter} />
+				</div>
 				<div className='flex-2 space-y-6'>
 					<div className='flex items-center gap-3 justify-end'>
 						<span className='text-gray-700'>Sắp xếp theo:</span>
@@ -96,9 +98,9 @@ function Page() {
 						</Card>
 					)}
 					{jobs && jobs.items?.length > 0 && (
-						<>
+						<div>
 							<JobList jobs={jobs.items} />
-							<div className='float-right'>
+							<div>
 								<Pagination
 									totalItems={jobs?.meta?.totalPages}
 									pageSize={filter.limit as number}
@@ -108,7 +110,7 @@ function Page() {
 									pageSizeOptions={[5, 10, 20, 50]}
 								/>
 							</div>
-						</>
+						</div>
 					)}{' '}
 					{jobs && jobs.items?.length === 0 && (
 						<div className='flex items-center flex-col '>

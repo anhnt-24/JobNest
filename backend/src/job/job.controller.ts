@@ -103,12 +103,12 @@ export class JobsController {
     return this.jobsService.updateStatus(+id, status);
   }
   @Get('cv/:id')
-  async getCVs(@Param('id') id: string) {
+  async getCVs(@Param('id') id: number) {
     return this.jobsService.getCVsByJob(+id);
   }
 
   @Get('company/:id')
-  async getCompany(@Param('id') id: string) {
+  async getCompany(@Param('id') id: number) {
     return this.jobsService.getCompanyByJob(+id);
   }
 }

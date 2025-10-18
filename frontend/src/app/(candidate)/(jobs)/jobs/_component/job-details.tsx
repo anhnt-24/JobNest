@@ -15,31 +15,29 @@ export default function JobDetails({ job }: { job: JobRes }) {
 				<h2>Danh mục nghề liên quan</h2>
 				<ul className='space-y-2'>
 					<li className='flex items-center gap-2'>
-						<Badge className='text-sm'>{job.category}</Badge>
+						<Badge variant={'secondary'}>{job.category}</Badge>
 					</li>
 				</ul>
 			</div>
 
 			<div className='space-y-2'>
 				<h2>Kỹ năng cần có</h2>
-				<ul className='space-y-2'>
+				<ul className='space-y-2 space-x-2'>
 					{job.mustSkills.map(skill => (
-						<li key={skill} className='flex items-center gap-2'>
-							<span className='h-2 w-2 rounded-full bg-gray-500'></span>
-							<span>{skill}</span>
-						</li>
+						<Badge key={skill} variant={'secondary'}>
+							{skill}
+						</Badge>
 					))}
 				</ul>
 			</div>
 
 			<div className='space-y-2'>
 				<h2>Kỹ năng nên có</h2>
-				<ul className='space-y-2'>
+				<ul className='space-y-2 space-x-2'>
 					{job.niceSkills?.map(skill => (
-						<li key={skill} className='flex items-center gap-2'>
-							<span className='h-2 w-2 rounded-full bg-muted-foreground'></span>
-							<span>{skill}</span>
-						</li>
+						<Badge key={skill} variant={'secondary'}>
+							{skill}
+						</Badge>
 					))}
 				</ul>
 			</div>

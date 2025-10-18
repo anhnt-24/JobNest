@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 import JobPosting from '../_component/job-posting';
 import LoadingCard from '../../../candidate/profile/skeleton';
-import RelatedJobs from '../_component/related-jobs';
 import { CompanyCard } from '../_component/company-sidebar-card';
 import GeneralInfo from '../_component/general-info';
 import JobDetails from '../_component/job-details';
 import { SidebarJobCard } from '@/components/candidate/sidebar-job-card';
 import { jobService } from '@/service/job.service';
+import RelatedJobs from '@/components/candidate/related-jobs';
 
 export default async function Page({ params }: { params: Promise<{ id: number }> }) {
 	const { id } = await params;

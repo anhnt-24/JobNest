@@ -32,11 +32,11 @@ export function SiteHeader() {
 						<DropdownMenuTrigger asChild>
 							<div className='flex items-center gap-3 cursor-pointer  py-1 transition hover:bg-gray-100'>
 								<Avatar className='size-12 border'>
-									<AvatarImage src={user?.company?.avatarUrl} alt='avatar' />
+									<AvatarImage src={user?.company?.user.avatarUrl} alt='avatar' />
 									<AvatarFallback>TA</AvatarFallback>
 								</Avatar>
 								<div className=' flex font-medium items-center gap-2 text-gray-700'>
-									{user?.company?.name}
+									{user?.company?.user.name}
 									<ChevronDown className='size-5'></ChevronDown>
 								</div>
 							</div>
@@ -45,11 +45,11 @@ export function SiteHeader() {
 						<DropdownMenuContent align='end' className='w-80'>
 							<DropdownMenuLabel className='font-medium text-lg flex items-center gap-4'>
 								<Avatar className='size-16 border'>
-									<AvatarImage src={user?.company?.avatarUrl} alt='avatar' />
+									<AvatarImage src={user?.company?.user.avatarUrl} alt='avatar' />
 									<AvatarFallback>TA</AvatarFallback>
 								</Avatar>
 								<div>
-									<span className='font-semibold text-lg'>{user?.company?.name}</span>
+									<span className='font-semibold text-lg'>{user?.company?.user.name}</span>
 									<p className='text-gray-500'>{user?.email}</p>
 								</div>
 							</DropdownMenuLabel>

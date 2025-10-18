@@ -81,7 +81,7 @@ export default async function JobPosting({ job }: { job: JobRes }) {
 					<h2 className='border-l-4 border-primary px-2 py-0'>Chi tiết tin tuyển dụng</h2>
 					<Badge variant={'secondary'}>Chuyên môn {job.title}</Badge>
 				</div>
-				<CardContent className='space-y-6'>
+				<div className='space-y-6'>
 					<div>
 						<h3 className='text-lg font-semibold mb-3'>Mô tả công việc</h3>
 						<p>{job.description}</p>
@@ -113,9 +113,9 @@ export default async function JobPosting({ job }: { job: JobRes }) {
 						<h3 className='text-lg font-semibold mb-3'>Cách thức ứng tuyển</h3>
 						<p>{job.applicationMethod}</p>
 					</div>
-				</CardContent>
+				</div>
 
-				<CardFooter className='flex flex-col gap-4'>
+				<div className='flex flex-col gap-4'>
 					<div className='flex justify-between items-center w-full'>
 						<p className=''>Hạn nộp hồ sơ: 30/09/2025</p>
 						<div className='flex gap-2'>
@@ -123,11 +123,7 @@ export default async function JobPosting({ job }: { job: JobRes }) {
 							<Button>Ứng tuyển ngay</Button>
 						</div>
 					</div>
-
-					<Button variant='outline' size={'sm'} className='self-start'>
-						Xem số người đã ứng tuyển <ChevronDown className='h-4 w-4 ml-1' />
-					</Button>
-				</CardFooter>
+				</div>
 			</Card>
 		</>
 	);

@@ -1,95 +1,118 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardTitle } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/hook/useAuth';
-import { useChatSocket } from '@/hooks/use-socket';
-import { conversationService } from '@/service/conversation.service';
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
-import { Building2, Send, Search, Bell, Volume2, Settings, Paperclip, Smile, Hand } from 'lucide-react';
-import { useState } from 'react';
+import { Send, Paperclip, Smile, MessageSquare } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { AppliedJobList } from './_component/applied-job-list';
 import { ConversationSidebar } from './_component/conversation-sidebar';
 import { FaHand } from 'react-icons/fa6';
+import LoadingCard from '@/components/ui/custom/skeleton';
+import useSWR from 'swr';
+import { authService } from '@/service/auth.service';
+import { useConversationStore } from '@/store/conversation-store';
+import ChatMessages from './_component/chat-message';
+import { useChat } from '@/hooks/use-chat';
+import { conversationService } from '@/service/conversation.service';
 
 export default function MessagesPage() {
 	const [activeConvo, setActiveConvo] = useState<number | null>(null);
-	const [activeApplication, setActiveApplication] = useState(null);
-	const { messages: socketMessages } = useChatSocket(activeConvo);
+	const [activeEmployer, setActiveEmployer] = useState<number | null>(null);
+	const [activeApplication, setActiveApplication] = useState<number | null>(null);
 	const [input, setInput] = useState<string>('');
 	const { user } = useAuth();
+	const { data: employer, isLoading } = useSWR(activeEmployer != null ? `/employer/profile/${activeEmployer}` : null, () => authService.findOne(activeEmployer!).then(res => res.data));
+	const { messages } = useChat(activeConvo!);
 	const handleSendMessage = async () => {
-		if (!input.trim() || !activeConvo) return;
-		await conversationService.sendMessage(activeConvo, input).then(res => {
-			setInput('');
-		});
-	};
-	if (!user) return <div>Loading...</div>;
+		if (!input.trim() || !user) return;
+		let conversationId = activeConvo;
+		if (activeConvo === null) {
+			const conversation = await conversationService.createByApplicationId(activeApplication!);
+			conversationId = conversation.data.id;
+			setActiveConvo(conversationId);
+		}
 
+		const message = {
+			conversationId: conversationId,
+			senderId: user.id,
+			content: input.trim(),
+		};
+
+		setInput('');
+		await conversationService.sendMessage(conversationId!, message.content);
+	};
+	const updateConversation = useConversationStore(state => state.updateConversation);
+	useEffect(() => {
+		if (activeConvo) {
+			conversationService.markAsRead(activeConvo).then(res => updateConversation(activeConvo, res.data));
+		}
+	}, [activeConvo]);
+	if (!user) return <LoadingCard></LoadingCard>;
 	return (
 		<Card className='flex p-0 '>
 			<div className='flex'>
-				<ConversationSidebar activeConvo={activeConvo} setActiveConvo={setActiveConvo} />
+				<ConversationSidebar setActiveEmployer={setActiveEmployer} activeConvo={activeConvo} setActiveConvo={setActiveConvo} />
 
 				<div className='flex-grow flex flex-col h-dvh '>
-					{activeApplication && (
+					{employer && (
 						<div className='px-4  h-24 border-b flex items-center justify-between'>
 							<div className='flex items-center gap-3'>
 								<Avatar className='size-14 border rounded-full'>
-									<AvatarImage src={activeApplication?.job.company?.avatarUrl} className='rounded-full size-full'></AvatarImage>
+									<AvatarImage src={employer?.avatarUrl} className='rounded-full size-full'></AvatarImage>
 								</Avatar>
 								<div>
-									<h3 className='font-semibold'>{activeApplication?.job.company?.name}</h3>
-									<p className=' text-gray-600'>Vị trí: {activeApplication?.job.title}</p>
+									<p className='text-lg font-bold'>{employer?.name}</p>
+									<p className='text-sm'>{employer?.employer?.company.user.name}</p>
 								</div>
 							</div>
-							<Button>Xem thông tin</Button>
+							<Button>Xem thêm</Button>
 						</div>
 					)}
 					{activeConvo ? (
-						<div className='flex-grow overflow-y-auto p-4 space-y-4'>
-							{socketMessages.map(message => (
-								<div key={message.id} className={`flex ${message.senderId === Number(user.id) ? 'justify-end' : 'justify-start'}`}>
-									<div className={`max-w-[70%] rounded-lg p-3 ${message.senderId === Number(user.id) ? 'bg-primary text-white' : 'bg-gray-100'}`}>
-										<p>{message.content}</p>
-										<span className={`text-xs mt-1 block ${message.senderId === Number(user.id) ? 'text-blue-100' : 'text-gray-500'}`}>{new Date(message.createdAt).toLocaleTimeString()}</span>
-									</div>
-								</div>
-							))}
-						</div>
+						<ChatMessages messages={messages}></ChatMessages>
 					) : (
-						<div className='flex-grow flex-col flex pt-40 gap-2 items-center'>
-							<Avatar className='border rounded-full'>
-								<AvatarImage src={activeApplication?.job.company?.avatarUrl} className='rounded-full size-14'></AvatarImage>
-							</Avatar>
-							<h3 className='font-semibold'>{activeApplication?.job.company?.name}</h3>
-							<p>Vị trí: {activeApplication?.job.title}</p>
-							<p>
-								Hãy bắt đầu cuộc trò chuyện bằng một lời chào <FaHand className=' inline  text-yellow-500 size-6 '></FaHand>
-							</p>
+						employer && (
+							<div className='flex-1  flex-col flex justify-center gap-2 items-center'>
+								<Avatar className='border rounded-full'>
+									<AvatarImage src={employer?.avatarUrl} className='rounded-full size-14'></AvatarImage>
+								</Avatar>
+								<div>
+									<p className='font-bold text-xl'>{employer?.name}</p>
+								</div>
+								<p>
+									Hãy bắt đầu cuộc trò chuyện bằng một lời chào <FaHand className=' inline  text-yellow-500 size-6 '></FaHand>
+								</p>
+							</div>
+						)
+					)}
+					{!employer && (
+						<div className='flex flex-col items-center flex-1 justify-center p-8 text-gray-400'>
+							<MessageSquare className='w-16 h-16 mb-4' />
+							<p className='text-lg font-medium'>Chưa có tin nhắn nào</p>
+							<p className='text-sm text-gray-500 mt-1'>Bắt đầu cuộc trò chuyện với người khác ngay!</p>
 						</div>
 					)}
-
-					<div className='p-4 border-t'>
-						<div className='flex  items-center'>
-							<Button variant={'ghost'} size={'sm'}>
-								<Paperclip className='size-6 ' />
-							</Button>
-							<Button variant={'ghost'} size={'sm'}>
-								<Smile className='size-6' />
-							</Button>
-							<Input value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Nhập tin nhắn...' className='flex-grow mr-3' />
-							<Button onClick={handleSendMessage}>
-								<Send className='w-4 h-4' />
-							</Button>
+					{employer && (
+						<div className='p-4 border-t mt-auto'>
+							<div className='flex  items-center'>
+								<Button variant={'ghost'} size={'sm'}>
+									<Paperclip className='size-6 ' />
+								</Button>
+								<Button variant={'ghost'} size={'sm'}>
+									<Smile className='size-6' />
+								</Button>
+								<Input value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Nhập tin nhắn...' className='flex-grow mr-3' />
+								<Button onClick={handleSendMessage}>
+									<Send className='w-4 h-4' />
+								</Button>
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
-				<AppliedJobList setActiveApplication={setActiveApplication} setActiveConvo={setActiveConvo}></AppliedJobList>
+				<AppliedJobList setActiveApplication={setActiveApplication} setActiveEmployer={setActiveEmployer} setActiveConvo={setActiveConvo} employer={employer}></AppliedJobList>
 			</div>
 		</Card>
 	);

@@ -16,10 +16,10 @@ export default function CompanyBanner({ company }: { company: CompanyRes }) {
 			</div>
 			<div className='absolute  flex items-end px-6 p-8 top-48 w-full'>
 				<Avatar className='size-40 rounded-full border-10 border-white shadow-lg'>
-					<AvatarImage src={company?.avatarUrl} alt='Apollo Logo'></AvatarImage>
+					<AvatarImage src={company?.user.avatarUrl} alt='Apollo Logo'></AvatarImage>
 				</Avatar>
 				<div className='flex-1 ml-4 text-shadow-gray-600 text-shadow-xs text-primary-foreground '>
-					<h2 className=' text-2xl text-primary-foreground'>{company?.name}</h2>
+					<h2 className=' text-2xl text-primary-foreground'>{company?.user.name}</h2>
 
 					<div className='mt-2 flex flex-wrap items-center gap-4'>
 						<div className='flex items-center gap-1'>

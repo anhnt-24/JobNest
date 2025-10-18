@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Put,
   Request,
   UploadedFile,
@@ -18,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { File as MulterFile } from 'multer';
 import { CompanyService } from 'src/company/company.service';
 import { UpdateCompanyDto } from 'src/company/dto/update-company.dto';
+import { CompanyListQueryDto } from './dto/company-list-query.dto';
 
 @Controller('company')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -42,6 +44,10 @@ export class CompanyController {
       +req.user.userId,
       updateCompanyDto,
     );
+  }
+  @Post('/get-all')
+  async getCompanies(@Body() query: CompanyListQueryDto) {
+    return this.companyService.getCompanies(query);
   }
 
   @Patch('cover')

@@ -16,24 +16,27 @@ function SidebarJobItem({ job }: { job: JobRes }) {
 	return (
 		<div className='p-4 rounded-lg  bg-white space-y-4 hover:border-primary transition-all border cursor-pointer group'>
 			<div className='flex items-start gap-3'>
-				<Avatar className='w-18 h-18 rounded-sm'>
-					<AvatarImage src={job.company?.avatarUrl || 'cc'} alt={job.company?.name} />
-					<AvatarFallback className='rounded-md border border-gray-200'>TA</AvatarFallback>
-				</Avatar>
+				<Link href={`/jobs/${job.id}`}>
+					<Avatar className='w-18 h-18 rounded-sm border p-2'>
+						<AvatarImage src={job.company?.user.avatarUrl || 'cc'} alt={job.company?.user.name} className='object-contain' />
+						<AvatarFallback>TA</AvatarFallback>
+					</Avatar>
+				</Link>
+
 				<div>
-					<div className='space-x-1'>
-						<CustomBadge type='top'></CustomBadge>
-						<CustomBadge type='gap'></CustomBadge>
-						<h4 className='line-clamp-2 text-base cursor-pointer hover:text-primary inline'>{job.title}</h4>
-					</div>
-					<p className='line-clamp-1 text-sm text-gray-500 font-medium'>{job.company?.name}</p>
+					<Link href={`/jobs/${job.id}`}>
+						<h4 className='line-clamp-2 text-base cursor-pointer hover:text-primary font-semibold '>{job.title}</h4>
+					</Link>
+					<Link href={`/cong-ty/${job.companyId}`}>
+						<p className='line-clamp-1 text-sm text-gray-500 font-medium'>{job.company?.user.name}</p>
+					</Link>
 				</div>
 			</div>
 
 			<div className='flex items-center justify-between'>
 				<div className='flex flex-col sm:flex-row sm:items-center sm:gap-2 '>
 					{job.salary && (
-						<Badge variant='secondary' className='bg-primary/10 text-primary font-mediumrounded-xs'>
+						<Badge variant='secondary' className='bg-primary/10 text-primary '>
 							{job.salary}
 						</Badge>
 					)}
@@ -42,9 +45,6 @@ function SidebarJobItem({ job }: { job: JobRes }) {
 					</Badge>
 				</div>
 				<div className='flex items-center gap-2'>
-					{/* <div className='hidden group-hover:block transition-all '>
-						<ApplyJobDialog job={job} />
-					</div> */}
 					<SaveJobButton jobId={job.id} iconOnly size='md' iconType='heart' rounded></SaveJobButton>
 				</div>
 			</div>

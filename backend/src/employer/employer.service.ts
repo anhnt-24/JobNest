@@ -33,7 +33,11 @@ export class EmployerService {
             avatarUrl: true,
           },
         },
-        company: true,
+        company: {
+          include: {
+            user: { select: { id: true, name: true, avatarUrl: true } },
+          },
+        },
       },
     });
     if (!employer) throw new NotFoundException('Employer không tồn tại');

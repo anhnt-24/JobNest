@@ -3,24 +3,17 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Bookmark, Clock, Heart, HeartPlus, MapPin } from 'lucide-react';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import Link from 'next/link';
 import LoadingCard from '@/components/ui/custom/skeleton';
-import { SaveJobButton } from '@/components/ui/custom/save-job-btn';
-import { useState } from 'react';
-import Pagination from '@/components/ui/custom/pagination';
-function SuggestedJobs() {
-	const [page, setPage] = useState(1);
-	const [limit, setLimit] = useState(5);
-	const { data: jobs, isLoading } = useSWR([`/timviec/`, page, limit], () => jobService.getAll({ page, limit }).then(res => res.data));
+import { SaveJobButton } from '../ui/custom/save-job-btn';
+function RelatedJobs() {
+	const { data: jobs, isLoading } = useSWR([`/timviec/cc`], () => jobService.getAll({ page: 1, limit: 10 }).then(res => res.data));
 	return (
-		<div className='px-4 space-y-4'>
-			<div>
-				<h2>Việc làm gợi ý cho bạn</h2>
-				<p className='text-gray-600'>Những công việc phù hợp nhất với bạn dựa trên mong muốn, kỹ năng và kinh nghiệm.</p>
-			</div>
-
+		<Card>
+			<CardTitle>Việc làm liên quan</CardTitle>
 			{isLoading && <LoadingCard></LoadingCard>}
 			{jobs?.items?.map(job => (
 				<div className='p-4  hover:shadow-md transition-shadow border rounded-lg hover:bg-primary/5  hover:border-primary'>
@@ -61,8 +54,7 @@ function SuggestedJobs() {
 					</div>
 				</div>
 			))}
-			<Pagination pageSize={limit} currentPage={page} onPageChange={setPage} onPageSizeChange={setLimit} totalItems={jobs?.meta?.total}></Pagination>
-		</div>
+		</Card>
 	);
 }
-export default SuggestedJobs;
+export default RelatedJobs;

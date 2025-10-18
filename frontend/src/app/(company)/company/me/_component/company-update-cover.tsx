@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Image as ImageIcon } from 'lucide-react';
 import { FaPencil, FaUpload } from 'react-icons/fa6';
 import { companyService } from '@/service/company.service';
+import { toast } from 'sonner';
 
 type Props = {
 	initialImage?: string;
@@ -13,7 +14,7 @@ type Props = {
 	placeholder?: string;
 };
 
-export default function CoverImageUploader({ initialImage, maxSizeMB = 5, onUploaded, placeholder = 'Kéo thả ảnh bìa vào đây hoặc nhấn để chọn' }: Props) {
+export default function CoverImageUploader({ initialImage, maxSizeMB = 5, placeholder = 'Kéo thả ảnh bìa vào đây hoặc nhấn để chọn' }: Props) {
 	const [preview, setPreview] = useState<string | null>(initialImage ?? null);
 	const [file, setFile] = useState<File | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -83,10 +84,10 @@ export default function CoverImageUploader({ initialImage, maxSizeMB = 5, onUplo
 		}
 		try {
 			setLoading(true);
-			const res = await companyService.updateCompanyCover(file);
+			const res = await companyService.uploadCover(file);
 			if (res.data) {
-				onUploaded?.(res.data); // Trả về URL ảnh mới
 				setOpen(false);
+				toast.success('Tải ảnh thành công.');
 			}
 		} catch (err: any) {
 			setError('Tải ảnh thất bại, vui lòng thử lại.');
@@ -130,7 +131,7 @@ export default function CoverImageUploader({ initialImage, maxSizeMB = 5, onUplo
 							)}
 							<input ref={inputRef} type='file' accept='image/*' className='sr-only' onChange={e => handleFiles(e.target.files)} />
 						</div>
-						{error && <p className='mt-2 text-sm text-red-600'>{error}</p>}
+						{error && <p className='mt-2 text-red-600'>{error}</p>}
 					</div>
 
 					<div className='justify-end flex gap-2'>

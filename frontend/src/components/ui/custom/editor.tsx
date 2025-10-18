@@ -132,7 +132,7 @@ export default function RichTextEditor({ title, value, onChange }: { title: stri
 
 	return (
 		<div className={cn('mx-auto transition-all duration-300', isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : '')}>
-			<div className='rounded-2xl overflow-hidden border border-editor-border bg-card '>
+			<div className='rounded-xs overflow-hidden border border-editor-border bg-card '>
 				{/* Header */}
 				<div className='border-b border-editor-border bg-editor-toolbar-bg px-4 py-3 rounded-t-2xl'>
 					<div className='flex items-center justify-between'>

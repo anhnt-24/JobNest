@@ -282,4 +282,36 @@ export class AuthService {
     });
     return imageUrl;
   }
+  async findOne(id: number) {
+    const { ...data } = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        company: {},
+        employer: {
+          include: {
+            company: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+
+        candidate: true,
+      },
+    });
+    const { password, ...user } = data;
+
+    if (!user) {
+      throw new NotFoundException('Không tìm thấy người dùng');
+    }
+    return user;
+  }
 }

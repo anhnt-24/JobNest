@@ -60,11 +60,11 @@ const ProfilePage = () => {
 				<CardTitle>Công ty</CardTitle>
 				<div className='flex items-center gap-4'>
 					<Avatar className='size-24'>
-						<AvatarImage src={data.company.avatarUrl} />
-						<AvatarFallback>{data.company.name.charAt(0)}</AvatarFallback>
+						<AvatarImage src={data.company.user.avatarUrl} />
+						<AvatarFallback>{data.company?.user.name.charAt(0)}</AvatarFallback>
 					</Avatar>
 					<div>
-						<h2 className='text-xl font-semibold'>{data.company.name}</h2>
+						<h2 className='text-xl font-semibold'>{data.company?.user.name}</h2>
 						<p className='text-gray-500'>{data.company.industry}</p>
 					</div>
 				</div>

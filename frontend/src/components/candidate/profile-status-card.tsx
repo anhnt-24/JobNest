@@ -19,12 +19,10 @@ export function ProfileStatusCard() {
 		const res = await candidateService.uploadAvatar(file);
 		setUser(user => ({
 			...user,
-			candidate: {
-				...user.candidate,
-				avatarUrl: res.data,
-			},
+			avatarUrl: res.data,
 		}));
 	};
+
 	const [jobStatus, setJobStatus] = useState(true);
 	const [allowSearch, setAllowSearch] = useState(true);
 	return (
@@ -33,7 +31,7 @@ export function ProfileStatusCard() {
 				<AvatarWithUpload user={user} onSave={handleUpload}></AvatarWithUpload>
 				<div className='space-y-0.5'>
 					<p className='text-sm text-gray-600'>Chào bạn trở lại,</p>
-					<h6 className='font-semibold text-lg mb-1 '>{user?.candidate.name}</h6>
+					<h6 className='font-semibold text-lg mb-1 '>{user?.name}</h6>
 					<Badge className=' flex items-center '>
 						<Check className='size-5' /> Đã xác thực
 					</Badge>
@@ -150,7 +148,7 @@ export default function AvatarWithUpload({ user, onSave }: AvatarWithUploadProps
 		<div className='relative w-32 h-32'>
 			<Avatar className='w-28 h-28 border border-gray-200 '>
 				<AvatarFallback className='text-2xl text-white'>{getInitials(user?.name)}</AvatarFallback>
-				<AvatarImage src={user?.candidate?.avatarUrl} />
+				<AvatarImage src={user?.avatarUrl} />
 			</Avatar>
 
 			<Dialog open={open} onOpenChange={setOpen}>

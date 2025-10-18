@@ -52,8 +52,8 @@ export function Profile() {
 	useEffect(() => {
 		if (profile) {
 			reset({
-				name: profile?.name || '',
-				phone: profile?.phone || '',
+				name: profile?.user.name || '',
+				phone: profile?.user.phone || '',
 				dob: new Date(profile?.dob),
 				gender: profile?.gender,
 			});

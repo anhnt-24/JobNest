@@ -228,8 +228,8 @@ model Job {
   level           JobLevel                       
   education       EducationLevel?                
   type              JobType  
-  category   String?                    
-  
+  category        String?                    
+  isUrgent      Boolean @default(false) 
   mustSkills  String[]  @default([])  
   niceSkills  String[]  @default([])  
   areaTags    String[]  @default([])                        
@@ -294,34 +294,44 @@ model Notification {
 }
 
 model Conversation {
-  id         Int                 @id @default(autoincrement())
-  createdAt  DateTime            @default(now())
-  users      UserConversation[]
-  messages   Message[]
+  id             Int                @id @default(autoincrement())
+  createdAt      DateTime           @default(now())
+  users          UserConversation[]
+  messages       Message[]
 
- lastMessage String?            
-  applicationId Int? @unique
-  application   Application? @relation(fields: [applicationId], references: [id])
+  lastMessage    String?            // lưu nội dung tin nhắn mới nhất (để hiển thị nhanh trong sidebar)
+  lastMessageAt  DateTime?          // lưu thời điểm tin mới nhất — dùng để sắp xếp danh sách chat
+
+  applicationId  Int?               @unique
+  application    Application?       @relation(fields: [applicationId], references: [id])
 }
 
 model UserConversation {
   id              Int           @id @default(autoincrement())
   userId          Int
   conversationId  Int
-  user            User          @relation(fields: [userId], references: [id])
-  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+
+  // Lưu trạng thái đọc tin của từng user trong mỗi conversation
+  lastReadAt      DateTime?      // thời điểm user đọc tin nhắn cuối cùng
+  unreadCount     Int            @default(0) // số tin chưa đọc (tùy dùng backend tính hoặc cập nhật realtime)
+
+  user            User           @relation(fields: [userId], references: [id])
+  conversation    Conversation   @relation(fields: [conversationId], references: [id])
+
+  @@unique([userId, conversationId])
 }
 
 model Message {
-  id             String        @id @default(cuid())
-  senderId       Int
-  conversationId Int
-  content        String
-  createdAt      DateTime      @default(now())
-  
-  sender         User          @relation(fields: [senderId], references: [id])
-  conversation   Conversation  @relation(fields: [conversationId], references: [id])
+  id              String         @id @default(cuid())
+  senderId        Int
+  conversationId  Int
+  content         String
+  createdAt       DateTime       @default(now())
+
+  sender          User           @relation(fields: [senderId], references: [id])
+  conversation    Conversation   @relation(fields: [conversationId], references: [id])
 }
+
 
 model Post {
   id          Int      @id @default(autoincrement())

@@ -37,31 +37,29 @@ export function SavedJobs() {
 					{data?.items?.length === 0 && <Empty></Empty>}
 
 					{data?.items?.map(res => (
-						<div key={res.id} className='border-b p-4 bg-primary/5  hover:bg-primary/10 cursor-pointer '>
+						<div key={res.id} className='border-b p-4   hover:bg-primary/5 hover:border-primary cursor-pointer '>
 							<div className='space-y-2'>
 								<div className='flex gap-4 items-start'>
-									<Avatar className='size-24 border border-gray-100'>
-										<AvatarImage className='size-full' src={res.job.company.avatarUrl} alt='@user' />
+									<Avatar className='size-32 p-2 bg-white border'>
+										<AvatarImage className='object-contain' src={res.job.company.user.avatarUrl} alt='@user' />
 									</Avatar>
 									<div className='flex-1 space-y-2'>
 										<div>
-											<div className='text-sm space-y-1'>
-												<div className='flex gap-8 justify-between'>
-													<Link href={`/job/${res.job.id}`} className='space-x-1'>
-														{false && <CustomBadge type='top'></CustomBadge>}
-														{false && <CustomBadge type='gap'></CustomBadge>}
-														<h3 className=' line-clamp-2 inline max-w-md hover:text-primary'>{res.job.title} caic caica caica cac cacsoc ac acac ac</h3>
+											<div className='space-y-1'>
+												<div className='flex gap-4 justify-between'>
+													<Link href={`/job/${res.job.id}`} className='flex-1'>
+														<h3 className=' line-clamp-2 font-semibold text-lg hover:text-primary'>{res.job.title} caic caica caica cac cacsoc ac acac ac</h3>
 													</Link>
-													<p className='text-primary font-semibold '>{res.job.salary}</p>
+													<p className='text-primary font-semibold text-lg '>{res.job.salary}</p>
 												</div>
-												<Link href={`/cong-ty/${res.job.company.id}`} className='space-x-1 '>
-													<p className='text-gray-600'>{res.job.company.name}</p>
+												<Link href={`/cong-ty/${res.job.companyId}`} className='space-x-1 '>
+													<p className='text-gray-600'>{res.job.company?.user.name}</p>
 												</Link>
 												<div className='flex gap-2 mt-1'>
-													<Badge variant={'secondary'} className='flex items-center text-sm '>
+													<Badge variant={'secondary'}>
 														<span>{res.job.workingAddress}</span>
 													</Badge>
-													<Badge variant={'secondary'} className='flex items-center'>
+													<Badge variant={'secondary'}>
 														<span>Cập nhật 10 phút trước</span>
 													</Badge>
 												</div>
@@ -69,7 +67,7 @@ export function SavedJobs() {
 										</div>
 										<div className='border-b'></div>
 										<div className='flex gap-2 justify-between'>
-											<div className='flex items-center text-gray-500'>
+											<div className='flex items-center'>
 												<Clock className='size-4 mr-1' />
 												<span>Đã lưu: {res.savedAt}</span>
 											</div>

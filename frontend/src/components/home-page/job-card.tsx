@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import { CustomBadge } from '../ui/custom/custom-badge';
 import Link from 'next/link';
+import { SaveJobButton } from '../ui/custom/save-job-btn';
 
 export function JobCard({ job }: { job?: any }) {
 	const id = job.id;
@@ -21,34 +22,36 @@ export function JobCard({ job }: { job?: any }) {
 			<div className='flex gap-3'>
 				<Link href={`/jobs/${job.id}`}>
 					<Avatar className='rounded-sm w-18 h-18 '>
-						<AvatarImage src={job.company.avatarUrl} alt='@user' />
+						<AvatarImage src={job.company.user.avatarUrl} alt='@user' className='border object-contain' />
 						<AvatarFallback>TA</AvatarFallback>
 					</Avatar>
 				</Link>
 
 				<div>
-					<div className='space-x-1'>
+					{/* <div className='space-x-1'>
 						{true && <CustomBadge type='top'></CustomBadge>}
 						{true && <CustomBadge type='gap'></CustomBadge>}
-					</div>
+					</div> */}
 
 					<Link href={`/jobs/${job.id}`}>
-						<h4 className='line-clamp-1 font-medium  cursor-pointer group-hover:text-primary'>{job.title}</h4>
+						<p className='line-clamp-2 font-semibold  cursor-pointer group-hover:text-primary'>{job.title}</p>
 					</Link>
 					<Link href={''}>
-						<p className='text-sm font-medium text-gray-400 line-clamp-1'>{job.company.name}</p>
+						<p className='text-sm font-medium text-gray-400 line-clamp-1'>{job.company?.user.name}</p>
 					</Link>
 				</div>
 			</div>
 
 			<div className=' flex justify-between items-center'>
 				<div className='flex flex-col sm:flex-row sm:items-center sm:gap-2 text-sm'>
-					<Badge variant={'secondary'}>10 - 35 triệu</Badge>
-					<Badge variant={'secondary'}>Hà Nội, Hồ Chí Minh</Badge>
+					<Badge variant={'secondary'} className='rounded-full py-1'>
+						10 - 35 triệu
+					</Badge>
+					<Badge variant={'secondary'} className='rounded-full py-1'>
+						Hà Nội, Hồ Chí Minh
+					</Badge>
 				</div>
-				<button onClick={handleSaveJob} className='rounded-full border border-primary text-primary p-1 cursor-pointer hover:bg-primary/5'>
-					{isSaved ? <Heart className='fill-primary size-6'></Heart> : <Heart className='size-6' />}
-				</button>
+				<SaveJobButton iconOnly iconType='heart' size='md' jobId={job.id} rounded></SaveJobButton>
 			</div>
 		</Card>
 	);

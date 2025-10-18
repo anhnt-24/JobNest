@@ -14,20 +14,22 @@ export default function JobList({ jobs }: { jobs: JobRes[] }) {
 		<div className='flex-2 space-y-6'>
 			<div className='space-y-4'>
 				{jobs?.map(item => (
-					<Card className='bg-primary/5 border-primary/80 p-4 hover:bg-primary/3'>
+					<Card className='border p-4 hover:bg-primary/5  hover:border-primary'>
 						<div className='flex gap-4 items-start '>
-							<Avatar className='size-28 border overflow-hidden rounded-xs border-gray-200'>
-								<AvatarImage className='size-full ' src={item.company.avatarUrl} alt='@user' />
+							<Avatar className='size-32 p-2 bg-white border overflow-hidden rounded-xs border-gray-200'>
+								<Link href={`/jobs/${item.id}`}>
+									<AvatarImage className='object-contain size-full' src={item.company.user.avatarUrl} alt='@user' />
+								</Link>
 							</Avatar>
 							<div className='flex-1 space-y-1'>
-								<div className='flex justify-between items-start '>
-									<Link href={`/jobs/${item.id}`}>
-										<h3 className='line-clamp-2 max-w-md text-xl font-semibold hover:text-primary cursor-pointer'>{item.title}</h3>
+								<div className='flex gap-4 justify-between items-start '>
+									<Link href={`/jobs/${item.id}`} className='flex-1'>
+										<h3 className='line-clamp-2 text-lg font-semibold hover:text-primary cursor-pointer'>{item.title}</h3>
 									</Link>
 									<p className='text-primary text-lg font-semibold border-primary'>{item.salary}</p>
 								</div>
-								<Link href={`/cong-ty/${item.company.id}`} className='hover:underline'>
-									<p className='text-gray-600'>{item.company.name}</p>
+								<Link href={`/cong-ty/${item.company.id}`}>
+									<p className='text-gray-600'>{item.company?.user.name}</p>
 								</Link>
 								<div className='flex  gap-2 mt-2'>
 									<Badge variant={'secondary'} className='shadow-2xl'>

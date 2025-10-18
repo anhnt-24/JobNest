@@ -57,7 +57,7 @@ export default function CompaniesPage() {
 					<TableBody>
 						{companies.map(company => (
 							<TableRow key={company.id}>
-								<TableCell className='font-medium'>{company.name}</TableCell>
+								<TableCell className='font-medium'>{company?.user.name}</TableCell>
 								<TableCell>{company.email}</TableCell>
 								<TableCell>{company.phone}</TableCell>
 								<TableCell>{company.jobsPosted}</TableCell>

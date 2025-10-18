@@ -13,7 +13,7 @@ export default function CompanyContact({ company }: { company: CompanyRes }) {
 					<MapPin className='size-6 text-primary inline mr-2' />
 					Địa chỉ công ty
 				</p>
-				<p className=' text-gray-600'>{company?.addressDetail}</p>
+				<p className=' text-gray-600'>{company?.address}</p>
 			</div>
 			<hr />
 			<div className='space-y-2'>

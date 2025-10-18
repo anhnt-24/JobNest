@@ -12,11 +12,11 @@ import { CompanyRes } from '@/schema/company.schema';
 export function CompanyCard({ company }: { company: CompanyRes }) {
 	return (
 		<Card className='p-6'>
-			<div className='flex items-start gap-2'>
-				<Avatar className='size-24 border rounded-lg '>
-					<AvatarImage src={company?.avatarUrl} />
+			<div className='flex flex-col gap-4 justify-center items-center gap-2'>
+				<Avatar className='size-32 border rounded-lg '>
+					<AvatarImage src={company?.user?.avatarUrl} />
 				</Avatar>
-				<h3>{company?.name}</h3>
+				<h3 className='font-bold'>{company?.user.name}</h3>
 			</div>
 
 			<div className='flex items-center  gap-2'>

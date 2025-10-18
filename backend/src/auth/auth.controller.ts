@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -73,5 +74,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async uploadAvatar(@Req() req, @UploadedFile() file: MulterFile) {
     return this.authService.uploadAvatar(+req.user.userId, file);
+  }
+  @Public()
+  @Get('/:id')
+  async getUserById(@Param('id') id: number) {
+    return this.authService.findOne(id);
   }
 }

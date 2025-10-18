@@ -20,8 +20,8 @@ export default function Layout({
 			<SidebarInset>
 				<SiteHeader />
 				<div className='flex flex-1 flex-col'>
-					<div className='@container/main flex flex-1 flex-col gap-2 bg-gray-50'>
-						<div className='flex flex-col gap-4 p-4 flex-1 '>{children}</div>
+					<div className='@container/main flex flex-1 flex-col gap-2 '>
+						<div className='flex flex-col gap-6 p-6 flex-1 '>{children}</div>
 					</div>
 				</div>
 			</SidebarInset>

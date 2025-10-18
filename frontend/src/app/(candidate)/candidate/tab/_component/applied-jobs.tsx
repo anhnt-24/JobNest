@@ -12,6 +12,8 @@ import { jobService } from '@/service/job.service';
 import { CustomBadge } from '@/components/ui/custom/custom-badge';
 import LoadingCard from '@/components/ui/custom/skeleton';
 import Empty from '@/components/ui/custom/empty';
+import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
 
 export function AppliedJobs() {
 	const [limit, setLimit] = useState(5);
@@ -19,9 +21,17 @@ export function AppliedJobs() {
 	const { data, isLoading } = useSWR(['/job/applied', page, limit], () => jobService.getAppliedJobs({ page, limit }).then(res => res.data));
 	return (
 		<>
-			<div className='px-4 space-y-6'>
-				<CardHeader className='flex justify-between items-center'>
+			<div className='px-4 space-y-4'>
+				<div className='border-b pb-2'>
 					<h2>Việc làm đã ứng tuyển</h2>
+					<p className='text-gray-600'>Những công việc phù hợp nhất với bạn dựa trên mong muốn, kỹ năng và kinh nghiệm.</p>
+				</div>
+
+				<div className='flex items-center justify-between gap-4'>
+					<p className='text-gray-500'>
+						Danh sách <span className='font-semibold text-primary'>{data?.meta.total}</span> việc làm đã ứng tuyển
+					</p>
+
 					<Select>
 						<SelectTrigger className='w-[180px]'>
 							<SelectValue placeholder='Trạng thái' />
@@ -33,7 +43,7 @@ export function AppliedJobs() {
 							<SelectItem value='system'>Hồ sơ chưa phù hợp</SelectItem>
 						</SelectContent>
 					</Select>
-				</CardHeader>
+				</div>
 				{isLoading ? (
 					<LoadingCard />
 				) : (
@@ -41,44 +51,38 @@ export function AppliedJobs() {
 						{data?.items?.length === 0 && <Empty></Empty>}
 
 						{data?.items?.map(res => (
-							<div className='p-4 hover:shadow-md transition-shadow border border-gray-200  bg-primary/5 hover:bg-primary/10 cursor-pointer '>
+							<div className='p-4 hover:border-primary transition-shadow border-b hover:bg-primary/5 cursor-pointer '>
 								<div className=''>
-									<div className='flex gap-4 items-start'>
-										<Avatar className='size-24 border border-gray-200 rounded-xs'>
-											<AvatarImage className='size-full' src={res.job.company.avatarUrl} alt='@user' />
+									<div className='flex gap-4 items-start '>
+										<Avatar className='size-32 border border-gray-200 rounded-xs p-2'>
+											<AvatarImage className='object-contain' src={res.job.company.user.avatarUrl} alt='@user' />
 										</Avatar>
-										<div className='flex-1 space-y-2 '>
-											<div className='flex justify-between '>
-												<div className='space-y-2'>
-													<div className='space-x-1'>
-														{true && <CustomBadge type='top'></CustomBadge>}
-														{true && <CustomBadge type='gap'></CustomBadge>}
-														<h3 className='inline line-clamp-2 max-w-md'>{res.job.title}</h3>
-													</div>
-													<p className='text-gray-500 text-sm font-medium'>{res.job.company.name}</p>
-													<div className='flex items-center text-gray-500'>
-														<Clock className='h-4 w-4 mr-1' />
-														<span>Thời gian ứng tuyển: {res.appliedAt}</span>
-													</div>
-												</div>
-												<p className='text-primary text-lg  font-semibold'> {res.job.salary}</p>
+										<div className='flex-1  '>
+											<div className='flex gap-4 justify-between'>
+												<Link href={`/job/${res.job.id}`} className='flex-1'>
+													<p className=' line-clamp-2 font-semibold text-lg hover:text-primary'>{res.job.title}</p>
+												</Link>
+												<p className='text-primary font-semibold text-lg '>{res.job.salary}</p>
 											</div>
+											<Link href={`/cong-ty/${res.job.companyId}`} className='space-x-1 '>
+												<p className='text-gray-600'>{res.job.company?.user.name}</p>
+											</Link>
+											<Badge variant={'secondary'} className='flex gap-2 items-center mt-1'>
+												<Clock className='size-4'></Clock>
+												<span>Ứng tuyển lúc: {res.appliedAt}</span>
+											</Badge>
 										</div>
 									</div>
 
 									<div className='flex flex-wrap items-center gap-2 pt-2 justify-between'>
 										<div className='flex gap-2'>
-											<p className='flex items-center font-semibold  text-blue-500'>Đã ứng tuyển</p>
+											<p className='flex items-center font-semibold  text-blue-500'> Đã ứng tuyển</p>
 										</div>
 										<div className='flex gap-2 justify-center'>
-											<Button className='flex-1' variant={'outline'} size={'md'}>
+											<Button variant={'outline'} size={'md'}>
 												<MessageSquare></MessageSquare>
-												Nhắn tin
 											</Button>
-											<Button className='flex-1' size={'md'}>
-												<Search />
-												Xem CV
-											</Button>
+											<Button size={'md'}>Xem CV</Button>
 										</div>
 									</div>
 								</div>

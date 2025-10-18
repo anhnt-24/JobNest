@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { File as MulterFile } from 'multer';
 import { MinioService } from 'src/minio/minio.service';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { CompanyListQueryDto } from './dto/company-list-query.dto';
 
 @Injectable()
 export class CompanyService {
@@ -33,6 +34,17 @@ export class CompanyService {
   async findOne(id: number) {
     const company = await this.prisma.company.findUnique({
       where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            phone: true,
+            avatarUrl: true,
+          },
+        },
+      },
     });
     if (!company) throw new NotFoundException('Không tìm thấy công ty.');
     return company;
@@ -84,5 +96,23 @@ export class CompanyService {
       },
     });
     return data.coverUrl;
+  }
+  async getCompanies(query: CompanyListQueryDto) {
+    const prismaArgs = query.toPrismaArgs();
+
+    const [items, total] = await Promise.all([
+      this.prisma.company.findMany(prismaArgs),
+      this.prisma.company.count({ where: prismaArgs.where }),
+    ]);
+
+    return {
+      items,
+      meta: {
+        total,
+        page: query.page,
+        limit: query.limit,
+        totalPages: Math.ceil(total / query.limit),
+      },
+    };
   }
 }

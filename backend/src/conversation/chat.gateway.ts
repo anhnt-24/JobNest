@@ -23,7 +23,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private convoService: ConversationService) {}
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    const userId = client.handshake.query.userId;
+    if (userId) {
+      client.join(`user_${userId}`);
+    }
   }
 
   handleDisconnect(client: Socket) {

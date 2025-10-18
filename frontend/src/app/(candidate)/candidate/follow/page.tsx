@@ -47,7 +47,7 @@ const companies = [
 export default function FollowedCompaniesPage() {
 	const [search, setSearch] = useState('');
 
-	const filteredCompanies = companies.filter(company => company.name.toLowerCase().includes(search.toLowerCase()));
+	const filteredCompanies = companies.filter(company => company?.user.name.toLowerCase().includes(search.toLowerCase()));
 
 	return (
 		<Card>
@@ -66,12 +66,12 @@ export default function FollowedCompaniesPage() {
 				<div key={company.id} className='flex gap-4 border-b  p-4 hover hover:bg-gray-100 cursor-pointer bg-white'>
 					<div className='flex gap-4'>
 						<Avatar className='size-32 rounded-xs border'>
-							<AvatarImage src={company.logo} alt={company.name} />
-							<AvatarFallback>{company.name.charAt(0)}</AvatarFallback>
+							<AvatarImage src={company.logo} alt={company?.user.name} />
+							<AvatarFallback>{company?.user.name.charAt(0)}</AvatarFallback>
 						</Avatar>
 						<div className='flex-grow'>
 							<div className='flex items-center justify-between'>
-								<h3>{company.name}</h3>
+								<h3>{company?.user.name}</h3>
 							</div>
 
 							<p className='text-gray-600 text-sm mt-1'>{company.description}</p>

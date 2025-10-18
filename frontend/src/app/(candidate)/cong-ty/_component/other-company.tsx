@@ -2,81 +2,33 @@
 import Image from 'next/image';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
-
-const companies = [
-	{
-		name: 'CÔNG TY CỔ PHẦN CÔNG NGHỆ - VIỄN THÔNG ELCOM',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-	{
-		name: 'CÔNG TY CỔ PHẦN TRUYỀN THÔNG IRIS',
-		industry: 'IT - Phần mềm',
-		logo: null,
-	},
-	{
-		name: 'CÔNG TY CỔ PHẦN VIỄN THÔNG FPT',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-	{
-		name: 'TRUNG TÂM NGHIÊN CỨU VÀ PHÁT TRIỂN MOBIFONE',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-	{
-		name: 'TỔNG CÔNG TY CÔNG NGHIỆP CÔNG NGHỆ CAO VIETTEL',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-	{
-		name: 'CÔNG TY CỔ PHẦN DỊCH VỤ KỸ THUẬT MOBIFONE',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-	{
-		name: 'VIETTEL IDC',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-	{
-		name: 'CÔNG TY TNHH PHÂN PHỐI SYNNEX FPT',
-		industry: 'IT - Phần mềm',
-		logo: null,
-	},
-	{
-		name: 'TẬP ĐOÀN FPT',
-		industry: 'IT - Phần mềm',
-		logo: null,
-	},
-	{
-		name: 'HỆ THỐNG BÁN LẺ VIETTEL STORE - CÔNG TY TM & XNK VIETTEL',
-		industry: 'Viễn thông',
-		logo: null,
-	},
-];
+import useSWR from 'swr';
+import { companyService } from '@/service/company.service';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
+import LoadingCard from '@/components/ui/custom/skeleton';
 
 export default function CompanyGrid() {
+	const { data: companies, isLoading } = useSWR('company', () => companyService.getAll({}).then(res => res.data));
 	return (
 		<Card>
 			<div className='border-b  pb-2'>
 				<CardTitle>Thương hiệu lớn tiêu biểu cùng lĩnh vực</CardTitle>
 				<p>Những thương hiệu tuyển dụng đã khẳng định được vị thế trên thị trường.</p>
 			</div>
+			{isLoading && <LoadingCard />}
 			<div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-				{companies.map((c, idx) => (
-					<div key={idx} className='flex items-center gap-3 p-4 hover:shadow-md transition rounded-xl border border-primary'>
-						<Image src={c.logo ?? '/image.png'} alt={c.name} width={54} height={54} className='rounded-md border bg-white object-contain' />
+				{companies?.items?.map((c, idx) => (
+					<Link href={`/cong-ty/${c.id}`} key={idx} className='flex items-center gap-3 p-4 hover:shadow-md transition rounded-xl border border-yellow-500 hover:bg-primary/5 hover:border-primary '>
+						<Avatar className='size-18 border rounded-sm'>
+							<AvatarImage src={c.user.avatarUrl} alt={c.name} width={54} height={54} className=' object-contain' />
+						</Avatar>
 						<div>
-							<p className='font-medium leading-snug line-clamp-2 hover:text-primary'>{c.name}</p>
-							<p className='text-sm text-gray-500'>{c.industry}</p>
+							<p className='font-semibold  leading-snug line-clamp-2 hover:text-primary'>{c.user.name}</p>
+							<p className=' text-gray-500'>{c.industry}</p>
 						</div>
-					</div>
+					</Link>
 				))}
-			</div>
-			<div className='flex items-center  mt-8 justify-center text-primary'>
-				<p className='font-semibold  hover:underline cursor-pointer'>Xem thêm</p>
-				<ArrowRight className='inline  size-5' />
 			</div>
 		</Card>
 	);

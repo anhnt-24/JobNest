@@ -10,11 +10,11 @@ import useSWR from 'swr';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import LoadingCard from '../ui/custom/skeleton';
 
 export function JobListings() {
 	const [page, setPage] = useState(1);
 	const { data: jobs, isLoading } = useSWR(['/job/listings', page], () => jobService.getAll({ page, limit: 9 }).then(res => res.data));
-	if (isLoading) return <></>;
 	const handlePrev = () => {
 		setPage(prev => (prev > 1 ? prev - 1 : prev));
 	};
@@ -50,7 +50,7 @@ export function JobListings() {
 						))}
 					</div>
 				) : (
-					<Image alt='empty' src={'/illustration/undraw_no-data_ig65.png'} height={1000} width={1000} className='size-[30%] mx-auto  object-contain'></Image>
+					!isLoading && <Image alt='empty' src={'/illustration/undraw_no-data_ig65.png'} height={1000} width={1000} className='size-[30%] mx-auto  object-contain'></Image>
 				)}
 
 				<div className='flex items-center justify-center gap-x-4 mt-4'>
@@ -63,12 +63,12 @@ export function JobListings() {
 
 					<p className='font-semibold'>
 						<span className='text-primary'>{page}</span>
-						<span className='text-gray-400'>/ {jobs.meta.totalPages}</span>
+						<span className='text-gray-400'>/ {jobs?.meta.totalPages}</span>
 					</p>
 
 					<button
 						onClick={handleNext}
-						disabled={page === jobs.meta.totalPages}
+						disabled={page === jobs?.meta.totalPages}
 						className='rounded-full text-primary border border-primary p-2 hover:bg-primary/5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'>
 						<ChevronRight size={20} />
 					</button>

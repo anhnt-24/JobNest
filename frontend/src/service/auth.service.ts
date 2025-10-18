@@ -7,6 +7,7 @@ export const authService = {
 	logoutNext: () => nextApi.post<string>('/auth/logout'),
 	logout: () => api.post<string>('/auth/logout'),
 	refresh: () => api.post<AuthResponse>('/auth/refresh'),
+	findOne: (id: number) => api.get(`/auth/${id}`),
 	candidateRegister: (data: RegisterReq) => api.post<AuthResponse>('/auth/register', data),
 	setAuth: (access_token: string, refresh_token: string) => nextApi.post<AuthResponse>('/auth/store-token', { access_token, refresh_token }),
 	getToken: () => nextApi.get<AuthResponse>('/auth/get-token'),

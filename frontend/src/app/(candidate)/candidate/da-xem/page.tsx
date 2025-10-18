@@ -56,7 +56,7 @@ const viewedRecords = [
 export default function ViewedCompaniesPage() {
 	const [search, setSearch] = useState('');
 
-	const filteredRecords = viewedRecords.filter(record => record.company.name.toLowerCase().includes(search.toLowerCase()));
+	const filteredRecords = viewedRecords.filter(record => record.company?.user.name.toLowerCase().includes(search.toLowerCase()));
 
 	return (
 		<Card>
@@ -77,13 +77,13 @@ export default function ViewedCompaniesPage() {
 			{filteredRecords.map(record => (
 				<div key={record.id} className='flex gap-4 border-b p-4 hover:bg-gray-100 cursor-pointer bg-white'>
 					<Avatar className='size-32 rounded-xs border'>
-						<AvatarImage src={record.company.logo} alt={record.company.name} />
-						<AvatarFallback>{record.company.name.charAt(0)}</AvatarFallback>
+						<AvatarImage src={record.company.logo} alt={record.company?.user.name} />
+						<AvatarFallback>{record.company?.user.name.charAt(0)}</AvatarFallback>
 					</Avatar>
 
 					<div className='flex-grow'>
 						<div className='flex items-center justify-between'>
-							<h3 className='font-semibold'>{record.company.name}</h3>
+							<h3 className='font-semibold'>{record.company?.user.name}</h3>
 							<span className='text-sm text-gray-500'>{record.viewedAt}</span>
 						</div>
 

@@ -88,6 +88,17 @@ export class ApplicationListQueryDto extends IntersectionType(
                 },
               },
             },
+            employer: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
           },
         },
         cv: true,

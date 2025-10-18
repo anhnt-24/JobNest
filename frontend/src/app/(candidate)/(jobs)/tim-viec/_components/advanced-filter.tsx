@@ -51,17 +51,15 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 	}, [salaryRange, setFilter]);
 
 	return (
-		<div className=' rounded-lg overflow-hidden'>
-			{/* Header */}
-			<div className='flex items-center gap-2 font-bold text-xl border-b sticky top-0 p-4 bg-white'>
+		<div className='  sticky top-46'>
+			<div className='flex items-center gap-2 font-bold text-xl border-b  p-4 '>
 				<Filter className='size-5 text-primary' />
 				Lọc nâng cao
 			</div>
 
-			<div className='p-4 max-h-200 overflow-y-auto space-y-6 bg-white rounded-b-lg'>
-				{/* Danh mục nghề */}
+			<div className='p-4 max-h-200 overflow-y-auto space-y-4 '>
 				<div>
-					<h3 className='mb-2 font-medium'>Danh mục nghề</h3>
+					<h3 className='mb-2 font-semibold'>Danh mục nghề</h3>
 					<Select value={filter.category ?? 'all'} onValueChange={val => handleChange('category', val === 'all' ? undefined : val)}>
 						<SelectTrigger className='w-full'>
 							<SelectValue placeholder='Tất cả danh mục' />
@@ -78,9 +76,9 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 				</div>
 
 				{/* Cấp bậc */}
-				<div className='space-y-2'>
-					<h3 className='mb-2 font-medium'>Cấp bậc</h3>
-					<RadioGroup value={filter.level ?? 'none'} onValueChange={val => handleChange('level', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-2'>
+				<div className='space-y-4'>
+					<h3 className=' font-semibold'>Cấp bậc</h3>
+					<RadioGroup value={filter.level ?? 'none'} onValueChange={val => handleChange('level', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-4'>
 						{[
 							{ value: 'none', label: 'Tất cả' },
 							{ value: 'INTERN', label: 'Thực tập sinh' },
@@ -101,8 +99,8 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 
 				{/* Hình thức làm việc */}
 				<div>
-					<h3 className='mb-2 font-medium'>Hình thức làm việc</h3>
-					<RadioGroup value={filter.type ?? 'none'} onValueChange={val => handleChange('type', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-2'>
+					<h3 className='mb-4 font-semibold'>Hình thức làm việc</h3>
+					<RadioGroup value={filter.type ?? 'none'} onValueChange={val => handleChange('type', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-4'>
 						{[
 							{ value: 'none', label: 'Tất cả' },
 							{ value: 'FULL_TIME', label: 'Toàn thời gian' },
@@ -121,8 +119,8 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 
 				{/* Kinh nghiệm */}
 				<div>
-					<h3 className='mb-2 font-medium'>Kinh nghiệm</h3>
-					<RadioGroup value={filter.experience ?? 'none'} onValueChange={val => handleChange('experience', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-2'>
+					<h3 className='mb-4 font-semibold'>Kinh nghiệm</h3>
+					<RadioGroup value={filter.experience ?? 'none'} onValueChange={val => handleChange('experience', val === 'none' ? undefined : (val as any))} className='grid grid-cols-2 gap-4'>
 						{[
 							{ value: 'none', label: 'Tất cả' },
 							{ value: 'NONE', label: 'Chưa có kinh nghiệm' },
@@ -142,7 +140,7 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 
 				{/* Mức lương */}
 				<div>
-					<h3 className='mb-2 font-medium'>Mức lương (triệu đồng)</h3>
+					<h3 className='mb-4 font-semibold'>Mức lương (triệu đồng)</h3>
 					<Slider value={salaryRange} onValueChange={(val: [number, number]) => setSalaryRange(val)} min={0} max={100} step={5} />
 					<p className='text-sm mt-2 text-gray-500'>
 						Từ {salaryRange[0]} - {salaryRange[1]} triệu
@@ -151,7 +149,7 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 
 				{/* Địa điểm làm việc */}
 				<div>
-					<h3 className='mb-2 font-medium'>Địa điểm làm việc</h3>
+					<h3 className='mb-2 font-semibold'>Địa điểm làm việc</h3>
 					<Select value={filter.workingAddress ?? 'all'} onValueChange={val => handleChange('workingAddress', val === 'all' ? undefined : val)}>
 						<SelectTrigger className='w-full'>
 							<SelectValue placeholder='Tất cả địa điểm' />
@@ -167,7 +165,7 @@ export default function AdvancedFilter({ filter, setFilter }: AdvancedFilterProp
 					</Select>
 				</div>
 
-				<Button variant='outline' className='w-full' onClick={handleClear}>
+				<Button className='w-full font-semibold  ' onClick={handleClear}>
 					Xóa bộ lọc
 				</Button>
 			</div>

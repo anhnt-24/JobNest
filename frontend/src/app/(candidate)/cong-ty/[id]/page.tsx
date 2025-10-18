@@ -20,8 +20,8 @@ export default function Page() {
 			<div className='flex pt-2 gap-6 '>
 				<div className='flex-2  space-y-6'>
 					<CompanyIntro company={company as CompanyRes}></CompanyIntro>
-					<CompanyGrid />
 					<CompanyJobs id={company?.id}></CompanyJobs>
+					<CompanyGrid />
 				</div>
 				<div className='flex-1 space-y-6 '>
 					<CompanyContact company={company as CompanyRes}></CompanyContact>

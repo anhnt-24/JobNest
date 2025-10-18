@@ -40,11 +40,21 @@ export class JobsService {
     return job;
   }
 
-  async findOne(id: number): Promise<Job> {
+  async findOne(id: number) {
     const job = await this.prisma.job.findUnique({
       where: { id },
       include: {
-        company: true,
+        company: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!job) throw new NotFoundException('Job not found');

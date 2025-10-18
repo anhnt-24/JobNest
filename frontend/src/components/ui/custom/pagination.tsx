@@ -33,7 +33,7 @@ export default function Pagination({ totalItems, pageSize, currentPage, onPageCh
 		pages.push(totalPages);
 	}
 	return (
-		<div className='flex gap-4 float-right'>
+		<div className='flex gap-4 mt-6 justify-end'>
 			<ShadCnPagination>
 				<PaginationContent className='gap-5 items-center'>
 					<PaginationItem>
