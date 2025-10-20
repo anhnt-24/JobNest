@@ -4,22 +4,22 @@ import { CompanyRegisterReq, LoginReq, RegisterReq } from '@/schema/auth.schema'
 import { UserRes } from '@/schema/user.schema';
 import { authService } from '@/service/auth.service';
 import { useRouter } from 'next/navigation';
-import { createContext, useState, ReactNode, useEffect, Dispatch } from 'react';
+import { createContext, useState, ReactNode, useEffect, Dispatch, SetStateAction } from 'react';
 import { toast } from 'sonner';
 
 interface AuthContextType {
-	user: UserRes | null;
+	user: UserRes | undefined;
 	login: (req: LoginReq) => Promise<void>;
 	candidateRegister: (req: RegisterReq) => Promise<void>;
 	companyRegister: (req: CompanyRegisterReq) => Promise<void>;
 	logout: () => Promise<void>;
-	setUser: Dispatch<UserRes>;
+	setUser: Dispatch<SetStateAction<UserRes | undefined>>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-	const [user, setUser] = useState<UserRes | null>(null);
+	const [user, setUser] = useState<UserRes>();
 	const router = useRouter();
 	useEffect(() => {
 		const loadUser = async () => {
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const logout = async () => {
 		await nextApi.post('/auth/logout');
-		setUser(null);
+		setUser(undefined);
 		toast.success('Đăng xuất thành công.');
 		router.replace('/login');
 		tokenStorage.acessToken = '';

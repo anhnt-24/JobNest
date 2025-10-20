@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, markdown } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
+import { Markdown } from '@tiptap/markdown';
 import Color from '@tiptap/extension-color';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { Button } from '@/components/ui/button';
@@ -40,7 +41,7 @@ import {
 	Palette,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
+import LoadingCard from './skeleton';
 interface ToolbarButtonProps {
 	onClick: () => void;
 	isActive?: boolean;
@@ -52,6 +53,7 @@ interface ToolbarButtonProps {
 const ToolbarButton = ({ onClick, isActive, disabled, children, title }: ToolbarButtonProps) => (
 	<Button
 		size='sm'
+		type='button'
 		variant='ghost'
 		onClick={onClick}
 		disabled={disabled}
@@ -66,21 +68,13 @@ const ToolbarButton = ({ onClick, isActive, disabled, children, title }: Toolbar
 	</Button>
 );
 
-// const ColorButton = ({ color, onClick, isActive }: { color: string; onClick: () => void; isActive: boolean }) => (
-// 	<button
-// 		className={cn('h-6 w-6 rounded border-2 transition-all duration-200 hover:scale-110', isActive ? 'border-ring shadow-md' : 'border-border')}
-// 		style={{ backgroundColor: color }}
-// 		onClick={onClick}
-// 		title={`Set color to ${color}`}
-// 	/>
-// );
-
 export default function RichTextEditor({ title, value, onChange }: { title: string; value: string; onChange: (val: string) => void }) {
 	const [preview, setPreview] = useState(false);
 	const [isFullscreen, setIsFullscreen] = useState(false);
 
 	const editor = useEditor({
 		extensions: [
+			Markdown,
 			StarterKit,
 			Underline,
 			TextStyle,
@@ -107,14 +101,15 @@ export default function RichTextEditor({ title, value, onChange }: { title: stri
 		immediatelyRender: false,
 	});
 	useEffect(() => {
-		if (editor && value !== editor.getHTML()) {
-			editor.commands.setContent(value);
+		if (editor && value !== editor.getMarkdown()) {
+			editor.commands.setContent(value, { contentType: 'markdown' });
 		}
 	}, [value, editor]);
-	if (!editor) return <></>;
+	console.log(value);
 
-	const wordCount = 0;
-	const charCount = 0;
+	if (!editor) return <LoadingCard />;
+	const wordCount = editor ? editor.getText().split(/\s+/).filter(Boolean).length : 0;
+	const charCount = editor ? editor.getText().length : 0;
 
 	const toggleLink = () => {
 		const previousUrl = editor.getAttributes('link').href;
@@ -131,7 +126,7 @@ export default function RichTextEditor({ title, value, onChange }: { title: stri
 	};
 
 	return (
-		<div className={cn('mx-auto transition-all duration-300', isFullscreen ? 'fixed inset-0 z-50 bg-background p-4' : '')}>
+		<div className={cn('mx-auto transition-all duration-300', isFullscreen ? 'fixed inset-0 z-1000000 bg-background p-4' : '')}>
 			<div className='rounded-xs overflow-hidden border border-editor-border bg-card '>
 				{/* Header */}
 				<div className='border-b border-editor-border bg-editor-toolbar-bg px-4 py-3 rounded-t-2xl'>
@@ -154,7 +149,7 @@ export default function RichTextEditor({ title, value, onChange }: { title: stri
 
 				{/* Toolbar */}
 				{!preview && (
-					<div className='border-b border-editor-border bg-editor-toolbar-bg px-4 py-3'>
+					<div className='border-b border-editor-border  bg-editor-toolbar-bg px-4 py-3'>
 						<div className='flex flex-wrap items-center gap-1'>
 							{/* Text Formatting */}
 							<div className='flex items-center gap-1'>

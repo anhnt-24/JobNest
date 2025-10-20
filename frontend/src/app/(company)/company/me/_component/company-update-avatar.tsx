@@ -6,11 +6,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Cropper, { Point, Area } from 'react-easy-crop';
 import { LoadingButton } from '@/components/ui/custom/loading-button';
-import { companyService } from '@/service/company.service';
 import { FaCamera, FaCameraRetro } from 'react-icons/fa6';
+import { authService } from '@/service/auth.service';
+import { mutate } from 'swr';
+import { toast } from 'sonner';
 
 export default function UpdateAvatar() {
-	const [imageSrc, setImageSrc] = useState<string | null>(null);
+	const [imageSrc, setImageSrc] = useState<string>('');
 	const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
 	const [zoom, setZoom] = useState(1);
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
@@ -37,8 +39,10 @@ export default function UpdateAvatar() {
 
 		try {
 			const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-			const res = await companyService.updateCompanyLogo(croppedImageBlob as File);
-			setUser(user => ({ ...user, avatarUrl: res.data.avatarUrl }));
+			const avatarUrl = (await authService.uploadAvatar(croppedImageBlob as File)).data;
+			setUser(prev => (prev ? { ...prev, avatarUrl } : undefined));
+			mutate('/company/me');
+			toast.success('Tải ảnh thành công.');
 		} catch {
 		} finally {
 			setOpen(false);

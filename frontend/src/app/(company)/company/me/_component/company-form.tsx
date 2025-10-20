@@ -4,20 +4,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import RichTextEditor from '@/components/ui/custom/editor';
+import { Card, CardTitle } from '@/components/ui/card';
 import MapPicker from '@/components/ui/map-picker';
-import { CompanyRes, companySchema } from '@/schema/company.schema';
 import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import useSWR from 'swr';
 import { companyService } from '@/service/company.service';
-import { Skeleton } from '@/components/ui/skeleton';
-import LoadingCard from '@/components/ui/custom/skeleton';
-import { rest } from 'lodash';
-import { candidateService } from '@/service/candidate.service';
-import { json } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { companySchema, UpdateCompanyReq } from '@/schema/company.schema';
+import { toast } from 'sonner';
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 
 function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
 	return (
@@ -35,32 +30,36 @@ export default function CompanyForm() {
 		register,
 		handleSubmit,
 		formState: { errors },
-		setValue,
 	} = useForm({
 		resolver: zodResolver(companySchema),
 	});
 
 	const { data: profile, mutate } = useSWR('/company/me', () => companyService.me().then(res => res.data));
-
+	const [coords, setCoords] = useState<[number, number]>([21.0278, 105.8342]);
 	useEffect(() => {
 		if (profile) {
 			reset({
-				name: profile.name,
-				website: profile.website,
-				phone: profile.phone || '',
-				employeeCount: profile.employeeCount,
-				industry: profile.industry,
-				description: profile.description,
-				addressDetail: profile.addressDetail,
-				latitude: profile.latitude,
-				longitude: profile.longitude,
+				...profile,
+				name: profile.user.name,
+				phone: profile.user.phone,
 			});
+			setCoords([profile.latitude, profile.longitude]);
 		}
 	}, [profile]);
 
-	const onSubmit = async (data: any) => {
-		const res = await companyService.update(data);
-		mutate(res.data);
+	const onSubmit = async (data: UpdateCompanyReq) => {
+		try {
+			const payload: UpdateCompanyReq = {
+				...data,
+				latitude: coords[0],
+				longitude: coords[1],
+			};
+			const res = await companyService.update(payload);
+			mutate(res.data);
+			toast.success('Cập nhật thành công');
+		} catch {
+			toast.error('Cập nhật thất bại.');
+		}
 	};
 
 	return (
@@ -72,14 +71,14 @@ export default function CompanyForm() {
 					<FormRow label='Tên công ty:'>
 						<div className='w-full'>
 							<Input {...register('name')} placeholder='Nhập tên công ty' />
-							{errors.name && <p className='text-red-500 text-sm'>{errors.name.message}</p>}
+							{errors.name && <p className='text-red-500 '>{errors.name.message}</p>}
 						</div>
 					</FormRow>
 
 					<FormRow label='Website:'>
 						<div className='w-full'>
 							<Input {...register('website')} placeholder='https://example.com' />
-							{errors.website && <p className='text-red-500 text-sm'>{errors.website.message}</p>}
+							{errors.website && <p className='text-red-500 '>{errors.website.message}</p>}
 						</div>
 					</FormRow>
 				</div>
@@ -87,14 +86,14 @@ export default function CompanyForm() {
 				<div className='grid gap-8 grid-cols-2'>
 					<FormRow label='Email:'>
 						<div className='w-full'>
-							<Input type='email' value={profile?.user?.email || ''} disabled />
+							<Input type='email' value={profile?.user?.email} disabled />
 						</div>
 					</FormRow>
 
 					<FormRow label='Số điện thoại:'>
 						<div className='w-full'>
 							<Input {...register('phone')} placeholder='090xxxxxxx' />
-							{errors.phone && <p className='text-red-500 text-sm'>{errors.phone.message}</p>}
+							{errors.phone && <p className='text-red-500 '>{errors.phone.message}</p>}
 						</div>
 					</FormRow>
 				</div>
@@ -103,14 +102,22 @@ export default function CompanyForm() {
 					<FormRow label='Số nhân viên:'>
 						<div className='w-full'>
 							<Input type='number' {...register('employeeCount', { valueAsNumber: true })} placeholder='Ví dụ: 50' />
-							{errors.employeeCount && <p className='text-red-500 text-sm'>{errors.employeeCount.message}</p>}
+							{errors.employeeCount && <p className='text-red-500 '>{errors.employeeCount.message}</p>}
 						</div>
 					</FormRow>
 
 					<FormRow label='Lĩnh vực:'>
 						<div className='w-full'>
 							<Input {...register('industry')} placeholder='Ví dụ: Công nghệ, Thời trang...' />
-							{errors.industry && <p className='text-red-500 text-sm'>{errors.industry.message}</p>}
+							{errors.industry && <p className='text-red-500 '>{errors.industry.message}</p>}
+						</div>
+					</FormRow>
+				</div>
+				<div className='grid gap-8 grid-cols-2'>
+					<FormRow label='Mã số thuế:'>
+						<div className='w-full'>
+							<Input {...register('taxCode')} placeholder='Ví dụ: 0311936031-002' />
+							{errors.taxCode && <p className='text-red-500 '>{errors.taxCode.message}</p>}
 						</div>
 					</FormRow>
 				</div>
@@ -120,8 +127,9 @@ export default function CompanyForm() {
 					control={control}
 					render={({ field }) => (
 						<div>
-							<RichTextEditor title='Giới thiệu' value={field.value} onChange={field.onChange} />
-							{errors.description && <p className='text-red-500 text-sm'>{errors.description.message}</p>}
+							<Label className='mb-4'>Giới thiệu: </Label>
+							<SimpleEditor content={field.value} setContent={field.onChange} />
+							{errors.description && <p className='text-red-500 '>{errors.description.message}</p>}
 						</div>
 					)}
 				/>
@@ -132,11 +140,11 @@ export default function CompanyForm() {
 					<div className='space-y-6'>
 						<FormRow label='Địa chỉ cụ thể:'>
 							<div className='w-full'>
-								<Textarea {...register('addressDetail')} placeholder='Ví dụ: Số 10, Ngõ 5, Đường ABC' />
-								{errors.addressDetail && <p className='text-red-500 text-sm'>{errors.addressDetail.message}</p>}
+								<Textarea {...register('address')} placeholder='Ví dụ: Số 10, Ngõ 5, Đường ABC' />
+								{errors.address && <p className='text-red-500 '>{errors.address.message}</p>}
 							</div>
 						</FormRow>
-						<MapPicker />
+						<MapPicker coords={coords} setCoords={setCoords} />
 					</div>
 
 					<div className='flex justify-end'>

@@ -1,10 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Users, Globe, PlusIcon } from 'lucide-react';
-import { CompanyRes } from '@/schema/company.schema';
 import { Avatar } from '@/components/ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import useSWR from 'swr';
@@ -14,12 +10,12 @@ import CoverImageUploader from './company-update-cover';
 import { FaGlobe, FaUserPlus, FaUsers } from 'react-icons/fa6';
 
 export default function CompanyBanner() {
-	const { data: company, mutate } = useSWR('/company/me', () => companyService.me().then(res => res.data));
+	const { data: company } = useSWR('/company/me', () => companyService.me().then(res => res.data));
 
 	return (
 		<div className='p-0 rounded-2xl overflow-hidden relative'>
 			<div className='relative h-100 w-full group'>
-				<Image src={company?.coverUrl} alt='Apollo Cover' fill className='object-cover h-full brightness-90' />
+				<Image src={company?.coverUrl || ''} alt='Apollo Cover' fill className='object-cover h-full brightness-90' />
 				<div className='absolute z-1 right-4 top-4'>
 					<CoverImageUploader></CoverImageUploader>
 				</div>
@@ -33,7 +29,7 @@ export default function CompanyBanner() {
 						<UpdateAvatar></UpdateAvatar>
 					</div>
 				</Avatar>
-				<div className='flex-1 ml-4 z-10 text-shadow-black/90 text-shadow-xs text-primary-foreground '>
+				<div className='flex-1 ml-4 z-10  text-primary-foreground '>
 					<h2 className=' text-3xl text-white'>{company?.user.name}</h2>
 
 					<div className='mt-2 flex flex-wrap items-center gap-6  text-lg'>

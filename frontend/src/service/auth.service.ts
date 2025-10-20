@@ -14,4 +14,13 @@ export const authService = {
 	companyRegister: (data: CompanyRegisterReq) => api.post<AuthResponse>('/auth/company-register', data),
 	employerRegister: (data: any) => api.post<AuthResponse>('/auth/employer-register', data),
 	me: () => api.get<UserRes>('/auth/me'),
+	uploadAvatar: (file: File) => {
+		const formData = new FormData();
+		formData.append('avatar', file);
+		return api.patch<string>('/auth/avatar', formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+	},
 };

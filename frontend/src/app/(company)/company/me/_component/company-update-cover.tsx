@@ -6,6 +6,7 @@ import { Image as ImageIcon } from 'lucide-react';
 import { FaPencil, FaUpload } from 'react-icons/fa6';
 import { companyService } from '@/service/company.service';
 import { toast } from 'sonner';
+import { mutate } from 'swr';
 
 type Props = {
 	initialImage?: string;
@@ -87,6 +88,7 @@ export default function CoverImageUploader({ initialImage, maxSizeMB = 5, placeh
 			const res = await companyService.uploadCover(file);
 			if (res.data) {
 				setOpen(false);
+				mutate('/company/me');
 				toast.success('Tải ảnh thành công.');
 			}
 		} catch (err: any) {
