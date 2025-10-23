@@ -7,9 +7,9 @@ import { FaEnvelope, FaFile, FaLocationDot, FaPhone, FaUser, FaPlus, FaTrash } f
 import { FaGlobeAmericas, FaSave } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import FormatToolbar from './_component/format-toolbar';
+import FormatToolbar from './format-toolbar';
 import { AutosizeTextarea } from '@/components/ui/custom/autosize-textarea';
-import CVDialog from './_component/cv-dialog';
+import CVDialog from './cv-dialog';
 import { cvService } from '@/service/cvs.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -116,7 +116,12 @@ const initialData: CVData = {
 	],
 };
 
-export default function CVA4() {
+interface CVForm {
+	initialData: CVData;
+	id?: number;
+}
+
+export default function CVForm({ initialData, id }: CVForm) {
 	const [cvData, setCvData] = useState<CVData>(initialData);
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -238,20 +243,18 @@ export default function CVA4() {
 		}));
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		setIsLoading(true);
-		const payload = { title: cvData.header.title, content: cvData, type: 'UPLOADED' };
-		cvService
-			.create(payload)
-			.then(res => {
-				toast.success('Tạo CV thành công.');
-				router.replace('/candidate/cv');
-			})
-			.catch(e => {
-				console.log(e);
-				toast.error('Thất bại');
-			})
-			.finally(() => setIsLoading(false));
+		const payload = { title: cvData.header.title, content: cvData };
+		try {
+			if (id) await cvService.update(id, payload);
+			else await cvService.create(payload);
+		} catch {
+			toast.error('Thất bại');
+		} finally {
+			toast.success('Thành công.');
+			router.replace('/candidate/cv');
+		}
 	};
 
 	return (

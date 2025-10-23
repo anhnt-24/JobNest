@@ -3,21 +3,11 @@
 import { useState } from 'react';
 import { CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { FaEnvelope, FaFile, FaLocationDot, FaPhone, FaUser } from 'react-icons/fa6';
-import { FaGlobeAmericas, FaSave } from 'react-icons/fa';
-import { Button } from '@/components/ui/button';
-import { X, Search } from 'lucide-react';
-import { AutosizeTextarea } from '@/components/ui/custom/autosize-textarea';
+import { FaEnvelope, FaLocationDot, FaPhone, FaUser } from 'react-icons/fa6';
+import { FaGlobeAmericas } from 'react-icons/fa';
 
 export default function CVA4() {
 	const [avatar, setAvatar] = useState('/image.png');
-
-	const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files[0]) {
-			const fileUrl = URL.createObjectURL(e.target.files[0]);
-			setAvatar(fileUrl);
-		}
-	};
 
 	return (
 		<div className=' flex justify-center gap-6 relative'>
@@ -33,7 +23,7 @@ export default function CVA4() {
 					</div>
 
 					<div className='hidden size-0'>
-						<input type='file' accept='image/*' onChange={handleUpload} className='text-sm absolute hidden' />
+						<input type='file' accept='image/*' className='text-sm absolute hidden' />
 					</div>
 
 					<div className='space-y-6 p-6 bg-[#004933] h-full'>

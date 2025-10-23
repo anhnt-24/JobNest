@@ -41,7 +41,6 @@ export default function JobDetails({ job }: { job: JobRes }) {
 					))}
 				</ul>
 			</div>
-			{/* Location Section */}
 			<div className='space-y-2'>
 				<h2>Khu vực</h2>
 				<div className='flex flex-wrap gap-2'>

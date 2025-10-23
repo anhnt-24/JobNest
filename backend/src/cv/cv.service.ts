@@ -2,7 +2,7 @@ import { MinioService } from '../minio/minio.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { File as MulterFile } from 'multer';
-import { CVFormat } from '@prisma/client';
+import { CVFormat, CVType } from '@prisma/client';
 import { CvListQueryDto } from './dto/cv-list-query.dto';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
@@ -51,7 +51,7 @@ export class CvService {
       data: {
         candidateId: candidate.id,
         title: createCvDto.title,
-        type: createCvDto.type || 'UPLOADED',
+        type: CVType.GENERATED,
         fileUrl: createCvDto.fileUrl,
         thumbnailUrl: createCvDto.thumbnailUrl,
         fileSize: createCvDto.fileSize,
@@ -125,5 +125,10 @@ export class CvService {
     const cv = await this.prisma.cV.findUnique({ where: { id } });
     if (!cv) throw new NotFoundException('Không tìm thấy CV');
     return this.prisma.cV.delete({ where: { id } });
+  }
+  async getCvById(id: number) {
+    const cv = await this.prisma.cV.findUnique({ where: { id } });
+    if (!cv) throw new NotFoundException('Không tìm thấy CV');
+    return cv;
   }
 }

@@ -11,6 +11,7 @@ import {
   Req,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CvService } from './cv.service';
@@ -61,5 +62,9 @@ export class CvController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.cvService.deleteCv(Number(id));
+  }
+  @Get(':id')
+  getCvById(@Param('id', ParseIntPipe) id: number) {
+    return this.cvService.getCvById(id);
   }
 }

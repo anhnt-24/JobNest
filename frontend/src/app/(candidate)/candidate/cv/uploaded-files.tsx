@@ -7,8 +7,6 @@ import useSWR from 'swr';
 import { cvService } from '@/service/cvs.service';
 import Pagination from '@/components/ui/custom/pagination';
 import { useState } from 'react';
-import { FaFilePdf, FaFileWord, FaFileImage, FaFileAlt } from 'react-icons/fa';
-import { LoadingTable } from '@/components/ui/custom/loading-table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import Image from 'next/image';
@@ -16,10 +14,11 @@ import Empty from '@/components/ui/custom/empty';
 import { DeleteCvButton } from './_component/delete-cv-btn';
 import { toast } from 'sonner';
 import { RenameCvButton } from './_component/rename-cv-diaglog';
+import LoadingCard from '@/components/ui/custom/skeleton';
 export function UploadedFiles() {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const { data: cvs, isLoading, mutate } = useSWR(['/cvs/me', page, limit], () => cvService.me({ page, limit }).then(res => res.data));
+	const { data: cvs, isLoading, mutate } = useSWR(['/cvs/me', page, limit], () => cvService.me({ page, limit, type: 'UPLOADED' }).then(res => res.data));
 	if (isLoading) return <>1</>;
 	return (
 		<Card className='p-6'>
@@ -28,7 +27,7 @@ export function UploadedFiles() {
 				<UploadCvModal></UploadCvModal>
 			</CardHeader>
 			{isLoading ? (
-				<LoadingTable />
+				<LoadingCard />
 			) : (
 				<>
 					{cvs?.items.length > 0 ? (
@@ -85,7 +84,7 @@ export function UploadedFiles() {
 
 									<div className='mt-2'>
 										<h4 className='hover:text-primary  text-lg font-semibold text-gray-700 '>{cv.title}</h4>
-										<span className='text-base text-gray-500 font-medium'>Cập nhật: {cv.updatedAt.split('T')[0]}</span>
+										<span className='text-base text-gray-500 font-medium'>Cập nhật: {cv.updatedAt}</span>
 									</div>
 								</div>
 							))}
