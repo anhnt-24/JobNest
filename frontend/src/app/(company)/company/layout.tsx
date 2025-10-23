@@ -13,7 +13,6 @@ export default function Layout({
 				{
 					'--sidebar-width': 'calc(var(--spacing) * 74)',
 					'--header-height': 'calc(var(--spacing) * 12)',
-					'--primary': 'lab(44.0605% 29.0279 -86.0352)',
 				} as React.CSSProperties
 			}>
 			<AppSidebar variant='inset' />

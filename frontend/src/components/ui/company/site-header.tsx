@@ -21,22 +21,22 @@ export function SiteHeader() {
 				</div>
 
 				<div className='flex items-center gap-4'>
-					<button className='hover:brightness-90 bg-white border cursor-pointer text-gray-500 p-3 rounded-full'>
+					<button className='hover:brightness-90 border cursor-pointer text-gray-500 p-3 rounded-full'>
 						<Bell className='size-6' />
 					</button>
 
-					<button className='hover:brightness-90 bg-white border cursor-pointer text-gray-500 p-3 rounded-full'>
+					<button className='hover:brightness-90 border cursor-pointer text-gray-500 p-3 rounded-full'>
 						<MessageCircleMore className='size-6' />
 					</button>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<div className='flex items-center gap-3 cursor-pointer  py-1 transition hover:bg-gray-100'>
 								<Avatar className='size-12 border'>
-									<AvatarImage src={user?.company?.user.avatarUrl} alt='avatar' />
+									<AvatarImage src={user?.avatarUrl} alt='avatar' />
 									<AvatarFallback>TA</AvatarFallback>
 								</Avatar>
 								<div className=' flex font-medium items-center gap-2 text-gray-700'>
-									{user?.company?.user.name}
+									{user?.name}
 									<ChevronDown className='size-5'></ChevronDown>
 								</div>
 							</div>
@@ -45,11 +45,11 @@ export function SiteHeader() {
 						<DropdownMenuContent align='end' className='w-80'>
 							<DropdownMenuLabel className='font-medium text-lg flex items-center gap-4'>
 								<Avatar className='size-16 border'>
-									<AvatarImage src={user?.company?.user.avatarUrl} alt='avatar' />
+									<AvatarImage src={user?.avatarUrl} alt='avatar' />
 									<AvatarFallback>TA</AvatarFallback>
 								</Avatar>
 								<div>
-									<span className='font-semibold text-lg'>{user?.company?.user.name}</span>
+									<span className='font-semibold text-lg'>{user?.name}</span>
 									<p className='text-gray-500'>{user?.email}</p>
 								</div>
 							</DropdownMenuLabel>

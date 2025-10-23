@@ -39,7 +39,14 @@ export class MinioService {
 
     return `${this.config.minioPublicUrl}/${fileName}`;
   }
-
+  async uploadMultipleFiles(files: File[]): Promise<string[]> {
+    const urls: string[] = [];
+    for (const file of files) {
+      const url = await this.uploadFile(file);
+      urls.push(url);
+    }
+    return urls;
+  }
   async getFileUrl(objectName: string): Promise<string> {
     return `${this.config.minioPublicUrl}/${objectName}`;
   }

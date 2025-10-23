@@ -32,8 +32,8 @@ export default function SettingsPage() {
 	};
 
 	return (
-		<Card className='space-y-2'>
-			<div className='space-y-4'>
+		<Card className='p-6 space-y-2'>
+			<Card>
 				<CardHeader>
 					<CardTitle>Thông báo</CardTitle>
 					<CardDescription className='text-gray-600'>Quản lý cách bạn và nhân viên nhận thông tin từ hệ thống.</CardDescription>
@@ -52,23 +52,28 @@ export default function SettingsPage() {
 						<Switch checked={settings.notifyInApp} onCheckedChange={v => handleChange('notifyInApp', v)} />
 					</div>
 				</CardContent>
-			</div>
+			</Card>
 
 			{/* Giao diện */}
-			<div className='space-y-4'>
+			<Card>
 				<CardHeader>
 					<CardTitle>Giao diện & hiển thị</CardTitle>
 					<CardDescription>Tùy chỉnh giao diện hệ thống để phù hợp với thương hiệu công ty.</CardDescription>
 				</CardHeader>
-				<CardContent className='space-y-4'>
+				<CardContent className='space-y-6'>
+					{/* Màu chủ đạo */}
 					<div className='flex items-center justify-between'>
 						<Label>Màu chủ đạo</Label>
 						<Input type='color' value={settings.primaryColor} onChange={e => handleChange('primaryColor', e.target.value)} className='w-16 h-10 p-1' />
 					</div>
+
+					{/* Dark mode */}
 					<div className='flex items-center justify-between'>
 						<Label>Chế độ tối (Dark mode)</Label>
 						<Switch checked={settings.darkMode} onCheckedChange={v => handleChange('darkMode', v)} />
 					</div>
+
+					{/* Ngôn ngữ */}
 					<div className='flex justify-between items-center'>
 						<Label>Ngôn ngữ hiển thị</Label>
 						<Select value={settings.language} onValueChange={v => handleChange('language', v)}>
@@ -82,9 +87,10 @@ export default function SettingsPage() {
 						</Select>
 					</div>
 				</CardContent>
-			</div>
+			</Card>
 
-			<div className='space-y-4'>
+			{/* Bảo mật */}
+			<Card>
 				<CardHeader>
 					<CardTitle>Bảo mật</CardTitle>
 					<CardDescription>Tăng cường bảo mật tài khoản và truy cập hệ thống.</CardDescription>
@@ -99,19 +105,21 @@ export default function SettingsPage() {
 						<Switch checked={settings.restrictIP} onCheckedChange={v => handleChange('restrictIP', v)} />
 					</div>
 				</CardContent>
-			</div>
+			</Card>
 
-			<div className='space-y-4'>
+			{/* Tài khoản */}
+			<Card>
 				<CardHeader>
 					<CardTitle>Tài khoản</CardTitle>
 					<CardDescription>Quản lý mật khẩu và thông tin đăng nhập của bạn.</CardDescription>
 				</CardHeader>
 				<Button className='w-32'>Đổi mật khẩu</Button>
-			</div>
+			</Card>
 
 			<div className='flex justify-end'>
-				<Button onClick={handleSave} className='px-6'>
-					Lưu cài đặt
+				<Button onClick={handleSave}>
+					<FaSave></FaSave>
+					Lưu{' '}
 				</Button>
 			</div>
 		</Card>

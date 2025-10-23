@@ -4,6 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { File as MulterFile } from 'multer';
 import { CVFormat } from '@prisma/client';
 import { CvListQueryDto } from './dto/cv-list-query.dto';
+import { CreateCvDto } from './dto/create-cv.dto';
+import { UpdateCvDto } from './dto/update-cv.dto';
 @Injectable()
 export class CvService {
   constructor(
@@ -37,6 +39,35 @@ export class CvService {
         thumbnailUrl: '',
         format,
         fileSize,
+      },
+    });
+  }
+  async create(createCvDto: CreateCvDto, userId: number) {
+    const candidate = await this.prisma.candidate.findUnique({
+      where: { userId },
+    });
+    if (!candidate) throw new NotFoundException("Candidate's not existing");
+    return this.prisma.cV.create({
+      data: {
+        candidateId: candidate.id,
+        title: createCvDto.title,
+        type: createCvDto.type || 'UPLOADED',
+        fileUrl: createCvDto.fileUrl,
+        thumbnailUrl: createCvDto.thumbnailUrl,
+        fileSize: createCvDto.fileSize,
+        templateId: createCvDto.templateId,
+        content: createCvDto.content,
+      },
+    });
+  }
+  async update(id: number, updateCvDto: UpdateCvDto) {
+    return this.prisma.cV.update({
+      where: { id },
+      data: {
+        title: updateCvDto.title,
+        thumbnailUrl: updateCvDto.thumbnailUrl,
+        templateId: updateCvDto.templateId,
+        content: updateCvDto.content,
       },
     });
   }

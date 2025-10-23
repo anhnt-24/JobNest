@@ -4,9 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { jobService } from '@/service/job.service';
-import { JobResponse } from '@/schema/job.schema';
+import { JobRes } from '@/schema/job.schema';
 
-export default function JobStatusCell({ job }: { job: JobResponse }) {
+export default function JobStatusCell({ job }: { job: JobRes }) {
 	const [open, setOpen] = useState(false);
 	const [selectedStatus, setSelectedStatus] = useState(job.status);
 
@@ -27,6 +27,7 @@ export default function JobStatusCell({ job }: { job: JobResponse }) {
 					<SelectValue placeholder='Chọn status' />
 				</SelectTrigger>
 				<SelectContent>
+					<SelectItem value='PENDING'>OPEN</SelectItem>
 					<SelectItem value='OPEN'>OPEN</SelectItem>
 					<SelectItem value='CLOSED'>CLOSED</SelectItem>
 					<SelectItem value='PAUSED'>PAUSED</SelectItem>

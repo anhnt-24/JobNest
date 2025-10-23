@@ -33,17 +33,6 @@ const schema = z.object({
 export function EmployerForm({ employer, onClose, onSave, open }: EmployerFormProps) {
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
-		defaultValues: {
-			name: employer?.name || '',
-			email: employer?.email || '',
-			phone: employer?.phone || '',
-			employeeId: employer?.employeeId || '',
-			dob: employer?.dob || '',
-			address: employer?.address || '',
-			position: employer?.position || '',
-			avatar: null,
-			gender: employer?.gender || 'male',
-		},
 	});
 
 	useEffect(() => {
@@ -61,17 +50,7 @@ export function EmployerForm({ employer, onClose, onSave, open }: EmployerFormPr
 			});
 			setPreview(employer?.avatarUrl || null);
 		} else {
-			form.reset({
-				name: '',
-				email: '',
-				phone: '',
-				employeeId: '',
-				dob: '',
-				address: '',
-				position: '',
-				avatar: null,
-				gender: 'male',
-			});
+			form.reset();
 		}
 	}, [employer, form]);
 

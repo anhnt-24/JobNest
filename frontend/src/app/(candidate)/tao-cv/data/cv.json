@@ -1,0 +1,51 @@
+{
+	"header": {
+		"title": "Fullstack Developer"
+	},
+	"personal_info": {
+		"avatar": "/image.png",
+		"name": "Nguyễn Tuấn Anh",
+		"job_title": "Software Engineer",
+		"gender": "Nam",
+		"phone": "0123454789",
+		"email": "tech.growth@topcv.vn",
+		"website": "facebook.com/",
+		"address": "Ba Đình, Hà Nội"
+	},
+	"skills": ["Kỹ năng Digital Marketing", "Kỹ năng Digital Marketing"],
+	"certifications": [
+		{
+			"year": "2025",
+			"name": "Toeic 900"
+		}
+	],
+	"career_objective": "Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager.",
+	"education_and_awards": [
+		{
+			"school": "Học viện Công nghệ Bưu chính Viễn Thông",
+			"duration": "2022 - Hiện tại",
+			"description": "Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager."
+		}
+	],
+	"projects": [
+		{
+			"name": "Học viện Công nghệ Bưu chính Viễn Thông",
+			"duration": "2022 - Hiện tại",
+			"description": "Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager."
+		}
+	],
+	"work_experience": [
+		{
+			"company": "Công ty BCD TopCV",
+			"position": "Học viện Công nghệ Bưu chính Viễn Thông",
+			"duration": "2022 - Hiện tại",
+			"description": "Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager."
+		},
+		{
+			"company": "Công ty ABC TopCV",
+			"position": "Học viện Công nghệ Bưu chính Viễn Thông",
+			"duration": "2022 - Hiện tại",
+			"description": "Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager."
+		}
+	]
+}

@@ -9,7 +9,7 @@ export const employerService = {
 
 	getAll: (query: any) => api.post('/employer/get', query),
 
-	getAllByCompany: (query?: any) => api.post('/employer/get-by-company', query),
+	getAllByCompany: (query?: any) => api.post('/employer/company', query),
 
 	update: (data: any) => api.put('/employer/update', data),
 

@@ -8,18 +8,18 @@ import { Pencil, Trash2, Eye, Plus, Filter, Search, Download, User, Mail, Phone,
 import Pagination from '@/components/ui/custom/pagination';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
-import { JobResponse } from '@/schema/job.schema';
 import JobStatusCell from './_component/job-status-cell';
 import CVTable from './_component/cv-table';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { FaEye, FaMagnifyingGlass, FaPencil, FaTrashCan } from 'react-icons/fa6';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { JobRes } from '@/schema/job.schema';
 
 export default function JobTable() {
-	const [selectedJob, setSelectedJob] = useState<JobResponse>();
+	const [selectedJob, setSelectedJob] = useState<JobRes>();
 	const [cvDialogOpen, setCvDialogOpen] = useState(false);
 
-	const handleViewCV = (job: JobResponse) => {
+	const handleViewCV = (job: JobRes) => {
 		setSelectedJob(job);
 		setCvDialogOpen(true);
 	};
@@ -40,7 +40,7 @@ export default function JobTable() {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
 
-	const { data } = useSWR([`/api/jobs`, page, limit], () => jobService.getListByMe({ page, limit }).then(res => res.data));
+	const { data } = useSWR([`/api/jobs`, page, limit], () => jobService.me({ page, limit }).then(res => res.data));
 	console.log(data);
 	return (
 		<>
@@ -81,7 +81,7 @@ export default function JobTable() {
 										<TableCell>{job.experience}</TableCell>
 										<TableCell>{job.type}</TableCell>
 										<TableCell>{job.quantity}</TableCell>
-										<TableCell>{job.deadline?.split('T')[0]}</TableCell>
+										<TableCell>{new Date(job.createdAt).toLocaleDateString('vi-VN')}</TableCell>
 										<JobStatusCell job={job}></JobStatusCell>
 
 										<TableCell>

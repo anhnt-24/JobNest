@@ -18,7 +18,7 @@ export function UserDropdown() {
 			<DropdownMenuTrigger className='flex items-center gap-2 outline-none' asChild>
 				<div className='relative cursor-pointer'>
 					<Avatar className='h-10 w-10'>
-						<AvatarImage src={user?.candidate?.avatarUrl || ''} />
+						<AvatarImage src={user?.avatarUrl || ''} />
 						<AvatarFallback className='bg-gray-100 font-medium'>TA</AvatarFallback>
 					</Avatar>
 					<ChevronDown className='h-4 w-4 text-gray-500 bg-gray-200 border-white border-3 rounded-full absolute -right-1 -bottom-1' />
@@ -29,11 +29,11 @@ export function UserDropdown() {
 				<DropdownMenuLabel>
 					<div className='flex space-x-4'>
 						<Avatar className='size-18 border'>
-							<AvatarImage src={user?.candidate?.avatarUrl} />
+							<AvatarImage src={user?.avatarUrl} />
 							<AvatarFallback>A</AvatarFallback>
 						</Avatar>
 						<div className='flex flex-col space-y'>
-							<p className='text-lg font-semibold'>{user?.candidate?.name}</p>
+							<p className='text-lg font-semibold'>{user?.name}</p>
 							<p className='text-sm  text-primary'>Tài khoản đã xác thực</p>
 							<p className='text-sm  text-muted-foreground'>
 								ID {user?.id} | {user?.email}{' '}

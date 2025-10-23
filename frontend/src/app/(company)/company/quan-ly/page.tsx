@@ -17,7 +17,7 @@ export default function EmployerPage() {
 
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const { data: employers } = useSWR(['/employer/get', page, limit], () => employerService.getAllByCompany({ page, limit }).then(res => res.data));
+	const { data: employers, isLoading } = useSWR(['/employer/get', page, limit], () => employerService.getAllByCompany({ page, limit }).then(res => res.data));
 	const handleEdit = (emp: any) => {
 		setEditEmployer(emp);
 		setOpenForm(true);
@@ -32,15 +32,15 @@ export default function EmployerPage() {
 
 	return (
 		<div>
-			<div className='flex justify-between items-center mb-2'>
-				<CardTitle>Quản lý Employer</CardTitle>
-				<Button onClick={handleAdd}>+ Thêm mới</Button>
-			</div>
-
 			<Card>
-				{employers && <EmployerTable employers={employers.items} onEdit={handleEdit} onDelete={handleDelete} />}
+				<div className='flex justify-between items-center mb-2'>
+					<CardTitle>Quản lý người tuyển dụng</CardTitle>
+					<Button onClick={handleAdd}>+ Thêm mới</Button>
+				</div>
+
+				<EmployerTable isLoading={isLoading} employers={employers?.items} onEdit={handleEdit} onDelete={handleDelete} />
 				<div>
-					<Pagination pageSize={limit} onPageChange={setPage} onPageSizeChange={setLimit} currentPage={page} totalItems={100}></Pagination>
+					<Pagination pageSize={limit} onPageChange={setPage} onPageSizeChange={setLimit} currentPage={page} totalItems={employers?.total}></Pagination>
 				</div>
 			</Card>
 

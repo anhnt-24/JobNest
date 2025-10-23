@@ -1,13 +1,14 @@
 import { api } from '@/lib/axios';
 
 export const cvService = {
-	create: (file: File, title: string) => {
+	upload: (file: File, title: string) => {
 		const data = new FormData();
 		if (file) data.append('file', file as File);
 		data.append('title', title);
 
 		return api.post('/cv/create', data);
 	},
+	create: (data: any) => api.post('/cv/create', data),
 	me: (query: any) => api.post('/cv/me', query),
 	getAll: (query: any) => api.post('/cv', query),
 	getByID: (id: number) => api.get(`/cv/${id}`),
