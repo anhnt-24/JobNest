@@ -7,7 +7,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { X, List, MapPin, Search } from 'lucide-react';
 import { FaLocationDot } from 'react-icons/fa6';
-import { SearchResultDropdown } from '@/components/ui/custom/search-result-dropdown';
+import { SearchResultDropdown } from '@/components/shared/search-result-dropdown';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useRef } from 'react';
 export default function JobSearchBar() {

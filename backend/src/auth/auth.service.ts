@@ -204,16 +204,6 @@ export class AuthService {
     };
   }
 
-  async me(id: number) {
-    const { ...data } = await this.prisma.user.findUnique({
-      where: { id },
-    });
-    const { password, ...user } = data;
-    if (!user) {
-      throw new NotFoundException('Không tìm thấy người dùng');
-    }
-    return user;
-  }
   async registerEmployer(userId, dto: CreateEmployerDto) {
     const company = await this.prisma.company.findUnique({
       where: { userId: userId },
@@ -265,53 +255,5 @@ export class AuthService {
       access_token: tokens.accessToken,
       refresh_token: tokens.refreshToken,
     };
-  }
-  async uploadAvatar(id: number, file: MulterFile) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
-    if (!user) {
-      throw new NotFoundException('Không tìm thấy ứng viên.');
-    }
-    const imageUrl = await this.minioService.uploadFile(file);
-    await this.prisma.user.update({
-      where: { id },
-      data: {
-        avatarUrl: imageUrl,
-      },
-    });
-    return imageUrl;
-  }
-  async findOne(id: number) {
-    const { ...data } = await this.prisma.user.findUnique({
-      where: { id },
-      include: {
-        company: {},
-        employer: {
-          include: {
-            company: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    avatarUrl: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-
-        candidate: true,
-      },
-    });
-    const { password, ...user } = data;
-
-    if (!user) {
-      throw new NotFoundException('Không tìm thấy người dùng');
-    }
-    return user;
   }
 }

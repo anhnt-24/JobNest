@@ -1,25 +1,12 @@
 import { api } from '@/lib/axios';
+import { EmployerReq, EmployerRes } from '@/schema/employer.schema';
+import { PaginationRes } from '@/schema/pagination.schema';
 
 export const employerService = {
-	me: () => api.get('/employer/me'),
-
-	findOne: (id: number) => api.get(`/employer/${id}`),
-
-	remove: (id: number) => api.delete(`/employer/${id}`),
-
-	getAll: (query: any) => api.post('/employer/get', query),
-
-	getAllByCompany: (query?: any) => api.post('/employer/company', query),
-
-	update: (data: any) => api.put('/employer/update', data),
-
-	uploadAvatar: (file: File) => {
-		const formData = new FormData();
-		formData.append('avatar', file);
-		return api.patch('/employer/avatar', formData, {
-			headers: {
-				'Content-Type': 'multipart/form-data',
-			},
-		});
-	},
+	me: () => api.get<EmployerRes>('/employers/me'),
+	delete: (id: number) => api.delete<EmployerRes>(`/employers/${id}`),
+	toggleActive: (id: number, active: boolean) => api.patch<EmployerRes>(`/employers/${id}/active`, { active }),
+	getById: (id: number) => api.get<EmployerRes>(`/employers/${id}`),
+	getAll: (query: any) => api.post<PaginationRes<EmployerRes>>('/employers/list', query),
+	update: (req: EmployerReq) => api.put<EmployerRes>('/employers/me', req),
 };

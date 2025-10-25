@@ -1,4 +1,3 @@
-import { Employer } from '.prisma/client';
 import {
   Injectable,
   NotFoundException,
@@ -7,9 +6,8 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { ApplicationStatus, Job, JobStatus, Role } from '@prisma/client';
+import { Job, JobStatus, Role } from '@prisma/client';
 import { JobListQueryDto } from './dto/list-jobs-query.dto';
-import { ApplicationListQueryDto } from './dto/list-application-query.req';
 import { SavedJobListQueryDto } from './dto/list-saved-query.req';
 
 @Injectable()
@@ -139,44 +137,11 @@ export class JobsService {
     return updated;
   }
 
-  async remove(id: number): Promise<Job> {
+  async delete(id: number): Promise<Job> {
     const existing = await this.prisma.job.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException('Job not found');
 
-    return this.prisma.job.delete({ where: { id } });
-  }
-
-  async applyForJob(
-    candidateId: number,
-    jobId: number,
-    cvId: number,
-    message?: string,
-  ) {
-    const job = await this.prisma.job.findUnique({ where: { id: jobId } });
-    if (!job) throw new NotFoundException('Job không tồn tại.');
-
-    const user = await this.prisma.user.findUnique({
-      where: { id: candidateId },
-      include: {
-        candidate: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (!user?.candidate?.id)
-      throw new NotFoundException('Không tìm thấy ứng viên.');
-
-    return this.prisma.application.create({
-      data: {
-        candidateId: user.candidate.id,
-        jobId,
-        cvId,
-        message,
-        status: ApplicationStatus.PENDING,
-      },
-    });
+    return this.prisma.job.update({ where: { id }, data: { isDeleted: true } });
   }
 
   async toggleSaveJob(userId: number, jobId: number) {
@@ -216,75 +181,6 @@ export class JobsService {
     return 'success';
   }
 
-  async getCVsByJob(jobId: number) {
-    const cvs = await this.prisma.application.findMany({
-      where: { jobId },
-      include: {
-        candidate: {
-          include: { cvs: true },
-        },
-      },
-    });
-
-    return cvs;
-  }
-
-  async getCompanyByJob(jobId: number) {
-    const job = await this.prisma.job.findUnique({
-      where: { id: jobId },
-      include: { company: true },
-    });
-
-    if (!job) throw new NotFoundException('Job not found');
-
-    return job.company;
-  }
-
-  async getMyAppliedJobs(userId: number, query: ApplicationListQueryDto) {
-    const candidate = await this.prisma.candidate.findUnique({
-      where: { userId },
-    });
-    if (!candidate) throw new Error('Candidate not found');
-
-    query.setCandidateId(candidate.id);
-
-    const prismaArgs = query.toPrismaArgs();
-
-    const total = await this.prisma.application.count({
-      where: prismaArgs.where,
-    });
-
-    const rows = await this.prisma.application.findMany(prismaArgs);
-
-    return {
-      items: rows,
-      meta: {
-        total,
-        page: query.page,
-        limit: query.limit,
-        totalPages: Math.ceil(total / query.limit),
-      },
-    };
-  }
-  async getAppliedJobs(query: ApplicationListQueryDto) {
-    const prismaArgs = query.toPrismaArgs();
-
-    const total = await this.prisma.application.count({
-      where: prismaArgs.where,
-    });
-
-    const rows = await this.prisma.application.findMany(prismaArgs);
-
-    return {
-      items: rows,
-      meta: {
-        total,
-        page: query.page,
-        limit: query.limit,
-        totalPages: Math.ceil(total / query.limit),
-      },
-    };
-  }
   async getSavedJobs(userId: number, query: SavedJobListQueryDto) {
     query.setUserId(userId);
 

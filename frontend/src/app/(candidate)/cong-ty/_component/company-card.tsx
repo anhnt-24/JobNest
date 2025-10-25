@@ -11,10 +11,11 @@ import { AvatarImage } from '@radix-ui/react-avatar';
 export default function CompanyBanner({ company }: { company: CompanyRes }) {
 	return (
 		<div className='mb-4 p-0 rounded-2xl overflow-hidden relative'>
-			<div className='relative h-100 w-full'>
-				<Image src={company?.coverUrl} alt='Apollo Cover' fill className='object-cover h-full' />
+			<div className='relative h-100 w-full bg-white'>
+				<Image src={company?.coverUrl} alt='Apollo Cover' fill className='object-contain h-full' />
 			</div>
-			<div className='absolute  flex items-end px-6 p-8 top-48 w-full'>
+			<div className='z-20 absolute inset-0 bg-gradient-to-t from-black/50  to-transparent' />
+			<div className='absolute  flex items-end px-6 p-8 top-48 z-50 w-full'>
 				<Avatar className='size-40 rounded-full border-10 border-white shadow-lg'>
 					<AvatarImage src={company?.user.avatarUrl} alt='Apollo Logo'></AvatarImage>
 				</Avatar>

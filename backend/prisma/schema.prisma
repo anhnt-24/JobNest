@@ -27,6 +27,8 @@ model User {
   notifications Notification[]  
   conversations  UserConversation[]
   messages       Message[]
+  isDeleted   Boolean   @default(false)  
+
 } 
 
 enum Role {
@@ -53,7 +55,8 @@ model Employer {
   userId    Int      @unique
   company         Company   @relation(fields: [companyId], references: [id])
   companyId       Int
- 
+  active      Boolean   @default(true)      
+  isDeleted   Boolean   @default(false)  
   gender      Gender
   dob    DateTime
   address String
@@ -95,6 +98,7 @@ model CV {
   thumbnailUrl String?       
   format       CVFormat?     
   fileSize     Int?          
+  isDeleted   Boolean   @default(false)  
 
   template     Template?  @relation(fields: [templateId], references: [id])
   templateId   Int?    
@@ -232,7 +236,9 @@ model Job {
   isUrgent      Boolean @default(false) 
   mustSkills  String[]  @default([])  
   niceSkills  String[]  @default([])  
-  areaTags    String[]  @default([])                        
+  areaTags    String[]  @default([]) 
+  isDeleted   Boolean   @default(false)  
+
 
   deadline        DateTime?                     
   status  JobStatus @default(PENDING) 
@@ -257,6 +263,7 @@ model Application {
   
   job          Job        @relation(fields: [jobId], references: [id])
   jobId        Int
+
 
   cvId         Int
   cv           CV         @relation(fields: [cvId], references: [id])
@@ -327,6 +334,7 @@ model Message {
   conversationId  Int
   content         String
   createdAt       DateTime       @default(now())
+  isDeleted   Boolean   @default(false)  
 
   sender          User           @relation(fields: [senderId], references: [id])
   conversation    Conversation   @relation(fields: [conversationId], references: [id])
@@ -344,6 +352,7 @@ model Post {
   tags        String[]
   category    String?
   status      PostStatus @default(DRAFT)
+  isDeleted   Boolean   @default(false)  
   views       Int      @default(0)
   likes       Int      @default(0)
   createdAt   DateTime @default(now())

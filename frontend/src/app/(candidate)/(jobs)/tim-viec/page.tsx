@@ -5,13 +5,13 @@ import { jobService } from '@/service/job.service';
 import { useSearchParams } from 'next/navigation';
 import AdvancedFilter from './_components/advanced-filter';
 import JobList from './_components/job-list';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
 import Image from 'next/image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { JobListQuery } from '@/schema/job.schema';
-import LoadingCard from '../../candidate/profile/skeleton';
 import { Card } from '@/components/ui/card';
 import RelatedJobs from '@/components/candidate/related-jobs';
+import { Loading } from '@/components/shared/loading';
 const orderMap: Record<string, Partial<Record<'createdAt' | 'salary' | 'deadline', 'asc' | 'desc'>>> = {
 	newest: { createdAt: 'desc' },
 	salaryHigh: { salary: 'desc' },
@@ -94,7 +94,7 @@ function Page() {
 					</div>
 					{isLoading && (
 						<Card>
-							<LoadingCard></LoadingCard>
+							<Loading></Loading>
 						</Card>
 					)}
 					{jobs && jobs.items?.length > 0 && (

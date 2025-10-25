@@ -5,18 +5,17 @@ import { useAuth } from '@/hook/useAuth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Cropper, { Point, Area } from 'react-easy-crop';
-import { LoadingButton } from '@/components/ui/custom/loading-button';
-import { FaCamera, FaCameraRetro } from 'react-icons/fa6';
-import { authService } from '@/service/auth.service';
+import { FaCameraRetro } from 'react-icons/fa6';
 import { mutate } from 'swr';
 import { toast } from 'sonner';
+import { userService } from '@/service/user.service';
 
 export default function UpdateAvatar() {
 	const [imageSrc, setImageSrc] = useState<string>('');
 	const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
 	const [zoom, setZoom] = useState(1);
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
-	const [aspectRatio, setAspectRatio] = useState(1);
+	const [aspectRatio] = useState(1);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 	const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
@@ -39,11 +38,12 @@ export default function UpdateAvatar() {
 
 		try {
 			const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-			const avatarUrl = (await authService.uploadAvatar(croppedImageBlob as File)).data;
-			setUser(prev => (prev ? { ...prev, avatarUrl } : undefined));
+			const avatarUrl = await userService.uploadAvatar(croppedImageBlob as File);
+			setUser(prev => (prev ? { ...prev, avatarUrl: avatarUrl.data } : undefined));
 			mutate('/company/me');
 			toast.success('Tải ảnh thành công.');
 		} catch {
+			toast.error('Thất bại.');
 		} finally {
 			setOpen(false);
 		}
@@ -130,7 +130,7 @@ export default function UpdateAvatar() {
 							<Button onClick={() => fileInputRef.current?.click()} variant={'outline'}>
 								{imageSrc && 'Chọn ảnh khác'}
 							</Button>
-							<LoadingButton onClickAsync={handleSave}>Lưu thay đổi</LoadingButton>
+							<Button onClick={handleSave}>Lưu thay đổi</Button>
 						</DialogFooter>
 					)}
 				</DialogContent>

@@ -5,19 +5,20 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { EmployerTable } from './_component/employer-table';
 import { EmployerForm } from './_component/employer-form';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
 import { Card, CardTitle } from '@/components/ui/card';
 import useSWR from 'swr';
 import { employerService } from '@/service/employer.service';
 import { authService } from '@/service/auth.service';
+import { userService } from '@/service/user.service';
 
 export default function EmployerPage() {
 	const [openForm, setOpenForm] = useState(false);
 	const [editEmployer, setEditEmployer] = useState<any | null>(null);
 
 	const [page, setPage] = useState(1);
-	const [limit, setLimit] = useState(10);
-	const { data: employers, isLoading } = useSWR(['/employer/get', page, limit], () => employerService.getAllByCompany({ page, limit }).then(res => res.data));
+	const [limit, setLimit] = useState(5);
+	const { data: employers, isLoading } = useSWR(['/employer/get', page, limit], () => employerService.getAll({ page, limit }).then(res => res.data));
 	const handleEdit = (emp: any) => {
 		setEditEmployer(emp);
 		setOpenForm(true);
@@ -40,7 +41,7 @@ export default function EmployerPage() {
 
 				<EmployerTable isLoading={isLoading} employers={employers?.items} onEdit={handleEdit} onDelete={handleDelete} />
 				<div>
-					<Pagination pageSize={limit} onPageChange={setPage} onPageSizeChange={setLimit} currentPage={page} totalItems={employers?.total}></Pagination>
+					<Pagination pageSize={limit} onPageChange={setPage} onPageSizeChange={setLimit} currentPage={page} totalItems={employers?.meta.total}></Pagination>
 				</div>
 			</Card>
 
@@ -54,7 +55,7 @@ export default function EmployerPage() {
 					} else {
 						await employerService.update(saved);
 					}
-					if (saved.avatar) await employerService.uploadAvatar(saved.avatar);
+					if (saved.avatar) await userService.uploadAvatar(saved.avatar);
 					setOpenForm(false);
 				}}
 			/>

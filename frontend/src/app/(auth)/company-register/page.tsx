@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hook/useAuth';
 import { Check } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CompanyRegisterReq, companyRegisterSchema } from '@/schema/auth.schema';
+import { CompanyRegisterReq, CompanyRegisterSchema } from '@/schema/auth.schema';
 
 export default function CompanyRegisterPage() {
 	const {
@@ -16,7 +16,7 @@ export default function CompanyRegisterPage() {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 	} = useForm<CompanyRegisterReq>({
-		resolver: zodResolver(companyRegisterSchema),
+		resolver: zodResolver(CompanyRegisterSchema),
 	});
 	const [termsChecked, setTermsChecked] = useState(true);
 	const { companyRegister } = useAuth();

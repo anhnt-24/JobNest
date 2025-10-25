@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Building2, Users, Briefcase, MapPin, Search, X } from 'lucide-react';
 import { useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { SimpleTooltip } from '@/components/ui/custom/simple-tooltip';
+import { SimpleTooltip } from '@/components/shared/simple-tooltip';
 const companies = [
 	{
 		id: 1,

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import { UserResponseSchema } from './user.schema';
 
-export const loginSchema = z.object({
+export const LoginSchema = z.object({
 	email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
 	password: z.string().min(1, 'Vui lòng nhập mật khẩu').min(6, 'Mật khẩu phải ≥ 6 ký tự').max(128, 'Mật khẩu quá dài'),
 });
 
-export const registerSchema = z
+export const RegisterSchema = z
 	.object({
 		name: z.string().min(1, 'Vui lòng nhập họ tên').max(50, 'Tên quá dài'),
 		email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
@@ -18,7 +18,7 @@ export const registerSchema = z
 		message: 'Mật khẩu xác nhận không khớp',
 	});
 
-export const companyRegisterSchema = z
+export const CompanyRegisterSchema = z
 	.object({
 		name: z.string().min(1, 'Vui lòng nhập tên công ty').max(100, 'Tên công ty quá dài'),
 		email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
@@ -35,13 +35,12 @@ export const companyRegisterSchema = z
 		message: 'Mật khẩu xác nhận không khớp',
 	});
 
-export const authResponseSchema = z.object({
+export const AuthResponseSchema = z.object({
 	user: UserResponseSchema,
 	access_token: z.string(),
 	refresh_token: z.string(),
 });
-export type CompanyRegisterReq = z.infer<typeof companyRegisterSchema>;
-export type LoginReq = z.infer<typeof loginSchema>;
-export type RegisterReq = z.infer<typeof registerSchema>;
-
-export type AuthResponse = z.infer<typeof authResponseSchema>;
+export type CompanyRegisterReq = z.infer<typeof CompanyRegisterSchema>;
+export type LoginReq = z.infer<typeof LoginSchema>;
+export type RegisterReq = z.infer<typeof RegisterSchema>;
+export type AuthResponse = z.infer<typeof AuthResponseSchema>;

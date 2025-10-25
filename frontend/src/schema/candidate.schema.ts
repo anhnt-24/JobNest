@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { UserResponseSchema } from './user.schema';
 
-export const candidateSchema = z.object({
+export const CandidateSchema = z.object({
 	name: z.string().min(1, 'Vui lòng nhập họ tên'),
 	phone: z
 		.string()
@@ -12,12 +13,13 @@ export const candidateSchema = z.object({
 	gender: z.enum(['MALE', 'FEMALE', 'OTHER'], 'Vui lòng chọn giới tính'),
 });
 
-export const candidateResponseSchema = candidateSchema.extend({
+export const candidateResponseSchema = CandidateSchema.extend({
 	id: z.number().int(),
 	userId: z.number().int(),
+	user: UserResponseSchema,
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
 
-export type UpdateCandidateReq = z.infer<typeof candidateSchema>;
+export type CandidateReq = z.infer<typeof CandidateSchema>;
 export type CandidateRes = z.infer<typeof candidateResponseSchema>;

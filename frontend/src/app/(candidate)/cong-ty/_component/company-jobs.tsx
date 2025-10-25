@@ -11,10 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import { useState } from 'react';
-import LoadingCard from '../../candidate/profile/skeleton';
 import JobList from './job-list';
-import Pagination from '@/components/ui/custom/pagination';
-import Empty from '@/components/ui/custom/empty';
+import Pagination from '@/components/shared/pagination';
+import Empty from '@/components/shared/empty';
+import { Loading } from '@/components/shared/loading';
 export default function CompanyJobs({ id }: { id: number | undefined }) {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
@@ -33,7 +33,7 @@ export default function CompanyJobs({ id }: { id: number | undefined }) {
 					Tìm kiếm
 				</Button>
 			</div>
-			{isLoading && <LoadingCard></LoadingCard>}
+			{isLoading && <Loading></Loading>}
 			{jobs && jobs.items?.length > 0 && (
 				<>
 					<JobList jobs={jobs.items} />

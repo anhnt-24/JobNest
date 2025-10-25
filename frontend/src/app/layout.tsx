@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/context/AuthContext';
 import './globals.css';
-import ProgressBar from '@/components/ui/custom/progress-bar';
+import ProgressBar from '@/components/shared/progress-bar';
 import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({
 	subsets: ['latin', 'vietnamese'],

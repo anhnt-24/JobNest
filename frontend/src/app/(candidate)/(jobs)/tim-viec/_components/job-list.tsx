@@ -7,7 +7,7 @@ import { AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Bookmark, Heart, Info } from 'lucide-react';
-import { SaveJobButton } from '@/components/ui/custom/save-job-btn';
+import { SaveJobButton } from '@/components/shared/save-job-btn';
 import { JobRes } from '@/schema/job.schema';
 export default function JobList({ jobs }: { jobs: JobRes[] }) {
 	return (

@@ -4,16 +4,17 @@ import { Bookmark, Clock, MapPin, ExternalLink, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@radix-ui/react-avatar';
 import { AvatarImage } from '@/components/ui/avatar';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
 import { useState } from 'react';
 import { jobService } from '@/service/job.service';
 import useSWR from 'swr';
-import { CustomBadge } from '@/components/ui/custom/custom-badge';
+import { CustomBadge } from '@/components/shared/custom-badge';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import LoadingCard from '../../profile/skeleton';
-import { SaveJobButton } from '@/components/ui/custom/save-job-btn';
-import Empty from '@/components/ui/custom/empty';
+import { SaveJobButton } from '@/components/shared/save-job-btn';
+import Empty from '@/components/shared/empty';
+import { Countdown } from '@/components/shared/count-down';
+import { RelativeTime } from '@/components/shared/relative-time';
 export function SavedJobs() {
 	const [limit, setLimit] = useState(10);
 	const [page, setPage] = useState(1);
@@ -56,12 +57,15 @@ export function SavedJobs() {
 													<p className='text-gray-600'>{res.job.company?.user.name}</p>
 												</Link>
 												<div className='flex gap-2 mt-1'>
-													<Badge variant={'secondary'}>
-														<span>{res.job.workingAddress}</span>
-													</Badge>
-													<Badge variant={'secondary'}>
-														<span>Cập nhật 10 phút trước</span>
-													</Badge>
+													<div className='flex gap-2'>
+														<Badge variant={'secondary'}>{res.job.areaTags[0]}</Badge>
+														<Badge variant={'secondary'}>
+															<Countdown date={res.job.deadline as Date} prefix='Còn' suffix='để ứng tuyển' />
+														</Badge>
+														<Badge variant={'secondary'}>
+															<RelativeTime date={res.job.updatedAt}></RelativeTime>
+														</Badge>
+													</div>
 												</div>
 											</div>
 										</div>

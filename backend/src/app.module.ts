@@ -14,6 +14,8 @@ import { ConversationModule } from './conversation/conversation.module';
 import { PostsModule } from './posts/posts.module';
 import { CategoryModule } from './category/category.module';
 import { IndustryModule } from './industry/industry.module';
+import { ApplicationModule } from './application/application.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { IndustryModule } from './industry/industry.module';
     PostsModule,
     CategoryModule,
     IndustryModule,
+    ApplicationModule,
+    UserModule,
   ],
 })
 export class AppModule {}

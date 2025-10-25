@@ -1,6 +1,8 @@
 import { api } from '@/lib/axios';
-import { CandidateRes, UpdateCandidateReq } from '@/schema/candidate.schema';
+import { CandidateRes, CandidateReq } from '@/schema/candidate.schema';
+
 export const candidateService = {
-	me: () => api.get<CandidateRes>('/candidate/me'),
-	update: (req: UpdateCandidateReq) => api.put<CandidateRes>('/candidate/me', req),
+	me: () => api.get<CandidateRes>('/candidates/me'),
+	getById: (id: number) => api.get<CandidateRes>(`/candidates/${id}`),
+	update: (req: CandidateReq) => api.put<CandidateRes>('/candidates/me', req),
 };

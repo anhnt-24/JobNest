@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Pencil, Trash2, Eye, Plus, Filter, Search, Download, User, Mail, Phone, Calendar, FileText, Edit, Ellipsis, PencilLine, Trash } from 'lucide-react';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import JobStatusCell from './_component/job-status-cell';

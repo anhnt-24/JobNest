@@ -18,7 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Calendar as CalendarIcon, X, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import RichTextEditor from '@/components/ui/custom/editor';
+import RichTextEditor from '@/components/shared/editor';
 import { CreateJobDto, JobSchema } from '@/schema/job.schema';
 import { jobService } from '@/service/job.service';
 

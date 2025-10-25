@@ -10,6 +10,7 @@ import {
   UseGuards,
   Req,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { JobsService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
@@ -18,34 +19,24 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { JobStatus, Role } from '@prisma/client';
 import { JobListQueryDto } from './dto/list-jobs-query.dto';
-import { ApplicationListQueryDto } from './dto/list-application-query.req';
 import { SavedJobListQueryDto } from './dto/list-saved-query.req';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-@Controller('job')
+@Controller('jobs')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
-
-  @Post('/my-applied')
-  async getMyAppliedJobs(@Req() req, @Body() query: ApplicationListQueryDto) {
-    return this.jobsService.getMyAppliedJobs(+req.user.userId, query);
-  }
-
-  @Post('/applied')
-  async getAppliedJobs(@Body() query: ApplicationListQueryDto) {
-    return this.jobsService.getAppliedJobs(query);
-  }
 
   @Post('/saved')
   async getSavedJobs(@Req() req, @Body() query: SavedJobListQueryDto) {
     return this.jobsService.getSavedJobs(+req.user.userId, query);
   }
 
-  @Get('is-saved/:id')
+  @Get('/:id/is-saved')
   async isJobSaved(@Param('id') jobId: string, @Req() req) {
     return this.jobsService.isJobSaved(+req.user.userId, Number(jobId));
   }
-  @Post('create')
+
+  @Post()
   @Roles(Role.EMPLOYER)
   async create(@Req() req, @Body() dto: CreateJobDto) {
     return this.jobsService.create(req.user.userId, dto);
@@ -57,12 +48,12 @@ export class JobsController {
     return this.jobsService.findOne(id);
   }
 
-  @Post()
+  @Post('list')
   findAll(@Body() query: JobListQueryDto) {
     return this.jobsService.getAll(query);
   }
   @Post('/me')
-  findByEmployer(@Req() req, @Body() query: JobListQueryDto) {
+  getListByMe(@Req() req, @Body() query: JobListQueryDto) {
     return this.jobsService.getListByMe(req.user, query);
   }
 
@@ -72,43 +63,20 @@ export class JobsController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.jobsService.remove(id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.jobsService.delete(id);
   }
 
-  @Post('apply/:id')
-  applyForJob(
-    @Param('id') jobId: string,
-    @Body() body: { cvId: number; message?: string },
-    @Req() req,
-  ) {
-    return this.jobsService.applyForJob(
-      +req.user.userId,
-      Number(jobId),
-      Number(body.cvId),
-      body.message,
-    );
-  }
-
-  @Post('save/:id')
+  @Post(':id/save')
   toggleSaveJob(@Param('id') jobId: string, @Req() req) {
     return this.jobsService.toggleSaveJob(+req.user.userId, Number(jobId));
   }
 
-  @Put('status/:id')
+  @Patch('/:id/status')
   updateStatus(
     @Param('id') id: string,
     @Body() { status }: { status: JobStatus },
   ) {
     return this.jobsService.updateStatus(+id, status);
-  }
-  @Get('cv/:id')
-  async getCVs(@Param('id') id: number) {
-    return this.jobsService.getCVsByJob(+id);
-  }
-
-  @Get('company/:id')
-  async getCompany(@Param('id') id: number) {
-    return this.jobsService.getCompanyByJob(+id);
   }
 }

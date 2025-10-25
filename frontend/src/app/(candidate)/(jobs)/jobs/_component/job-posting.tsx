@@ -9,7 +9,7 @@ import { jobService } from '@/service/job.service';
 import { FaBookmark } from 'react-icons/fa';
 import { FaClock, FaCoins, FaCreditCard, FaLocationDot, FaUserClock } from 'react-icons/fa6';
 import { ApplyJobDialog } from '@/components/candidate/apply-job-diaglog';
-import { SaveJobButton } from '../../../../../components/ui/custom/save-job-btn';
+import { SaveJobButton } from '../../../../../components/shared/save-job-btn';
 import { JobRes } from '@/schema/job.schema';
 
 export default async function JobPosting({ job }: { job: JobRes }) {

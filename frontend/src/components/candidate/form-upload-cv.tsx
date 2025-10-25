@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { ArrowUp, FileUp } from 'lucide-react';
-import { cvService } from '@/service/cvs.service';
+import { cvService } from '@/service/cv.service';
 import { Label } from '@/components/ui/label';
 import { useDropzone } from 'react-dropzone';
 import { Card, CardContent } from '@/components/ui/card';

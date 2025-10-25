@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { LoginReq, loginSchema } from '@/schema/auth.schema';
+import { LoginReq, LoginSchema } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/hook/useAuth';
 
@@ -15,7 +15,7 @@ export default function LoginPage() {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 	} = useForm<LoginReq>({
-		resolver: zodResolver(loginSchema),
+		resolver: zodResolver(LoginSchema),
 		defaultValues: { email: '', password: '' },
 		mode: 'onSubmit',
 	});

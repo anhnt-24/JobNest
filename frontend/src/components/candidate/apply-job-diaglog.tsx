@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { AlertTriangle, Edit } from 'lucide-react';
 import { UploadCvModal } from './form-upload-cv';
 import useSWR from 'swr';
-import { cvService } from '@/service/cvs.service';
+import { cvService } from '@/service/cv.service';
 import { jobService } from '@/service/job.service';
 import { toast } from 'sonner';
 

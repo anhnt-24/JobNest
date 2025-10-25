@@ -5,20 +5,22 @@ import { Clock, FileText, MessageSquare, CheckCircle, ChevronRight, MapPin, Tras
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
 import { useState } from 'react';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
-import { CustomBadge } from '@/components/ui/custom/custom-badge';
-import LoadingCard from '@/components/ui/custom/skeleton';
-import Empty from '@/components/ui/custom/empty';
+import { CustomBadge } from '@/components/shared/custom-badge';
+import Empty from '@/components/shared/empty';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
+import { Loading } from '@/components/shared/loading';
+import { applicationService } from '@/service/application.service';
+import { RelativeTime } from '@/components/shared/relative-time';
 
 export function AppliedJobs() {
 	const [limit, setLimit] = useState(5);
 	const [page, setPage] = useState(1);
-	const { data, isLoading } = useSWR(['/job/applied', page, limit], () => jobService.getAppliedJobs({ page, limit }).then(res => res.data));
+	const { data, isLoading } = useSWR(['/job/applied', page, limit], () => applicationService.getMyAppliedJobs({ page, limit }).then(res => res.data));
 	return (
 		<>
 			<div className='px-4 space-y-4'>
@@ -45,16 +47,16 @@ export function AppliedJobs() {
 					</Select>
 				</div>
 				{isLoading ? (
-					<LoadingCard />
+					<Loading />
 				) : (
 					<div className='space-y-4'>
 						{data?.items?.length === 0 && <Empty></Empty>}
 
 						{data?.items?.map(res => (
-							<div className='p-4 hover:border-primary transition-shadow border-b hover:bg-primary/5 cursor-pointer '>
+							<Card className='p-4 border shadow-none hover:border-primary  hover:bg-primary/5 cursor-pointer '>
 								<div className=''>
 									<div className='flex gap-4 items-start '>
-										<Avatar className='size-32 border border-gray-200 rounded-xs p-2'>
+										<Avatar className='size-28 border border-gray-200 rounded-xs p-2'>
 											<AvatarImage className='object-contain' src={res.job.company.user.avatarUrl} alt='@user' />
 										</Avatar>
 										<div className='flex-1  '>
@@ -67,10 +69,12 @@ export function AppliedJobs() {
 											<Link href={`/cong-ty/${res.job.companyId}`} className='space-x-1 '>
 												<p className='text-gray-600'>{res.job.company?.user.name}</p>
 											</Link>
-											<Badge variant={'secondary'} className='flex gap-2 items-center mt-1'>
-												<Clock className='size-4'></Clock>
-												<span>Ứng tuyển lúc: {res.appliedAt}</span>
-											</Badge>
+											<div className='flex gap-2 mt-1'>
+												<Badge variant={'secondary'}>{res.job.areaTags[0]}</Badge>
+												<Badge variant={'secondary'}>
+													<RelativeTime icon prefix='Ứng tuyển lúc: ' date={res.appliedAt as Date} />
+												</Badge>
+											</div>
 										</div>
 									</div>
 
@@ -79,14 +83,14 @@ export function AppliedJobs() {
 											<p className='flex items-center font-semibold  text-blue-500'> Đã ứng tuyển</p>
 										</div>
 										<div className='flex gap-2 justify-center'>
+											<Button size={'md'}>Xem CV</Button>
 											<Button variant={'outline'} size={'md'}>
 												<MessageSquare></MessageSquare>
 											</Button>
-											<Button size={'md'}>Xem CV</Button>
 										</div>
 									</div>
 								</div>
-							</div>
+							</Card>
 						))}
 					</div>
 				)}

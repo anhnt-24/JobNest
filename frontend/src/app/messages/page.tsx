@@ -10,13 +10,13 @@ import { useEffect, useState } from 'react';
 import { AppliedJobList } from './_component/applied-job-list';
 import { ConversationSidebar } from './_component/conversation-sidebar';
 import { FaHand } from 'react-icons/fa6';
-import LoadingCard from '@/components/ui/custom/skeleton';
 import useSWR from 'swr';
 import { authService } from '@/service/auth.service';
 import { useConversationStore } from '@/store/conversation-store';
 import ChatMessages from './_component/chat-message';
 import { useChat } from '@/hooks/use-chat';
 import { conversationService } from '@/service/conversation.service';
+import { Loading } from '@/components/shared/loading';
 
 export default function MessagesPage() {
 	const [activeConvo, setActiveConvo] = useState<number | null>(null);
@@ -50,7 +50,7 @@ export default function MessagesPage() {
 			conversationService.markAsRead(activeConvo).then(res => updateConversation(activeConvo, res.data));
 		}
 	}, [activeConvo]);
-	if (!user) return <LoadingCard></LoadingCard>;
+	if (!user) return <Loading></Loading>;
 	return (
 		<Card className='flex p-0 '>
 			<div className='flex'>

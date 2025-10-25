@@ -3,6 +3,7 @@ import { api, nextApi, tokenStorage } from '@/lib/axios';
 import { CompanyRegisterReq, LoginReq, RegisterReq } from '@/schema/auth.schema';
 import { UserRes } from '@/schema/user.schema';
 import { authService } from '@/service/auth.service';
+import { userService } from '@/service/user.service';
 import { useRouter } from 'next/navigation';
 import { createContext, useState, ReactNode, useEffect, Dispatch, SetStateAction } from 'react';
 import { toast } from 'sonner';
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		const loadUser = async () => {
 			try {
-				const data = await authService.me();
+				const data = await userService.me();
 				setUser(data.data);
 			} catch (err) {}
 		};

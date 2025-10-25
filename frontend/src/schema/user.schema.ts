@@ -11,7 +11,6 @@ export const UserResponseSchema = z.object({
 	verified: z.boolean(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
-
 	candidateId: z.number().optional(),
 	companyId: z.number().optional(),
 	employerId: z.number().optional(),

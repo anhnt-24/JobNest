@@ -8,9 +8,9 @@ import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import { ApplyJobDialog } from './apply-job-diaglog';
 import Link from 'next/link';
-import { CustomBadge } from '../ui/custom/custom-badge';
+import { CustomBadge } from '../shared/custom-badge';
 import { JobRes } from '@/schema/job.schema';
-import { SaveJobButton } from '../ui/custom/save-job-btn';
+import { SaveJobButton } from '../shared/save-job-btn';
 
 function SidebarJobItem({ job }: { job: JobRes }) {
 	return (

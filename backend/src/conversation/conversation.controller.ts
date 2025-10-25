@@ -15,36 +15,36 @@ import { ChatGateway } from './chat.gateway';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@Controller('conversation')
+@Controller('conversations')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ConversationController {
   constructor(
-    private convoService: ConversationService,
+    private conversationService: ConversationService,
     private chatGateway: ChatGateway,
   ) {}
 
   @Post('')
   async createConversation(@Body() body: { userIds: number[] }) {
-    return this.convoService.create(body.userIds);
+    return this.conversationService.create(body.userIds);
   }
-  @Post('create/:appId')
+  @Post(':appId')
   async createWithApplication(@Param('appId', ParseIntPipe) appId: number) {
-    return await this.convoService.createWithApplication(appId);
+    return await this.conversationService.createWithApplication(appId);
   }
 
   @Get('/me')
   async getUserConversations(@Req() req) {
-    return this.convoService.getConversations(Number(req.user.userId));
+    return this.conversationService.getConversations(Number(req.user.userId));
   }
 
   @Get('/application/:appId')
   async getConversationByApplication(@Param('appId') appId: number) {
-    return this.convoService.getConversationByApplication(Number(appId));
+    return this.conversationService.getConversationByApplication(Number(appId));
   }
 
   @Get('/:convoId/messages')
   async getMessages(@Param('convoId') convoId: number) {
-    return this.convoService.getMessages(Number(convoId));
+    return this.conversationService.getMessages(Number(convoId));
   }
 
   @Post('/:convoId/messages')
@@ -53,12 +53,13 @@ export class ConversationController {
     @Param('convoId', ParseIntPipe) convoId: number,
     @Body() body: { content: string },
   ) {
-    const message = await this.convoService.sendMessage(
+    const message = await this.conversationService.sendMessage(
       convoId,
       +req.user.userId,
       body.content,
     );
-    const conversation = await this.convoService.getConversationById(convoId);
+    const conversation =
+      await this.conversationService.getConversationById(convoId);
 
     const participants = conversation!.users.map((u) => u.user.id);
     participants.forEach((userId) => {
@@ -75,21 +76,24 @@ export class ConversationController {
     return message;
   }
 
-  @Patch('readed/:convoId')
+  @Patch(':conversationId')
   async markAsRead(
     @Req() req,
-    @Param('convoId', ParseIntPipe) convoId: number,
+    @Param('conversationId', ParseIntPipe) conversationId: number,
   ) {
-    return this.convoService.markAsRead(convoId, Number(req.user.userId));
+    return this.conversationService.markAsRead(
+      conversationId,
+      Number(req.user.userId),
+    );
   }
-  @Delete('/delete/:id')
+  @Delete('/:id')
   async deleteConversation(@Param('id', ParseIntPipe) id: number) {
-    return this.convoService.deleteConversation(id);
+    return this.conversationService.deleteConversation(id);
   }
-  @Get('/status/:conversationId')
+  @Get('/:conversationId/status')
   async getStatus(@Param('conversationId') conversationId: string, @Req() req) {
     const userId = req.user.userId;
-    const status = await this.convoService.getStatus(
+    const status = await this.conversationService.getStatus(
       +userId,
       Number(conversationId),
     );
@@ -99,7 +103,7 @@ export class ConversationController {
   async getUnreadConversations(@Req() req) {
     const userId = req.user.userId;
     const unreadConvos =
-      await this.convoService.getUnreadConversations(+userId);
+      await this.conversationService.getUnreadConversations(+userId);
     return unreadConvos;
   }
 }

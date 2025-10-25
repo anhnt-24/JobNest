@@ -12,9 +12,8 @@ import { CalendarIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Suspense, useEffect, useState } from 'react';
 import { candidateService } from '@/service/candidate.service';
-import { candidateSchema, UpdateCandidateReq } from '@/schema/candidate.schema';
+import { CandidateSchema, CandidateReq, CandidateRes } from '@/schema/candidate.schema';
 import { toast } from 'sonner';
-import LoadingCard from './skeleton';
 export function Profile() {
 	const {
 		register,
@@ -23,8 +22,8 @@ export function Profile() {
 		reset,
 		control,
 		formState: { errors, isSubmitting },
-	} = useForm<UpdateCandidateReq>({
-		resolver: zodResolver(candidateSchema),
+	} = useForm<CandidateReq>({
+		resolver: zodResolver(CandidateSchema),
 		defaultValues: {
 			name: '',
 			phone: '',
@@ -34,8 +33,8 @@ export function Profile() {
 	});
 
 	const [date, setDate] = useState<Date>();
-	const { data: profile } = useSWR('/candidate/profile', () => candidateService.me().then(res => res.data), { suspense: true });
-	const onSubmit = async (data: UpdateCandidateReq) => {
+	const { data: profile } = useSWR('/candidate/profile', () => candidateService.me().then(res => res.data));
+	const onSubmit = async (data: CandidateReq) => {
 		try {
 			const payload = {
 				...data,
@@ -132,16 +131,3 @@ export function Profile() {
 		</form>
 	);
 }
-
-function Page() {
-	return (
-		<Card>
-			<CardTitle>Cài đặt thông tin cá nhân</CardTitle>
-			<Suspense fallback={<LoadingCard></LoadingCard>}>
-				<Profile></Profile>
-			</Suspense>
-		</Card>
-	);
-}
-
-export default Page;

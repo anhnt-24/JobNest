@@ -6,10 +6,12 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import Link from 'next/link';
-import LoadingCard from '@/components/ui/custom/skeleton';
-import { SaveJobButton } from '@/components/ui/custom/save-job-btn';
+import { SaveJobButton } from '@/components/shared/save-job-btn';
 import { useState } from 'react';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
+import { Loading } from '@/components/shared/loading';
+import { RelativeTime } from '@/components/shared/relative-time';
+import { Countdown } from '@/components/shared/count-down';
 function SuggestedJobs() {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(5);
@@ -21,7 +23,7 @@ function SuggestedJobs() {
 				<p className='text-gray-600'>Những công việc phù hợp nhất với bạn dựa trên mong muốn, kỹ năng và kinh nghiệm.</p>
 			</div>
 
-			{isLoading && <LoadingCard></LoadingCard>}
+			{isLoading && <Loading></Loading>}
 			{jobs?.items?.map(job => (
 				<div className='p-4  hover:shadow-md transition-shadow border rounded-lg hover:bg-primary/5  hover:border-primary'>
 					<div className='flex gap-4 items-start'>
@@ -46,11 +48,13 @@ function SuggestedJobs() {
 
 					<div className='flex flex-wrap items-center gap-2 pt-2 justify-between'>
 						<div className='flex gap-2'>
-							<Badge variant={'secondary'}>Hà Nội</Badge>
+							<Badge variant={'secondary'}>{job.areaTags[0]}</Badge>
 							<Badge variant={'secondary'}>
-								Còn <strong className='text-sm'>30</strong> ngày để ứng tuyển
+								<Countdown date={job.deadline as Date} prefix='Còn' suffix='để ứng tuyển' />
 							</Badge>
-							<Badge variant={'secondary'}>Cập nhật 10 phút trước</Badge>
+							<Badge variant={'secondary'}>
+								<RelativeTime date={job.updatedAt}></RelativeTime>
+							</Badge>
 						</div>
 						<div className='flex gap-2 justify-center items-center'>
 							<Link href={`/jobs/${job.id}`}>

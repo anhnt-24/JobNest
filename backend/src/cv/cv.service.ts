@@ -13,7 +13,7 @@ export class CvService {
     private miniosService: MinioService,
   ) {}
 
-  async uploadCv(candidateId: number, title: string, file: MulterFile) {
+  async upload(candidateId: number, title: string, file: MulterFile) {
     const fileUrl = await this.miniosService.uploadFile(file);
     if (!fileUrl) throw new NotFoundException('Không tìm thấy file');
 
@@ -112,21 +112,12 @@ export class CvService {
       },
     };
   }
-  async updateCv(id: number, data: { title?: string; thumbnailUrl?: string }) {
+  async delete(id: number) {
     const cv = await this.prisma.cV.findUnique({ where: { id } });
     if (!cv) throw new NotFoundException('Không tìm thấy CV');
-
-    return this.prisma.cV.update({
-      where: { id },
-      data,
-    });
+    return this.prisma.cV.update({ where: { id }, data: { isDeleted: true } });
   }
-  async deleteCv(id: number) {
-    const cv = await this.prisma.cV.findUnique({ where: { id } });
-    if (!cv) throw new NotFoundException('Không tìm thấy CV');
-    return this.prisma.cV.delete({ where: { id } });
-  }
-  async getCvById(id: number) {
+  async findOne(id: number) {
     const cv = await this.prisma.cV.findUnique({ where: { id } });
     if (!cv) throw new NotFoundException('Không tìm thấy CV');
     return cv;

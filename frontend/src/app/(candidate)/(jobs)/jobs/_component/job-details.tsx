@@ -6,7 +6,6 @@ import { jobService } from '@/service/job.service';
 import { useParams } from 'next/navigation';
 import { Suspense } from 'react';
 import useSWR from 'swr';
-import LoadingCard from '../../../candidate/profile/skeleton';
 
 export default function JobDetails({ job }: { job: JobRes }) {
 	return (

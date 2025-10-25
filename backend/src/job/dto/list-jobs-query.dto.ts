@@ -34,6 +34,7 @@ export function buildJobQuery(
       filter.employerId ? { employerId: filter.employerId } : {},
       filter.category ? { category: filter.category } : {},
       filter.workingAddress ? { workingAddress: filter.workingAddress } : {},
+      { isDeleted: false },
     ],
   };
 

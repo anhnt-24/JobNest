@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { cvService } from '@/service/cvs.service';
+import { cvService } from '@/service/cv.service';
 import { toast } from 'sonner';
 
 const schema = z.object({
@@ -40,12 +40,12 @@ export function RenameCvButton({ id, title, mutate }: RenameCvButtonProps) {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			await cvService.update(id, { title: values.title.trim() });
-			toast.success(`Đã đổi tên CV thành "${values.title}"`);
+			toast.success(`Thành công."`);
 			mutate();
 			setOpen(false);
 		} catch (error) {
 			console.error(error);
-			toast.error('Đổi tên thất bại!');
+			toast.error('Thất bại.');
 		}
 	};
 

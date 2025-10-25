@@ -12,26 +12,26 @@ import { IndustryService } from './industry.service';
 import { CreateIndustryDto } from './dto/create-industry.dto';
 import { UpdateIndustryDto } from './dto/update-industry.dto';
 
-@Controller('industry')
+@Controller('industries')
 export class IndustryController {
   constructor(private readonly industryService: IndustryService) {}
 
-  @Post('create')
+  @Post()
   create(@Body() dto: CreateIndustryDto) {
     return this.industryService.create(dto);
   }
 
-  @Get('get-all')
+  @Post('list')
   findAll() {
     return this.industryService.findAll();
   }
 
-  @Get('get/:id')
+  @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.industryService.findOne(id);
   }
 
-  @Patch('update/:id')
+  @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateIndustryDto,
@@ -39,7 +39,7 @@ export class IndustryController {
     return this.industryService.update(id, dto);
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.industryService.remove(id);
   }

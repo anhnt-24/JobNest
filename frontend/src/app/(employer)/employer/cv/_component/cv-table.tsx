@@ -6,9 +6,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Download, User, Mail, Phone, Calendar, FileText, ArrowUpDown, Filter, MapPin, DollarSign, Briefcase, Clock, Ellipsis, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import Pagination from '@/components/ui/custom/pagination';
+import Pagination from '@/components/shared/pagination';
 import useSWR from 'swr';
-import { cvService } from '@/service/cvs.service';
+import { cvService } from '@/service/cv.service';
 import Link from 'next/link';
 import { jobService } from '@/service/job.service';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';

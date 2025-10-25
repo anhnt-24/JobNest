@@ -9,6 +9,11 @@ const nextConfig = {
 				port: '9000',
 				pathname: '/**',
 			},
+			{
+				protocol: 'https',
+				hostname: 'cdn-new.topcv.vn',
+				pathname: '/**',
+			},
 		],
 	},
 };

@@ -14,7 +14,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { cvService } from '@/service/cvs.service';
+import { cvService } from '@/service/cv.service';
 import { toast } from 'sonner';
 
 type DeleteCvButtonProps = {
@@ -30,11 +30,11 @@ export function DeleteCvButton({ id, title, onDeleted }: DeleteCvButtonProps) {
 		try {
 			setLoading(true);
 			await cvService.delete(id);
-			toast.success(`Đã xoá CV${title ? ` "${title}"` : ''} thành công!`);
+			toast.success(`Xóa thành công!`);
 			onDeleted?.();
 		} catch (error) {
 			console.error(error);
-			toast.error('Xoá CV thất bại!');
+			toast.error('Thất bại!');
 		} finally {
 			setLoading(false);
 		}

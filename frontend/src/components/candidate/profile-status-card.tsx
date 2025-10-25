@@ -9,18 +9,16 @@ import { useAuth } from '@/hook/useAuth';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Cropper, { Point, Area } from 'react-easy-crop';
-import { candidateService } from '@/service/candidate.service';
-import { LoadingButton } from '../ui/custom/loading-button';
 import { Switch } from '../ui/switch';
 import { Separator } from '../ui/separator';
 export function ProfileStatusCard() {
 	const { user, setUser } = useAuth();
 	const handleUpload = async (file: File) => {
-		const res = await candidateService.uploadAvatar(file);
-		setUser(user => ({
-			...user,
-			avatarUrl: res.data,
-		}));
+		// const res = await userService.uploadAvatar(file);
+		// setUser(user => ({
+		// 	...user,
+		// 	avatarUrl: res.data,
+		// }));
 	};
 
 	const [jobStatus, setJobStatus] = useState(true);
@@ -210,7 +208,7 @@ export default function AvatarWithUpload({ user, onSave }: AvatarWithUploadProps
 							<Button onClick={() => fileInputRef.current?.click()} variant={'outline'}>
 								{imageSrc && 'Chọn ảnh khác'}
 							</Button>
-							<LoadingButton onClickAsync={handleSave}>Lưu thay đổi</LoadingButton>
+							<Button onClick={handleSave}>Lưu thay đổi</Button>
 						</DialogFooter>
 					)}
 				</DialogContent>

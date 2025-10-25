@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UserResponseSchema } from './user.schema';
 
-export const companySchema = z
+export const CompanySchema = z
 	.object({
 		name: z.string().trim().min(1, 'Tên không được để trống').max(200),
 		website: z.string().trim().url('Website không hợp lệ'),
@@ -19,7 +19,7 @@ export const companySchema = z
 	})
 	.passthrough();
 
-export const companyResponseSchema = companySchema.extend({
+export const CompanyResponseSchema = CompanySchema.extend({
 	id: z.number().int(),
 	userId: z.string(),
 	coverUrl: z.string(),
@@ -27,6 +27,5 @@ export const companyResponseSchema = companySchema.extend({
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
-export type CreateCompanyReq = z.infer<typeof companySchema>;
-export type UpdateCompanyReq = z.infer<typeof companySchema>;
-export type CompanyRes = z.infer<typeof companyResponseSchema>;
+export type CompanyReq = z.infer<typeof CompanySchema>;
+export type CompanyRes = z.infer<typeof CompanyResponseSchema>;

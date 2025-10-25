@@ -38,6 +38,7 @@ export class CvListQueryDto extends IntersectionType(
 
     const where: Prisma.CVWhereInput = {
       ...filter,
+      isDeleted: true,
     };
 
     const orderBy: Prisma.CVOrderByWithRelationInput[] = orders

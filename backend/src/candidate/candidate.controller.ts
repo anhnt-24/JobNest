@@ -14,7 +14,7 @@ import { Role } from '@prisma/client';
 import { UpdateCandidateDto } from './dto/update-candidate.dto';
 import { CandidatesService } from './candidate.service';
 
-@Controller('candidate')
+@Controller('candidates')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CandidatesController {
   constructor(private readonly candidatesService: CandidatesService) {}

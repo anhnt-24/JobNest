@@ -4,18 +4,32 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, Pencil, Search, Trash2 } from 'lucide-react';
 import { FaMagnifyingGlass, FaPencil, FaTrashCan } from 'react-icons/fa6';
-import { LoadingTable } from '@/components/ui/custom/loading-table';
+import { Loading } from '@/components/shared/loading';
+import { EmployerRes, EmployerReq } from '@/schema/employer.schema';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { ActiveStatusSelect } from '@/components/shared/active-status-select';
+import { employerService } from '@/service/employer.service';
+import { toast } from 'sonner';
 
 interface EmployerTableProps {
-	employers: any[];
-	onEdit: (employer: any) => void;
+	employers?: EmployerRes[];
+	onEdit: (employer: EmployerReq) => void;
 	onDelete: (id: number) => void;
 	isLoading: boolean;
 }
 
-export const EmployerTable = ({ employers, onEdit, onDelete, isLoading }: EmployerTableProps) => {
+export const EmployerTable = ({ employers, isLoading }: EmployerTableProps) => {
+	const handleStatusChange = async (employerId: number, newValue: boolean) => {
+		try {
+			await employerService.toggleActive(employerId, newValue);
+			toast.success(`Thành công. `);
+		} catch (error) {
+			console.error(error);
+			toast.error('Thất bại.');
+		}
+	};
 	return (
 		<div>
 			<Table>
@@ -37,42 +51,45 @@ export const EmployerTable = ({ employers, onEdit, onDelete, isLoading }: Employ
 					{employers?.map(emp => (
 						<TableRow key={emp.id}>
 							<TableCell>{emp.employeeId}</TableCell>
+							<TableCell
+								className='flex gap-2 items-center
+							'>
+								<Avatar className='size-12 border'>
+									<AvatarImage src={emp.user.avatarUrl} className='  size-12 object-cover'></AvatarImage>
+								</Avatar>
+								{emp.user.name}
+							</TableCell>
 							<TableCell>{emp.gender}</TableCell>
-							<TableCell>{emp.name}</TableCell>
 							<TableCell>{emp.user.email}</TableCell>
-							<TableCell>{emp.phone}</TableCell>
+							<TableCell>{emp.user.phone}</TableCell>
 							<TableCell>{emp.dob.split('T')[0]}</TableCell>
 							<TableCell>{emp.address}</TableCell>
 							<TableCell>
-								<Badge variant={emp.user.active ? 'default' : 'destructive'}>{emp.user.active ? 'active' : 'restricted'} </Badge>
+								<ActiveStatusSelect value={emp.active} onChange={newValue => handleStatusChange(emp.id, newValue)}></ActiveStatusSelect>
 							</TableCell>
 							<TableCell>{emp.position}</TableCell>
-							<TableCell className='flex gap-2'>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button className='rounded-full' variant='ghost'>
-											<Ellipsis />
-										</Button>
-									</DropdownMenuTrigger>
+							<TableCell className=''>
+								<div className='h-full'>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant={'ghost'}>
+												<Ellipsis />
+											</Button>
+										</DropdownMenuTrigger>
 
-									<DropdownMenuContent align='end' className='w-48 text-gray-600'>
-										<DropdownMenuItem>
-											<FaPencil className='mr-2 size-5' /> Chỉnh sửa
-										</DropdownMenuItem>
-										<DropdownMenuItem>
-											<FaMagnifyingGlass className='mr-2 size-5' /> Xem CV
-										</DropdownMenuItem>
-										<DropdownMenuItem className='text-red-500'>
-											<FaTrashCan className='mr-2 size-5' /> Xóa
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
+										<DropdownMenuContent align='end' className='w-48 text-gray-600'>
+											<DropdownMenuItem className='text-red-500'>
+												<Trash2 className='mr-2 size-5' /> Xóa
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
 							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
-			{isLoading && <LoadingTable></LoadingTable>}
+			{isLoading && <Loading type='table'></Loading>}
 		</div>
 	);
 };

@@ -65,12 +65,6 @@ export class EmployerService {
     });
   }
 
-  async delete(id: number) {
-    const employer = await this.prisma.employer.findUnique({ where: { id } });
-    if (!employer) throw new NotFoundException('Employer không tồn tại');
-
-    return this.prisma.employer.delete({ where: { id } });
-  }
   async getAll(query: EmployerListQueryDto) {
     const prismaArgs = query.toPrismaArgs();
 
@@ -111,5 +105,24 @@ export class EmployerService {
         totalPages: Math.ceil(total / query.limit),
       },
     };
+  }
+  async toggleActive(id: number, active: boolean) {
+    const employer = await this.prisma.employer.findUnique({ where: { id } });
+    if (!employer) throw new NotFoundException('Employer not found');
+
+    return this.prisma.employer.update({
+      where: { id },
+      data: { active },
+    });
+  }
+
+  async softDelete(id: number) {
+    const employer = await this.prisma.employer.findUnique({ where: { id } });
+    if (!employer) throw new NotFoundException('Employer not found');
+
+    return this.prisma.employer.update({
+      where: { id },
+      data: { isDeleted: true, active: false },
+    });
   }
 }

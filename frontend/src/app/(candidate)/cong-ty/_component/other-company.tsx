@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import { companyService } from '@/service/company.service';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
-import LoadingCard from '@/components/ui/custom/skeleton';
+import { Loading } from '@/components/shared/loading';
 
 export default function CompanyGrid() {
 	const { data: companies, isLoading } = useSWR('company', () => companyService.getAll({}).then(res => res.data));
@@ -16,7 +16,7 @@ export default function CompanyGrid() {
 				<CardTitle>Thương hiệu lớn tiêu biểu cùng lĩnh vực</CardTitle>
 				<p>Những thương hiệu tuyển dụng đã khẳng định được vị thế trên thị trường.</p>
 			</div>
-			{isLoading && <LoadingCard />}
+			{isLoading && <Loading />}
 			<div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
 				{companies?.items?.map((c, idx) => (
 					<Link href={`/cong-ty/${c.id}`} key={idx} className='flex items-center gap-3 p-4 hover:shadow-md transition rounded-xl border border-yellow-500 hover:bg-primary/5 hover:border-primary '>

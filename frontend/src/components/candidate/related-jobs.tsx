@@ -7,14 +7,16 @@ import { Bookmark, Clock, Heart, HeartPlus, MapPin } from 'lucide-react';
 import useSWR from 'swr';
 import { jobService } from '@/service/job.service';
 import Link from 'next/link';
-import LoadingCard from '@/components/ui/custom/skeleton';
-import { SaveJobButton } from '../ui/custom/save-job-btn';
+import { SaveJobButton } from '../shared/save-job-btn';
+import { Loading } from '../shared/loading';
+import { Countdown } from '../shared/count-down';
+import { RelativeTime } from '../shared/relative-time';
 function RelatedJobs() {
 	const { data: jobs, isLoading } = useSWR([`/timviec/cc`], () => jobService.getAll({ page: 1, limit: 10 }).then(res => res.data));
 	return (
 		<Card>
 			<CardTitle>Việc làm liên quan</CardTitle>
-			{isLoading && <LoadingCard></LoadingCard>}
+			{isLoading && <Loading />}
 			{jobs?.items?.map(job => (
 				<div className='p-4  hover:shadow-md transition-shadow border rounded-lg hover:bg-primary/5  hover:border-primary'>
 					<div className='flex gap-4 items-start'>
@@ -39,11 +41,13 @@ function RelatedJobs() {
 
 					<div className='flex flex-wrap items-center gap-2 pt-2 justify-between'>
 						<div className='flex gap-2'>
-							<Badge variant={'secondary'}>Hà Nội</Badge>
+							<Badge variant={'secondary'}>{job.areaTags[0]}</Badge>
 							<Badge variant={'secondary'}>
-								Còn <strong className='text-sm'>30</strong> ngày để ứng tuyển
+								<Countdown date={job.deadline as Date} prefix='Còn' suffix='để ứng tuyển' />
 							</Badge>
-							<Badge variant={'secondary'}>Cập nhật 10 phút trước</Badge>
+							<Badge variant={'secondary'}>
+								<RelativeTime date={job.updatedAt}></RelativeTime>
+							</Badge>
 						</div>
 						<div className='flex gap-2 justify-center items-center'>
 							<Link href={`/jobs/${job.id}`}>

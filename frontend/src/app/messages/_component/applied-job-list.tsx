@@ -3,7 +3,7 @@
 import useSWR from 'swr';
 import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import Empty from '@/components/ui/custom/empty';
+import Empty from '@/components/shared/empty';
 import { jobService } from '@/service/job.service';
 import { conversationService } from '@/service/conversation.service';
 interface AppliedJobListProps {

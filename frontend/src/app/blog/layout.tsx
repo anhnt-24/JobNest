@@ -1,5 +1,5 @@
-import Footer from '@/components/home-page/footer';
-import Header from '@/components/home-page/header';
+import Footer from '@/components/home/footer';
+import Header from '@/components/home/header';
 import { BlogSearch } from './_component/blog-search';
 
 export default function CandidateLayout({ children }: { children: React.ReactNode }) {

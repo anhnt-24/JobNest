@@ -20,8 +20,9 @@ import { CvListQueryDto } from './dto/cv-list-query.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CreateCvDto } from './dto/create-cv.dto';
+import { UpdateCvDto } from './dto/update-cv.dto';
 
-@Controller('cv')
+@Controller('cvs')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CvController {
   constructor(private readonly cvService: CvService) {}
@@ -34,7 +35,7 @@ export class CvController {
     @Body('title') title: string,
   ) {
     if (!file) throw new BadRequestException('Vui lòng chọn file CV');
-    return this.cvService.uploadCv(Number(req.user.userId), title, file);
+    return this.cvService.upload(Number(req.user.userId), title, file);
   }
 
   @Post('create')
@@ -43,28 +44,25 @@ export class CvController {
   }
 
   @Post('me')
-  async getCvsByCandidate(@Req() req, @Body() query: CvListQueryDto) {
+  async me(@Req() req, @Body() query: CvListQueryDto) {
     return this.cvService.getCvsByCandidate(Number(req.user.userId), query);
   }
 
-  @Post('get')
+  @Post('list')
   async getAll(@Body() query: CvListQueryDto) {
     return this.cvService.getAll(query);
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() data: { title?: string; thumbnailUrl?: string },
-  ) {
-    return this.cvService.updateCv(Number(id), data);
+  async update(@Param('id') id: string, @Body() data: UpdateCvDto) {
+    return this.cvService.update(Number(id), data);
   }
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    return this.cvService.deleteCv(Number(id));
+    return this.cvService.delete(Number(id));
   }
   @Get(':id')
-  getCvById(@Param('id', ParseIntPipe) id: number) {
-    return this.cvService.getCvById(id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.cvService.findOne(id);
   }
 }

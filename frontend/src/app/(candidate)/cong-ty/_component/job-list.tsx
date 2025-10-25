@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@radix-ui/react-avatar';
 import { AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Bookmark, Heart, Info } from 'lucide-react';
-import { SaveJobButton } from '@/components/ui/custom/save-job-btn';
+import { SaveJobButton } from '@/components/shared/save-job-btn';
 import { JobRes } from '@/schema/job.schema';
+import { Countdown } from '@/components/shared/count-down';
+import { RelativeTime } from '@/components/shared/relative-time';
 export default function JobList({ jobs }: { jobs: JobRes[] }) {
 	return (
 		<div className='flex-2 space-y-6'>
@@ -35,11 +36,13 @@ export default function JobList({ jobs }: { jobs: JobRes[] }) {
 
 						<div className='flex flex-wrap items-center gap-2 pt-2 justify-between'>
 							<div className='flex gap-2'>
-								<Badge variant={'secondary'}>Hà Nội</Badge>
+								<Badge variant={'secondary'}>{job.areaTags[0]}</Badge>
 								<Badge variant={'secondary'}>
-									Còn <strong className='text-sm'>30</strong> ngày để ứng tuyển
+									<Countdown date={job.deadline as Date} prefix='Còn' suffix='để ứng tuyển' />
 								</Badge>
-								<Badge variant={'secondary'}>Cập nhật 10 phút trước</Badge>
+								<Badge variant={'secondary'}>
+									<RelativeTime date={job.updatedAt}></RelativeTime>
+								</Badge>
 							</div>
 							<div className='flex gap-2 justify-center items-center'>
 								<Link href={`/jobs/${job.id}`}>

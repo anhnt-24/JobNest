@@ -53,6 +53,7 @@ export function buildEmployerQuery(
       filter.position
         ? { position: { contains: filter.position, mode: 'insensitive' } }
         : {},
+      { isDeleted: false },
     ],
   };
 

@@ -49,7 +49,7 @@ export default function FormatToolbar() {
 					{group.map((btn, idx) => (
 						<Tooltip key={idx}>
 							<TooltipTrigger asChild>
-								<Button variant='ghost' size='sm' onClick={btn.onClick} className={btn.active ? 'bg-gray-200' : ''}>
+								<Button variant='ghost' size='sm' onClick={btn.onClick}>
 									{btn.icon}
 								</Button>
 							</TooltipTrigger>

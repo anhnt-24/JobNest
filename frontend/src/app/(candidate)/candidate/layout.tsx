@@ -1,5 +1,5 @@
-import Footer from '@/components/home-page/footer';
-import Header from '@/components/home-page/header';
+import Footer from '@/components/home/footer';
+import Header from '@/components/home/header';
 import { Card } from '@/components/ui/card';
 import { ProfileStatusCard } from '@/components/candidate/profile-status-card';
 import { SidebarJobCard } from '@/components/candidate/sidebar-job-card';

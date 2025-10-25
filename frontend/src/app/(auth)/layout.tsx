@@ -1,5 +1,5 @@
-import Footer from '@/components/home-page/footer';
-import Header from '@/components/home-page/header';
+import Footer from '@/components/home/footer';
+import Header from '@/components/home/header';
 
 export default function Login({ children }: { children: React.ReactNode }) {
 	return (

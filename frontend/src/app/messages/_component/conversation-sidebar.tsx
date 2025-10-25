@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Bell, Volume2, Search, Settings } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import Empty from '@/components/ui/custom/empty';
+import Empty from '@/components/shared/empty';
 import { useAuth } from '@/hook/useAuth';
 import { useConversationStore } from '@/store/conversation-store';
 

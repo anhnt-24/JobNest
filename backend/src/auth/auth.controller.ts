@@ -21,63 +21,44 @@ import { RolesGuard } from './guards/roles.guard';
 import { CreateEmployerDto } from './dto/employer-create.dto';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from '@prisma/client';
-
-import { FileInterceptor } from '@nestjs/platform-express';
-import { File as MulterFile } from 'multer';
-@Controller('auth')
+@Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post('register')
+  @Post('/register')
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
 
-  @Post('login')
+  @Post('/login')
   @Public()
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
 
   @Public()
-  @Post('refresh')
+  @Post('/refresh')
   async refresh(@Body() dto: RefreshTokenDto) {
     return this.authService.refreshToken(dto.refresh_token);
   }
 
   @Public()
-  @Post('logout')
+  @Post('/logout')
   async logout(@Body('userId') userId: string) {
     return this.authService.logout(userId);
   }
 
   @Public()
-  @Post('company-register')
+  @Post('/company-register')
   create(@Body() dto: CreateCompanyDto) {
     return this.authService.registerCompany(dto);
   }
 
-  @Post('employer-register')
+  @Post('/employer-register')
   @Roles(Role.COMPANY)
   @UseGuards(JwtAuthGuard, RolesGuard)
   registerEmployer(@Req() req, @Body() dto: CreateEmployerDto) {
     return this.authService.registerEmployer(+req.user.userId, dto);
-  }
-  @Get('me')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  me(@Req() req) {
-    return this.authService.me(+req.user.userId);
-  }
-  @Patch('/avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async uploadAvatar(@Req() req, @UploadedFile() file: MulterFile) {
-    return this.authService.uploadAvatar(+req.user.userId, file);
-  }
-  @Public()
-  @Get('/:id')
-  async getUserById(@Param('id') id: number) {
-    return this.authService.findOne(id);
   }
 }

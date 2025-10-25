@@ -7,8 +7,8 @@ import { useParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
-import LoadingCard from '../../../candidate/profile/skeleton';
 import { FaBriefcase, FaClock, FaGraduationCap, FaUsers } from 'react-icons/fa6';
+import { Loading } from '@/components/shared/loading';
 function GeneralInfo() {
 	const params = useParams();
 	const id = params.id;
@@ -54,7 +54,7 @@ function Component() {
 	return (
 		<Card>
 			<CardTitle>Thông tin chung</CardTitle>
-			<Suspense fallback={<LoadingCard />}>
+			<Suspense fallback={<Loading />}>
 				<GeneralInfo></GeneralInfo>
 			</Suspense>
 		</Card>

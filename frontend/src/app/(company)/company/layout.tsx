@@ -1,5 +1,5 @@
-import { AppSidebar } from '@/components/ui/company/app-sidebar';
-import { SiteHeader } from '@/components/ui/company/site-header';
+import { AppSidebar } from '@/components/company/app-sidebar';
+import { SiteHeader } from '@/components/company/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 export default function Layout({

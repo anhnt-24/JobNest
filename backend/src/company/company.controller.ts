@@ -21,12 +21,12 @@ import { CompanyService } from 'src/company/company.service';
 import { UpdateCompanyDto } from 'src/company/dto/update-company.dto';
 import { CompanyListQueryDto } from './dto/company-list-query.dto';
 
-@Controller('company')
+@Controller('companies')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
-  @Get('me')
+  @Get('/me')
   @Roles(Role.COMPANY)
   me(@Request() req) {
     return this.companyService.findByUserId(+req.user.userId);
@@ -37,7 +37,7 @@ export class CompanyController {
     return this.companyService.findOne(+id);
   }
 
-  @Put('me')
+  @Put('/me')
   @Roles(Role.COMPANY)
   update(@Request() req, @Body() updateCompanyDto: UpdateCompanyDto) {
     return this.companyService.updateByUserId(
@@ -45,12 +45,12 @@ export class CompanyController {
       updateCompanyDto,
     );
   }
-  @Post('/get-all')
+  @Post('/list')
   async getCompanies(@Body() query: CompanyListQueryDto) {
     return this.companyService.getCompanies(query);
   }
 
-  @Patch('cover')
+  @Patch('/cover')
   @Roles(Role.COMPANY)
   @UseInterceptors(FileInterceptor('cover'))
   async uploadCover(@Request() req, @UploadedFile() file: MulterFile) {

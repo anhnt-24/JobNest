@@ -8,11 +8,12 @@ import { FaGlobeAmericas, FaSave } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import FormatToolbar from './format-toolbar';
-import { AutosizeTextarea } from '@/components/ui/custom/autosize-textarea';
+import { AutosizeTextarea } from '@/components/shared/autosize-textarea';
 import CVDialog from './cv-dialog';
-import { cvService } from '@/service/cvs.service';
+import { cvService } from '@/service/cv.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { mutate } from 'swr';
 interface Certification {
 	year: string;
 	name: string;
@@ -58,63 +59,6 @@ interface CVData {
 	projects: Project[];
 	work_experience: WorkExperience[];
 }
-
-const initialData: CVData = {
-	header: {
-		title: 'Fullstack Developer',
-	},
-	personal_info: {
-		avatar: '/image.png',
-		name: 'Nguyễn Tuấn Anh',
-		job_title: 'Software Engineer',
-		gender: 'Nam',
-		phone: '0123454789',
-		email: 'tech.growth@topcv.vn',
-		website: 'facebook.com/',
-		address: 'Ba Đình, Hà Nội',
-	},
-	skills: ['Kỹ năng Digital Marketing', 'Kỹ năng Digital Marketing'],
-	certifications: [
-		{
-			year: '2025',
-			name: 'Toeic 900',
-		},
-	],
-	career_objective:
-		'Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager.',
-	education_and_awards: [
-		{
-			school: 'Học viện Công nghệ Bưu chính Viễn Thông',
-			duration: '2022 - Hiện tại',
-			description:
-				'Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager.',
-		},
-	],
-	projects: [
-		{
-			name: 'Học viện Công nghệ Bưu chính Viễn Thông',
-			duration: '2022 - Hiện tại',
-			description:
-				'Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager.',
-		},
-	],
-	work_experience: [
-		{
-			company: 'Công ty BCD TopCV',
-			position: 'Học viện Công nghệ Bưu chính Viễn Thông',
-			duration: '2022 - Hiện tại',
-			description:
-				'Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager.',
-		},
-		{
-			company: 'Công ty ABC TopCV',
-			position: 'Học viện Công nghệ Bưu chính Viễn Thông',
-			duration: '2022 - Hiện tại',
-			description:
-				'Senior Digital Marketing với hơn 4 năm kinh nghiệm làm việc. Thành công xây dựng và quản lý các chiến dịch Digital Marketing đa kênh, bao gồm SEO, Ads, Social Media, Email Marketing, E-Commerce… giúp công ty tăng trưởng 25% doanh thu. Trong 2 năm tới, tôi đặt mục tiêu thăng tiến lên Marketing Manager.',
-		},
-	],
-};
 
 interface CVForm {
 	initialData: CVData;
@@ -244,15 +188,20 @@ export default function CVForm({ initialData, id }: CVForm) {
 	};
 
 	const handleSave = async () => {
-		setIsLoading(true);
 		const payload = { title: cvData.header.title, content: cvData };
+		if (!payload.title.trim()) {
+			toast.error('Vui lòng nhập tên CV của bạn.');
+			return;
+		}
+		setIsLoading(true);
 		try {
 			if (id) await cvService.update(id, payload);
 			else await cvService.create(payload);
+			toast.success('Thành công.');
+			mutate(`/cv/${id}`);
 		} catch {
 			toast.error('Thất bại');
 		} finally {
-			toast.success('Thành công.');
 			router.replace('/candidate/cv');
 		}
 	};
@@ -295,6 +244,7 @@ export default function CVForm({ initialData, id }: CVForm) {
 						<FaFile className='size-8' />
 						<input
 							type='text'
+							placeholder='Tên hồ sơ'
 							value={cvData.header.title}
 							onChange={e =>
 								setCvData(prev => ({
@@ -306,7 +256,7 @@ export default function CVForm({ initialData, id }: CVForm) {
 						/>
 					</div>
 					<div className='items-center flex gap-2'>
-						<Button variant='secondary' className='font-semibold rounded-full'>
+						<Button variant='secondary' className='font-semibold rounded-full' onClick={() => router.replace('/candidate/cv')}>
 							<X />
 							Hủy
 						</Button>

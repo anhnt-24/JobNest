@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { companyService } from '@/service/company.service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { companySchema, UpdateCompanyReq } from '@/schema/company.schema';
+import { CompanyReq, CompanySchema } from '@/schema/company.schema';
 import { toast } from 'sonner';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor';
 
@@ -31,7 +31,7 @@ export default function CompanyForm() {
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
-		resolver: zodResolver(companySchema),
+		resolver: zodResolver(CompanySchema),
 	});
 
 	const { data: profile, mutate } = useSWR('/company/me', () => companyService.me().then(res => res.data));
@@ -46,10 +46,10 @@ export default function CompanyForm() {
 			setCoords([profile.latitude, profile.longitude]);
 		}
 	}, [profile]);
-
-	const onSubmit = async (data: UpdateCompanyReq) => {
+	console.log(errors);
+	const onSubmit = async (data: CompanyReq) => {
 		try {
-			const payload: UpdateCompanyReq = {
+			const payload: CompanyReq = {
 				...data,
 				latitude: coords[0],
 				longitude: coords[1],
@@ -127,7 +127,7 @@ export default function CompanyForm() {
 					control={control}
 					render={({ field }) => (
 						<div>
-							<Label className='mb-4'>Giới thiệu: </Label>
+							<Label className='my-4'>Giới thiệu: </Label>
 							<SimpleEditor content={field.value} setContent={field.onChange} />
 							{errors.description && <p className='text-red-500 '>{errors.description.message}</p>}
 						</div>
